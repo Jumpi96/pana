@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Login } from './pages/Login'
 import { DailyTracking } from './pages/DailyTracking'
+import { Settings } from './pages/Settings'
+import { WeeklyView } from './pages/WeeklyView'
 import { supabase } from './lib/supabase'
 import type { Session } from '@supabase/supabase-js'
 import { Loader2 } from 'lucide-react'
@@ -45,31 +47,6 @@ function RequireAuth({ children }: { children: ReactNode }) {
   if (!session) return <Navigate to="/login" replace />
 
   return <>{children}</>
-}
-
-// Placeholder components for routes we haven't built yet
-function WeeklyView() {
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl mb-4">📊</h1>
-        <h2 className="text-2xl font-bold text-green-600 dark:text-green-400">Weekly View</h2>
-        <p className="text-gray-500 mt-2">Coming in Phase 6</p>
-      </div>
-    </div>
-  )
-}
-
-function Settings() {
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl mb-4">⚙️</h1>
-        <h2 className="text-2xl font-bold text-green-600 dark:text-green-400">Settings</h2>
-        <p className="text-gray-500 mt-2">Coming in Phase 6</p>
-      </div>
-    </div>
-  )
 }
 
 export default function App() {

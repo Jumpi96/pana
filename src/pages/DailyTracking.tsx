@@ -7,6 +7,7 @@ import { calculateExpectedMacros } from '../lib/macros'
 import { MealGroupSection } from '../components/MealGroupSection'
 import { MacrosSummary } from '../components/MacrosSummary'
 import { OfflineBanner } from '../components/OfflineBanner'
+import { Onboarding } from '../components/Onboarding'
 import type { MealEntry, UserSettings, DailyTotals, MealGroup } from '../types'
 
 export function DailyTracking() {
@@ -149,6 +150,11 @@ export function DailyTracking() {
           />
         ))}
       </main>
+
+      {/* Onboarding Modal */}
+      {!loading && !settings && (
+        <Onboarding onComplete={loadData} />
+      )}
     </div>
   )
 }
