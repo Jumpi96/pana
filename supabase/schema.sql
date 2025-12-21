@@ -26,8 +26,8 @@ create table meal_entries (
   description text not null check (char_length(description) <= 140),
 
   -- Macro ranges
-  calories_min integer not null check (calories_min >= 0),
-  calories_max integer not null check (calories_max >= calories_min),
+  calories_min numeric not null check (calories_min >= 0),
+  calories_max numeric not null check (calories_max >= calories_min),
   protein_g_min numeric not null check (protein_g_min >= 0),
   protein_g_max numeric not null check (protein_g_max >= protein_g_min),
   carbs_g_min numeric not null check (carbs_g_min >= 0),
@@ -37,7 +37,7 @@ create table meal_entries (
 
   -- Alcohol (no ranges, exact values)
   alcohol_g numeric not null default 0 check (alcohol_g >= 0),
-  alcohol_calories integer not null default 0 check (alcohol_calories >= 0),
+  alcohol_calories numeric not null default 0 check (alcohol_calories >= 0),
 
   -- Uncertainty and portion selection
   uncertainty boolean not null default false,

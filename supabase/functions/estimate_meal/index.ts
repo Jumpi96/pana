@@ -61,12 +61,29 @@ serve(async (req) => {
     // Call OpenAI API
     const prompt = `You are a nutrition expert. Estimate the macronutrients for this meal: "${description}".
 
-Provide RANGES (minimum and maximum) for calories, protein, carbs, and fat. If the meal contains alcohol, provide exact alcohol grams and alcohol calories (7 cal/g).
+IMPORTANT - Calorie Calculation Rules:
+- calories_min/max should ONLY include food macros (protein + carbs + fat)
+- Formula: calories = (protein_g * 4) + (carbs_g * 4) + (fat_g * 9)
+- If the meal contains alcohol, provide alcohol_g and alcohol_calories SEPARATELY (7 cal/g)
+- DO NOT include alcohol in calories_min/max - it will be added separately
 
-Return uncertainty=true if:
-- The description is vague or ambiguous
-- Portion size is unclear
-- The meal is complex/homemade without details
+Example for "light beer (95 kcal)":
+- Macros: 0g protein, 3g carbs, 0g fat
+- calories_min/max: 12 (from 3g carbs * 4)
+- alcohol_g: 12
+- alcohol_calories: 84 (from 12g * 7)
+- Total displayed to user: 12 + 84 = 96 cal ✓
+
+Provide RANGES (minimum and maximum) for protein, carbs, fat, and food calories.
+
+UNCERTAINTY GUIDELINES - Only set uncertainty=true when the description is VERY vague:
+- ✅ CERTAIN (uncertainty=false): Specific quantities + named foods, even if homemade
+  Examples: "2 eggs", "chicken breast with rice", "2 tostadas con jalea", "bowl of oatmeal with banana"
+- ❌ UNCERTAIN (uncertainty=true): Generic descriptions without specifics
+  Examples: "pasta", "salad", "sandwich", "snack", "lunch"
+
+The uncertainty flag means "I really can't estimate this well", not "there's some normal variation".
+If you can make a reasonable estimate with a normal range, set uncertainty=false.
 
 Return JSON in this exact format:
 {
@@ -83,7 +100,7 @@ Return JSON in this exact format:
   "uncertainty": <boolean>
 }
 
-Be conservative with ranges. For clear meals (e.g., "2 eggs"), keep ranges tight. For vague meals (e.g., "pasta"), use wider ranges.`
+Range sizing: Use tighter ranges for specific meals (±20%), wider ranges for less specific meals (±40%).`
 
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -136,6 +153,29 @@ Be conservative with ranges. For clear meals (e.g., "2 eggs"), keep ranges tight
       typeof estimate.uncertainty !== 'boolean'
     ) {
       throw new Error('Invalid estimation response from OpenAI')
+    }
+
+    // Validate that calories match macros (not including alcohol)
+    // Allow 20% tolerance for rounding and estimation variance
+    const expectedCaloriesMin = (estimate.protein_g_min * 4) + (estimate.carbs_g_min * 4) + (estimate.fat_g_min * 9)
+    const expectedCaloriesMax = (estimate.protein_g_max * 4) + (estimate.carbs_g_max * 4) + (estimate.fat_g_max * 9)
+    const toleranceMin = expectedCaloriesMin * 0.2
+    const toleranceMax = expectedCaloriesMax * 0.2
+
+    if (
+      Math.abs(estimate.calories_min - expectedCaloriesMin) > toleranceMin ||
+      Math.abs(estimate.calories_max - expectedCaloriesMax) > toleranceMax
+    ) {
+      console.error('Calorie mismatch detected:', {
+        provided: { min: estimate.calories_min, max: estimate.calories_max },
+        expected: { min: expectedCaloriesMin, max: expectedCaloriesMax },
+        macros: {
+          protein: { min: estimate.protein_g_min, max: estimate.protein_g_max },
+          carbs: { min: estimate.carbs_g_min, max: estimate.carbs_g_max },
+          fat: { min: estimate.fat_g_min, max: estimate.fat_g_max }
+        }
+      })
+      throw new Error('Calorie values do not match macros. Alcohol should not be included in calories_min/max.')
     }
 
     return new Response(

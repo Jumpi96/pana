@@ -1,0 +1,199 @@
+import { useState } from 'react'
+import { Trash2, Edit2, Check, X, AlertCircle } from 'lucide-react'
+import { updatePortionLevel, deleteMealEntry, estimateMeal, updateMealEntry, updateMealEmbedding } from '../lib/api'
+import { calculateMealMacros } from '../lib/macros'
+import type { MealEntry, PortionLevel } from '../types'
+import { cn } from '../lib/utils'
+
+interface Props {
+  meal: MealEntry
+  onUpdate: () => void
+  isOnline: boolean
+}
+
+export function MealEntryRow({ meal, onUpdate, isOnline }: Props) {
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editedDescription, setEditedDescription] = useState(meal.description)
+  const [isSaving, setIsSaving] = useState(false)
+
+  const macros = calculateMealMacros(meal)
+
+  async function handlePortionChange(level: PortionLevel) {
+    try {
+      await updatePortionLevel(meal.id, level)
+      onUpdate()
+    } catch (error) {
+      console.error('Failed to update portion:', error)
+      alert('Failed to update portion')
+    }
+  }
+
+  async function handleDelete() {
+    if (!confirm('Delete this meal?')) return
+
+    try {
+      setIsDeleting(true)
+      await deleteMealEntry(meal.id)
+      onUpdate()
+    } catch (error) {
+      console.error('Failed to delete:', error)
+      alert('Failed to delete meal')
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  async function handleSaveEdit() {
+    if (!isOnline) return
+    if (editedDescription.trim().length === 0) {
+      alert('Description cannot be empty')
+      return
+    }
+    if (editedDescription.length > 140) {
+      alert('Description must be 140 characters or less')
+      return
+    }
+
+    try {
+      setIsSaving(true)
+
+      // Re-estimate with new description
+      const estimate = await estimateMeal(editedDescription.trim())
+
+      // Update meal entry
+      await updateMealEntry(meal.id, {
+        description: editedDescription.trim(),
+        ...estimate,
+        last_estimated_at: new Date().toISOString()
+      })
+
+      // Update embedding asynchronously
+      updateMealEmbedding(meal.id, editedDescription.trim()).catch(err => {
+        console.error('Failed to update embedding:', err)
+      })
+
+      setIsEditing(false)
+      onUpdate()
+    } catch (error) {
+      console.error('Failed to save edit:', error)
+      alert('Failed to save changes')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  function handleCancelEdit() {
+    setEditedDescription(meal.description)
+    setIsEditing(false)
+  }
+
+  return (
+    <div className="px-6 py-4 hover:bg-gray-50 dark:hover:bg-zinc-900 transition-colors">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1 min-w-0">
+          {isEditing ? (
+            <div className="mb-2 relative">
+              <textarea
+                value={editedDescription}
+                onChange={e => setEditedDescription(e.target.value)}
+                maxLength={140}
+                rows={2}
+                className="w-full px-3 py-2 rounded-lg border border-green-300 dark:border-green-700 bg-white dark:bg-zinc-950 focus:ring-2 focus:ring-green-500 outline-none resize-none text-sm"
+                disabled={isSaving}
+                autoFocus
+              />
+              <div className="absolute bottom-2 right-2 text-xs text-gray-400">
+                {editedDescription.length}/140
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm font-medium mb-2 break-words">{meal.description}</p>
+          )}
+
+          <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
+            <div className="flex gap-4">
+              <span>{macros.calories.toFixed(0)} cal</span>
+              <span>P: {macros.protein_g.toFixed(0)}g</span>
+              <span>C: {macros.carbs_g.toFixed(0)}g</span>
+              <span>F: {macros.fat_g.toFixed(0)}g</span>
+            </div>
+
+            {meal.uncertainty && (
+              <div className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
+                <AlertCircle className="w-3 h-3" />
+                <span>Uncertain estimate</span>
+              </div>
+            )}
+          </div>
+
+          {/* Portion Level Buttons - hidden when editing */}
+          {!isEditing && (
+            <div className="flex gap-2 mt-3">
+              {(['light', 'ok', 'heavy'] as PortionLevel[]).map(level => (
+                <button
+                  key={level}
+                  onClick={() => handlePortionChange(level)}
+                  disabled={!isOnline}
+                  className={cn(
+                    'px-3 py-1 rounded-lg text-xs font-medium transition-colors',
+                    meal.portion_level === level
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700',
+                    !isOnline && 'opacity-50 cursor-not-allowed'
+                  )}
+                >
+                  {level.charAt(0).toUpperCase() + level.slice(1)}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="flex gap-2">
+          {isEditing ? (
+            <>
+              <button
+                onClick={handleSaveEdit}
+                disabled={isSaving}
+                className="p-2 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/20 text-green-600 dark:text-green-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Save (will re-estimate)"
+              >
+                <Check className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={handleCancelEdit}
+                disabled={isSaving}
+                className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Cancel"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => setIsEditing(true)}
+                disabled={!isOnline}
+                className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Edit"
+              >
+                <Edit2 className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={handleDelete}
+                disabled={!isOnline || isDeleting}
+                className="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Delete"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

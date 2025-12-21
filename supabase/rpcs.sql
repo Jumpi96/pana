@@ -110,8 +110,8 @@ create or replace function search_similar_meals_vector(
 returns table (
   id uuid,
   description text,
-  calories_min integer,
-  calories_max integer,
+  calories_min numeric,
+  calories_max numeric,
   protein_g_min numeric,
   protein_g_max numeric,
   carbs_g_min numeric,
@@ -119,7 +119,7 @@ returns table (
   fat_g_min numeric,
   fat_g_max numeric,
   alcohol_g numeric,
-  alcohol_calories integer,
+  alcohol_calories numeric,
   uncertainty boolean,
   date_local date,
   similarity float
