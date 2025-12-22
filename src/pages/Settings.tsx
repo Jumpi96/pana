@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, LogOut, Loader2 } from 'lucide-react'
 import { fetchUserSettings, upsertUserSettings } from '../lib/api'
 import { supabase } from '../lib/supabase'
-import type { UserSettings } from '../types'
 
 export function Settings() {
   const navigate = useNavigate()

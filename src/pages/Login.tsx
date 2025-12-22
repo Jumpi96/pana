@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import { Loader2, Mail, KeyRound, ChevronLeft } from 'lucide-react'
+import { Loader2, Mail, KeyRound } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 export function Login() {
@@ -44,9 +44,9 @@ export function Login() {
       } else if (data.session) {
         navigate('/')
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error(err)
-      alert(err.message)
+      alert(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setIsLoading(false)
     }

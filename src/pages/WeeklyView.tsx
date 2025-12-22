@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Calendar, Home, Settings as SettingsIcon, Loader2 } from 'lucide-react'
 import { getLocalDate, getMondayOfWeek, addDays, formatDate } from '../lib/utils'
@@ -16,11 +16,7 @@ export function WeeklyView() {
   const [totals, setTotals] = useState<DailyTotals | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadData()
-  }, [currentWeekStart])
-
-  async function loadData() {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true)
       const [settingsData, totalsData] = await Promise.all([
@@ -35,7 +31,11 @@ export function WeeklyView() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [currentWeekStart])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
 
   function handlePrevWeek() {
     setCurrentWeekStart(prev => addDays(prev, -7))

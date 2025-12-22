@@ -93,9 +93,9 @@ export function AddMealForm({ mealGroup, date, position, onSave, onCancel }: Pro
       })
 
       onSave()
-    } catch (err: any) {
+    } catch (err) {
       console.error('Failed to save meal:', err)
-      setError(err.message || 'Failed to estimate meal')
+      setError(err instanceof Error ? err.message : 'Failed to estimate meal')
     } finally {
       setIsEstimating(false)
     }
@@ -133,9 +133,9 @@ export function AddMealForm({ mealGroup, date, position, onSave, onCancel }: Pro
       })
 
       onSave()
-    } catch (err: any) {
+    } catch (err) {
       console.error('Failed to save meal:', err)
-      setError(err.message || 'Failed to save meal')
+      setError(err instanceof Error ? err.message : 'Failed to save meal')
     } finally {
       setIsEstimating(false)
     }

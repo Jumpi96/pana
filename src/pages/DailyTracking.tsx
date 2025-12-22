@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { ChevronLeft, ChevronRight, Calendar, Settings as SettingsIcon, TrendingUp } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { getLocalDate, formatDate, addDays } from '../lib/utils'
@@ -18,24 +18,7 @@ export function DailyTracking() {
   const [loading, setLoading] = useState(true)
   const [isOnline, setIsOnline] = useState(navigator.onLine)
 
-  useEffect(() => {
-    loadData()
-  }, [currentDate])
-
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true)
-    const handleOffline = () => setIsOnline(false)
-
-    window.addEventListener('online', handleOnline)
-    window.addEventListener('offline', handleOffline)
-
-    return () => {
-      window.removeEventListener('online', handleOnline)
-      window.removeEventListener('offline', handleOffline)
-    }
-  }, [])
-
-  async function loadData() {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true)
       const [mealsData, settingsData, totalsData] = await Promise.all([
@@ -52,7 +35,24 @@ export function DailyTracking() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [currentDate])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true)
+    const handleOffline = () => setIsOnline(false)
+
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+
+    return () => {
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
+  }, [])
 
   function handlePrevDay() {
     setCurrentDate(prev => addDays(prev, -1))
