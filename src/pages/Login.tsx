@@ -63,26 +63,28 @@ export function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-zinc-950 p-4 font-sans">
-      <div className="bg-white dark:bg-zinc-900 w-full max-w-md p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-zinc-800">
-        <div className="text-center mb-8">
-          <span className="text-4xl">🥗</span>
-          <h1 className="text-2xl font-bold mt-4">Welcome to Pana</h1>
-          <p className="text-gray-500 text-sm mt-2">Macro Tracker</p>
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-zinc-950 p-6 font-sans transition-colors">
+      <div className="bg-white dark:bg-zinc-900 w-full max-w-md p-10 rounded-[32px] shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,0.05)] border-[4px] border-black dark:border-zinc-800 transition-all hover:scale-[1.01]">
+        <div className="text-center mb-10">
+          <div className="inline-block text-6xl mb-6 animate-bounce-subtle rotate-6">🥗</div>
+          <h1 className="text-4xl font-[900] tracking-tighter italic uppercase text-black dark:text-white leading-none">
+            Pana<span className="text-green-500">!</span>
+          </h1>
+          <p className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] mt-3">The Dorky Macro Tracker</p>
         </div>
 
         {view === 'email' ? (
-          <form onSubmit={handleSendCode} className="space-y-4">
+          <form onSubmit={handleSendCode} className="space-y-6">
             <div>
-              <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">Email Address</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <label className="block text-[10px] font-black text-gray-400 mb-2 uppercase tracking-widest pl-2">Your Email Boss</label>
+              <div className="relative group">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black/20 dark:text-white/20 group-focus-within:text-green-500 transition-colors" />
                 <input
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 dark:bg-zinc-800/50 focus:ring-2 focus:ring-green-500 outline-none transition-all"
-                  placeholder="you@example.com"
+                  className="w-full pl-12 pr-4 py-4 rounded-2xl border-[3px] border-black dark:border-zinc-700 dark:bg-zinc-800 bg-white font-black italic tracking-tight focus:ring-4 focus:ring-green-500/10 outline-none transition-all"
+                  placeholder="you@email.com"
                   required
                 />
               </div>
@@ -90,53 +92,53 @@ export function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-4 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 shadow-lg shadow-green-500/20 transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
+              className="w-full py-5 bg-black dark:bg-white text-white dark:text-black rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-[6px_6px_0px_0px_rgba(34,197,94,1)] disabled:opacity-50 text-lg flex items-center justify-center gap-3 group"
             >
               {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
                 <>
-                  Send Access Code
-                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                  Send Magic Code
+                  <span className="group-hover:translate-x-1 transition-transform">🚀</span>
                 </>
               )}
             </button>
           </form>
         ) : (
-          <form onSubmit={handleVerifyCode} className="space-y-6">
-            <div className="space-y-2">
+          <form onSubmit={handleVerifyCode} className="space-y-8">
+            <div className="space-y-4">
               <button
                 type="button"
                 onClick={() => setView('email')}
-                className="text-xs text-green-600 font-bold flex items-center gap-1 hover:underline mb-2"
+                className="text-[10px] font-black uppercase tracking-widest text-green-600 flex items-center gap-1 hover:underline mb-4"
               >
-                <ChevronLeft className="w-3 h-3" /> Change Email
+                <ChevronLeft className="w-4 h-4" /> Wait, wrong email!
               </button>
-              <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">Enter 6-digit Code</label>
-              <div className="relative">
-                <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <label className="block text-[10px] font-black text-gray-400 mb-2 uppercase tracking-widest pl-2">The Secret 6-Digit Code</label>
+              <div className="relative group">
+                <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black/20 dark:text-white/20 group-focus-within:text-green-500 transition-colors" />
                 <input
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]*"
                   value={token}
                   onChange={e => setToken(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 dark:bg-zinc-800/50 text-2xl tracking-[0.5em] font-mono text-center focus:ring-2 focus:ring-green-500 outline-none transition-all"
+                  className="w-full pl-12 pr-4 py-5 rounded-2xl border-[3px] border-black dark:border-zinc-700 dark:bg-zinc-800 bg-white text-3xl tracking-[0.4em] font-black italic text-center focus:ring-4 focus:ring-green-500/10 outline-none transition-all placeholder:opacity-20"
                   placeholder="000000"
                   maxLength={6}
                   required
                   autoFocus
                 />
               </div>
-              <p className="text-xs text-center text-gray-500 mt-2">
-                We sent it to <span className="font-bold text-gray-700 dark:text-gray-300">{email}</span>
+              <p className="text-[10px] font-bold text-center text-gray-400 uppercase tracking-widest mt-4">
+                Sent with luv to <span className="text-black dark:text-white underline decoration-green-500 decoration-2">{email}</span>
               </p>
             </div>
 
             <button
               type="submit"
               disabled={isLoading || token.length < 6}
-              className="w-full py-4 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 shadow-lg shadow-green-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-5 bg-black dark:bg-white text-white dark:text-black rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-[6px_6px_0px_0px_rgba(34,197,94,1)] disabled:opacity-50 text-lg flex items-center justify-center gap-3"
             >
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Verify & Sign In"}
+              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Let's Go! 🥑"}
             </button>
           </form>
         )}

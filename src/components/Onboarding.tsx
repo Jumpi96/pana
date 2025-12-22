@@ -49,125 +49,124 @@ export function Onboarding({ onComplete }: Props) {
   const isValidTotal = Math.abs(total - 100) < 0.01
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-zinc-950 rounded-lg shadow-xl max-w-md w-full p-6 space-y-6">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-6 transition-all">
+      <div className="bg-white dark:bg-zinc-950 rounded-[40px] border-[4px] border-black dark:border-zinc-800 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,0.05)] max-w-md w-full p-10 space-y-8 animate-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">
-            Welcome to Pana! 🥗
+          <div className="text-6xl mb-6">🥑</div>
+          <h1 className="text-3xl font-[900] tracking-tighter italic uppercase text-black dark:text-white leading-none">
+            Welcome to Pana<span className="text-green-500">!</span>
           </h1>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Let's set up your daily nutrition goals
+          <p className="text-xs font-black text-gray-400 uppercase tracking-widest mt-4">
+            Let's build your goal engine 🚀
           </p>
         </div>
 
         {/* Progress Indicator */}
         <div className="flex gap-2">
-          <div className={`flex-1 h-1 rounded ${step >= 1 ? 'bg-green-600' : 'bg-gray-200 dark:bg-zinc-800'}`} />
-          <div className={`flex-1 h-1 rounded ${step >= 2 ? 'bg-green-600' : 'bg-gray-200 dark:bg-zinc-800'}`} />
+          <div className={`flex-1 h-2 rounded-full border-2 border-black dark:border-zinc-800 transition-all ${step >= 1 ? 'bg-green-500' : 'bg-transparent'}`} />
+          <div className={`flex-1 h-2 rounded-full border-2 border-black dark:border-zinc-800 transition-all ${step >= 2 ? 'bg-green-500' : 'bg-transparent'}`} />
         </div>
 
         {/* Step 1: Calorie Target */}
         {step === 1 && (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div>
-              <h2 className="font-semibold mb-2">Daily Calorie Target</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                How many calories do you want to consume per day?
-              </p>
+              <h2 className="text-sm font-black uppercase tracking-widest mb-3 pl-2">Daily Calorie Target</h2>
               <input
                 type="number"
                 value={calorieTarget}
                 onChange={e => setCalorieTarget(Number(e.target.value))}
                 min="1"
                 step="50"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-lg font-medium focus:ring-2 focus:ring-green-500 outline-none"
+                className="w-full px-6 py-4 rounded-2xl border-[3px] border-black dark:border-zinc-700 bg-white dark:bg-zinc-900 text-3xl font-[900] tracking-tighter italic focus:ring-4 focus:ring-green-500/10 outline-none transition-all shadow-inner"
                 autoFocus
               />
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-3 pl-2 leading-relaxed">
+                How many calories are we hunting today? 🥗
+              </p>
             </div>
 
             <button
               onClick={handleNext}
-              className="w-full px-4 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
+              className="w-full py-5 bg-black dark:bg-white text-white dark:text-black rounded-2xl font-[900] uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-[6px_6px_0px_0px_rgba(34,197,94,1)] text-lg italic"
             >
-              Next
+              Keep Going →
             </button>
           </div>
         )}
 
         {/* Step 2: Macro Distribution */}
         {step === 2 && (
-          <div className="space-y-4">
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="font-semibold">Macro Distribution</h2>
-                <div className={`text-sm font-medium ${isValidTotal ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                  Total: {total.toFixed(1)}%
+          <>
+            <div className="space-y-6">
+              <div>
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-sm font-black uppercase tracking-widest italic">Macro Distribution</h2>
+                  <div className={`px-2 py-0.5 rounded-full text-[10px] font-black border-2 ${isValidTotal ? 'bg-green-500 text-white border-black' : 'bg-red-500 text-white border-black'}`}>
+                    {total.toFixed(0)}%
+                  </div>
+                </div>
+
+                <div className="space-y-8">
+                  {/* Protein */}
+                  <div className="group">
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-blue-600">🥩 Protein</label>
+                      <span className="text-[10px] font-black italic text-gray-400">
+                        {proteinPct}% ({((calorieTarget * proteinPct / 100) / 4).toFixed(0)}g)
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      step="1"
+                      value={proteinPct}
+                      onChange={e => setProteinPct(Number(e.target.value))}
+                      className="w-full h-4 bg-gray-100 dark:bg-zinc-900 rounded-full appearance-none cursor-pointer accent-blue-600 border-2 border-black/10 transition-all"
+                    />
+                  </div>
+
+                  {/* Carbs */}
+                  <div className="group">
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-orange-600">🍞 Carbs</label>
+                      <span className="text-[10px] font-black italic text-gray-400">
+                        {carbsPct}% ({((calorieTarget * carbsPct / 100) / 4).toFixed(0)}g)
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      step="1"
+                      value={carbsPct}
+                      onChange={e => setCarbsPct(Number(e.target.value))}
+                      className="w-full h-4 bg-gray-100 dark:bg-zinc-900 rounded-full appearance-none cursor-pointer accent-orange-600 border-2 border-black/10 transition-all"
+                    />
+                  </div>
+
+                  {/* Fat */}
+                  <div className="group">
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-yellow-600">🥑 Fat</label>
+                      <span className="text-[10px] font-black italic text-gray-400">
+                        {fatPct}% ({((calorieTarget * fatPct / 100) / 9).toFixed(0)}g)
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      step="1"
+                      value={fatPct}
+                      onChange={e => setFatPct(Number(e.target.value))}
+                      className="w-full h-4 bg-gray-100 dark:bg-zinc-900 rounded-full appearance-none cursor-pointer accent-yellow-600 border-2 border-black/10 transition-all"
+                    />
+                  </div>
                 </div>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                Adjust the percentage split for protein, carbs, and fat
-              </p>
-
-              <div className="space-y-4">
-                {/* Protein */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="text-sm font-medium">Protein</label>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {proteinPct}% ({((calorieTarget * proteinPct / 100) / 4).toFixed(0)}g)
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    step="1"
-                    value={proteinPct}
-                    onChange={e => setProteinPct(Number(e.target.value))}
-                    className="w-full h-2 bg-gray-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-green-600"
-                  />
-                </div>
-
-                {/* Carbs */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="text-sm font-medium">Carbs</label>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {carbsPct}% ({((calorieTarget * carbsPct / 100) / 4).toFixed(0)}g)
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    step="1"
-                    value={carbsPct}
-                    onChange={e => setCarbsPct(Number(e.target.value))}
-                    className="w-full h-2 bg-gray-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-green-600"
-                  />
-                </div>
-
-                {/* Fat */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="text-sm font-medium">Fat</label>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {fatPct}% ({((calorieTarget * fatPct / 100) / 9).toFixed(0)}g)
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    step="1"
-                    value={fatPct}
-                    onChange={e => setFatPct(Number(e.target.value))}
-                    className="w-full h-2 bg-gray-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-green-600"
-                  />
-                </div>
-              </div>
-
               {!isValidTotal && (
                 <p className="mt-2 text-sm text-red-600 dark:text-red-400">
                   Percentages must sum to exactly 100%
@@ -175,22 +174,22 @@ export function Onboarding({ onComplete }: Props) {
               )}
             </div>
 
-            <div className="flex gap-3">
-              <button
-                onClick={() => setStep(1)}
-                className="flex-1 px-4 py-3 border border-gray-300 dark:border-zinc-700 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-zinc-900 transition-colors"
-              >
-                Back
-              </button>
+            <div className="flex flex-col gap-4">
               <button
                 onClick={handleFinish}
                 disabled={!isValidTotal || saving}
-                className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-5 bg-black dark:bg-white text-white dark:text-black rounded-2xl font-[900] uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-[6px_6px_0px_0px_rgba(34,197,94,1)] text-lg italic"
               >
-                {saving ? 'Saving...' : 'Finish'}
+                {saving ? 'Locking it in...' : 'Lock it in! 🥑'}
+              </button>
+              <button
+                onClick={() => setStep(1)}
+                className="w-full py-3 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors"
+              >
+                ← Wait, go back
               </button>
             </div>
-          </div>
+          </>
         )}
       </div>
     </div>

@@ -136,20 +136,30 @@ export function MealEntryRow({ meal, onUpdate, isOnline }: Props) {
           {/* Portion Level Buttons - hidden when editing */}
           {!isEditing && (
             <div className="flex gap-2 mt-3">
-              {(['light', 'ok', 'heavy'] as PortionLevel[]).map(level => (
+              {[
+                { level: 'light', emoji: '🍃', label: 'Light', color: 'hover:bg-green-100 dark:hover:bg-green-900/30' },
+                { level: 'ok', emoji: '✅', label: 'Ok', color: 'hover:bg-yellow-100 dark:hover:bg-yellow-900/30' },
+                { level: 'heavy', emoji: '🍕', label: 'Heavy', color: 'hover:bg-red-100 dark:hover:bg-red-900/30' }
+              ].map(({ level, emoji, label, color }) => (
                 <button
                   key={level}
-                  onClick={() => handlePortionChange(level)}
+                  onClick={() => handlePortionChange(level as PortionLevel)}
                   disabled={!isOnline}
+                  title={label}
                   className={cn(
-                    'px-3 py-1 rounded-lg text-xs font-medium transition-colors',
+                    'p-2 rounded-xl text-lg transition-all duration-200 transform hover:scale-110 active:scale-95 border-2',
                     meal.portion_level === level
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700',
-                    !isOnline && 'opacity-50 cursor-not-allowed'
+                      ? 'bg-white dark:bg-zinc-800 border-green-500 shadow-md ring-2 ring-green-500/20'
+                      : 'bg-gray-50 dark:bg-zinc-900/50 border-transparent ' + color,
+                    !isOnline && 'opacity-50 cursor-not-allowed grayscale'
                   )}
                 >
-                  {level.charAt(0).toUpperCase() + level.slice(1)}
+                  <span className="flex items-center gap-1.5">
+                    <span>{emoji}</span>
+                    <span className="text-[10px] uppercase tracking-wider font-bold text-gray-400 group-hover:text-gray-600">
+                      {label}
+                    </span>
+                  </span>
                 </button>
               ))}
             </div>
