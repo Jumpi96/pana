@@ -64,17 +64,18 @@ serve(async (req) => {
 IMPORTANT - Calorie Calculation Rules:
 - calories_min/max should ONLY include food macros (protein + carbs + fat)
 - Formula: calories = (protein_g * 4) + (carbs_g * 4) + (fat_g * 9)
-- If the meal contains alcohol, provide alcohol_g and alcohol_calories SEPARATELY (7 cal/g)
-- DO NOT include alcohol in calories_min/max - it will be added separately
+- alcohol_g and alcohol_calories (7 cal/g) MUST be provided separately
+- DO NOT include alcohol in calories_min/max
 
 Example for "light beer (95 kcal)":
 - Macros: 0g protein, 3g carbs, 0g fat
 - calories_min/max: 12 (from 3g carbs * 4)
 - alcohol_g: 12
 - alcohol_calories: 84 (from 12g * 7)
-- Total displayed to user: 12 + 84 = 96 cal ✓
+- Total: 12 + 84 = 96 cal
 
 Provide RANGES (minimum and maximum) for protein, carbs, fat, and food calories.
+Ensure they are mathematically consistent.
 
 UNCERTAINTY GUIDELINES - Only set uncertainty=true when the description is VERY vague:
 - ✅ CERTAIN (uncertainty=false): Specific quantities + named foods, even if homemade
@@ -82,7 +83,6 @@ UNCERTAINTY GUIDELINES - Only set uncertainty=true when the description is VERY 
 - ❌ UNCERTAIN (uncertainty=true): Generic descriptions without specifics
   Examples: "pasta", "salad", "sandwich", "snack", "lunch"
 
-The uncertainty flag means "I really can't estimate this well", not "there's some normal variation".
 If you can make a reasonable estimate with a normal range, set uncertainty=false.
 
 Return JSON in this exact format:
@@ -155,31 +155,34 @@ Range sizing: Use tighter ranges for specific meals (±20%), wider ranges for le
       throw new Error('Invalid estimation response from OpenAI')
     }
 
-    // Validate that calories match macros (not including alcohol)
-    // Use 30% tolerance OR minimum 15 calories tolerance (whichever is larger)
-    // This handles both regular meals and alcohol-heavy items (like wine)
-    const expectedCaloriesMin = (estimate.protein_g_min * 4) + (estimate.carbs_g_min * 4) + (estimate.fat_g_min * 9)
-    const expectedCaloriesMax = (estimate.protein_g_max * 4) + (estimate.carbs_g_max * 4) + (estimate.fat_g_max * 9)
-    const toleranceMin = Math.max(expectedCaloriesMin * 0.3, 15)
-    const toleranceMax = Math.max(expectedCaloriesMax * 0.3, 15)
+    // Reconcile calories with macros
+    // We trust the macro grams (P/C/F) more and recalculate calories to ensure 100% mathematical consistency
+    const expectedFoodMin = (estimate.protein_g_min * 4) + (estimate.carbs_g_min * 4) + (estimate.fat_g_min * 9)
+    const expectedFoodMax = (estimate.protein_g_max * 4) + (estimate.carbs_g_max * 4) + (estimate.fat_g_max * 9)
+    const expectedAlcoholCals = Math.round(estimate.alcohol_g * 7)
 
-    const diffMin = Math.abs(estimate.calories_min - expectedCaloriesMin)
-    const diffMax = Math.abs(estimate.calories_max - expectedCaloriesMax)
+    // Define tolerance for validation (50% OR 15 cals)
+    const toleranceMin = Math.max(expectedFoodMin * 0.5, 15)
+    const toleranceMax = Math.max(expectedFoodMax * 0.5, 15)
+    const alcoholTolerance = Math.max(expectedAlcoholCals * 0.5, 10)
 
-    if (diffMin > toleranceMin || diffMax > toleranceMax) {
-      console.error('Calorie mismatch detected:', {
-        provided: { min: estimate.calories_min, max: estimate.calories_max },
-        expected: { min: expectedCaloriesMin, max: expectedCaloriesMax },
-        difference: { min: diffMin, max: diffMax },
-        tolerance: { min: toleranceMin, max: toleranceMax },
-        macros: {
-          protein: { min: estimate.protein_g_min, max: estimate.protein_g_max },
-          carbs: { min: estimate.carbs_g_min, max: estimate.carbs_g_max },
-          fat: { min: estimate.fat_g_min, max: estimate.fat_g_max }
-        },
-        alcohol: { g: estimate.alcohol_g, calories: estimate.alcohol_calories }
+    const diffFoodMin = Math.abs(estimate.calories_min - expectedFoodMin)
+    const diffFoodMax = Math.abs(estimate.calories_max - expectedFoodMax)
+    const diffAlcohol = Math.abs(estimate.alcohol_calories - expectedAlcoholCals)
+
+    // If OpenAI's calories are reasonably close, we overwrite them with our perfectly calculated ones
+    if (diffFoodMin <= toleranceMin && diffFoodMax <= toleranceMax && diffAlcohol <= alcoholTolerance) {
+      estimate.calories_min = Math.round(expectedFoodMin)
+      estimate.calories_max = Math.round(expectedFoodMax)
+      estimate.alcohol_calories = expectedAlcoholCals
+    } else {
+      // Significant mismatch detected - log the raw response for debugging
+      console.error('Significant calorie mismatch detected:', {
+        estimate,
+        expected: { foodMin: expectedFoodMin, foodMax: expectedFoodMax, alcoholCals: expectedAlcoholCals },
+        differences: { foodMin: diffFoodMin, foodMax: diffFoodMax, alcohol: diffAlcohol }
       })
-      throw new Error('Calorie values do not match macros. Alcohol should not be included in calories_min/max.')
+      throw new Error('Could not generate a consistent nutrition estimate. Please try a more specific description.')
     }
 
     return new Response(

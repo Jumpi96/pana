@@ -45,7 +45,7 @@ export function MealGroupSection({ mealGroup, date, meals, onMealsChange, isOnli
             <AddMealForm
               mealGroup={mealGroup}
               date={date}
-              position={0} // New meals at top for better visibility
+              position={meals.length > 0 ? Math.min(...meals.map(m => m.position)) - 1 : 0}
               onSave={() => {
                 setShowAddForm(false)
                 onMealsChange()
