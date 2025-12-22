@@ -1,0 +1,169 @@
+name: Deploy
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one deployment at a time
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Build job
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build application
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  # Deploy to GitHub Pages
+  deploy-pages:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # Deploy Supabase changes
+  deploy-supabase:
+    name: Deploy Supabase
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link to Supabase project
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          supabase link --project-ref $SUPABASE_PROJECT_ID
+
+      - name: Run database migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          supabase db push
+
+      - name: Deploy Edge Functions
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          supabase functions deploy estimate_meal --no-verify-jwt
+          supabase functions deploy search_similar_meals --no-verify-jwt
+          supabase functions deploy update_meal_embedding --no-verify-jwt
+
+          # Set secrets for Edge Functions
+          supabase secrets set OPENAI_API_KEY=$OPENAI_API_KEY
+
+  # Deploy infrastructure changes
+  deploy-terraform:
+    name: Deploy Infrastructure (Terraform)
+    needs: build
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./terraform
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION || 'us-east-1' }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        env:
+          TF_VAR_supabase_db_url: ${{ secrets.SUPABASE_DB_URL }}
+          TF_VAR_alert_email: ${{ secrets.ALERT_EMAIL }}
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        env:
+          TF_VAR_supabase_db_url: ${{ secrets.SUPABASE_DB_URL }}
+          TF_VAR_alert_email: ${{ secrets.ALERT_EMAIL }}
+        run: terraform apply -auto-approve tfplan
+
+  # Notify deployment success
+  notify:
+    name: Notify Deployment
+    needs: [deploy-pages, deploy-supabase, deploy-terraform]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Deployment summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- GitHub Pages: ${{ needs.deploy-pages.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Supabase: ${{ needs.deploy-supabase.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Terraform: ${{ needs.deploy-terraform.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Release: ${{ github.event.release.tag_name }}" >> $GITHUB_STEP_SUMMARY
