@@ -19,11 +19,24 @@ export function AddMealForm({ mealGroup, date, position, onSave, onCancel }: Pro
   const [suggestions, setSuggestions] = useState<SimilarMeal[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+  const formRef = useRef<HTMLFormElement>(null)
 
   const debouncedDescription = useDebounce(description, 300)
 
   useEffect(() => {
     inputRef.current?.focus()
+  }, [])
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (formRef.current && !formRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   useEffect(() => {
@@ -46,6 +59,7 @@ export function AddMealForm({ mealGroup, date, position, onSave, onCancel }: Pro
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    setShowSuggestions(false) // Close suggestions on submit
 
     if (description.trim().length === 0) {
       setError('Description is required')
@@ -129,13 +143,18 @@ export function AddMealForm({ mealGroup, date, position, onSave, onCancel }: Pro
 
   return (
     <div className="px-6 py-4 bg-gray-50 dark:bg-zinc-900/50">
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <form ref={formRef} onSubmit={handleSubmit} className="space-y-3">
         <div className="relative">
           <textarea
             ref={inputRef}
             value={description}
             onChange={e => setDescription(e.target.value)}
             onFocus={() => setShowSuggestions(true)}
+            onKeyDown={e => {
+              if (e.key === 'Escape') {
+                setShowSuggestions(false)
+              }
+            }}
             placeholder="Describe your meal (e.g., 2 eggs and toast)..."
             maxLength={140}
             rows={2}
@@ -167,6 +186,9 @@ export function AddMealForm({ mealGroup, date, position, onSave, onCancel }: Pro
             </div>
           )}
         </div>
+
+        {/* Add margin when suggestions are showing to prevent overlap */}
+        <div style={{ marginTop: showSuggestions && suggestions.length > 0 ? '260px' : undefined }} />
 
         {error && (
           <div className="flex items-center gap-2 text-red-600 dark:text-red-400 text-sm">
