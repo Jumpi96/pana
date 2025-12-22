@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import { Loader2, Mail, KeyRound } from 'lucide-react'
+import { Loader2, Mail, KeyRound, ChevronLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 export function Login() {
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [token, setToken] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [view, setView] = useState<'email' | 'token'>('email')
   const navigate = useNavigate()
 
   // If user is already logged in, send them home
@@ -16,32 +17,41 @@ export function Login() {
     })
   }, [navigate])
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSendCode = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     try {
-      // Try to sign in first
-      const { error: signInError, data } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithOtp({
         email,
-        password,
-      })
-
-      // If user doesn't exist, sign them up
-      if (signInError?.message.includes('Invalid login credentials')) {
-        const { error: signUpError, data: signUpData } = await supabase.auth.signUp({
-          email,
-          password,
-        })
-        if (signUpError) throw signUpError
-
-        if (signUpData.session) {
-          navigate('/')
-        } else {
-          alert('Account created! Please log in.')
+        options: {
+          shouldCreateUser: false,
+          emailRedirectTo: window.location.origin + import.meta.env.BASE_URL
         }
-      } else if (signInError) {
-        throw signInError
-      } else if (data.session) {
+      })
+      if (error) throw error
+      setView('token')
+    } catch (err) {
+      console.error(err)
+      const message = err instanceof Error ? err.message : 'An error occurred'
+      alert(message === "Signups not allowed for this instance" ? "Access denied: User not found." : message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleVerifyCode = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    try {
+      const { error, data } = await supabase.auth.verifyOtp({
+        email,
+        token,
+        type: 'email'
+      })
+      if (error) throw error
+
+      // If data.session exists, we are logged in
+      if (data.session) {
         navigate('/')
       }
     } catch (err) {
@@ -61,51 +71,75 @@ export function Login() {
           <p className="text-gray-500 text-sm mt-2">Macro Tracker</p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">Email Address</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 dark:bg-zinc-800/50 focus:ring-2 focus:ring-green-500 outline-none transition-all"
-                placeholder="you@example.com"
-                required
-              />
+        {view === 'email' ? (
+          <form onSubmit={handleSendCode} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">Email Address</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 dark:bg-zinc-800/50 focus:ring-2 focus:ring-green-500 outline-none transition-all"
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
             </div>
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">Password</label>
-            <div className="relative">
-              <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 dark:bg-zinc-800/50 focus:ring-2 focus:ring-green-500 outline-none transition-all"
-                placeholder="••••••••"
-                required
-              />
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-4 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 shadow-lg shadow-green-500/20 transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
+            >
+              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
+                <>
+                  Send Access Code
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </>
+              )}
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleVerifyCode} className="space-y-6">
+            <div className="space-y-2">
+              <button
+                type="button"
+                onClick={() => setView('email')}
+                className="text-xs text-green-600 font-bold flex items-center gap-1 hover:underline mb-2"
+              >
+                <ChevronLeft className="w-3 h-3" /> Change Email
+              </button>
+              <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">Enter 6-digit Code</label>
+              <div className="relative">
+                <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  value={token}
+                  onChange={e => setToken(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-zinc-700 dark:bg-zinc-800/50 text-2xl tracking-[0.5em] font-mono text-center focus:ring-2 focus:ring-green-500 outline-none transition-all"
+                  placeholder="000000"
+                  maxLength={6}
+                  required
+                  autoFocus
+                />
+              </div>
+              <p className="text-xs text-center text-gray-500 mt-2">
+                We sent it to <span className="font-bold text-gray-700 dark:text-gray-300">{email}</span>
+              </p>
             </div>
-          </div>
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-4 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 shadow-lg shadow-green-500/20 transition-all flex items-center justify-center gap-2 group disabled:opacity-50"
-          >
-            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
-              <>
-                Sign In / Sign Up
-                <span className="group-hover:translate-x-1 transition-transform">→</span>
-              </>
-            )}
-          </button>
-          <p className="text-xs text-center text-gray-500 mt-4">
-            First time? Just enter email + password to create account
-          </p>
-        </form>
+
+            <button
+              type="submit"
+              disabled={isLoading || token.length < 6}
+              className="w-full py-4 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 shadow-lg shadow-green-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Verify & Sign In"}
+            </button>
+          </form>
+        )}
       </div>
     </div>
   )
