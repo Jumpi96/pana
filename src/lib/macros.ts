@@ -47,5 +47,7 @@ export function calculateWeeklyRebalance(
   const delta = actualTotal - expectedSoFar
   const perDayAdjustment = -delta / daysRemaining
 
-  return Math.round(perDayAdjustment)
+  const rounded = Math.round(perDayAdjustment)
+  // Convert -0 to +0 to avoid Object.is() equality issues
+  return rounded === 0 ? 0 : rounded
 }
