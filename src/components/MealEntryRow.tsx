@@ -119,6 +119,12 @@ export function MealEntryRow({ meal, onUpdate, isOnline }: Props) {
               <span>F: {macros.fat_g.toFixed(0)}g</span>
             </div>
 
+            {meal.alcohol_calories > 0 && (
+              <div className="flex items-center gap-1 text-purple-600 dark:text-purple-400">
+                <span>🍷 {meal.alcohol_calories.toFixed(0)} cal from alcohol ({meal.alcohol_g.toFixed(1)}g)</span>
+              </div>
+            )}
+
             {meal.uncertainty && (
               <div className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
                 <AlertCircle className="w-3 h-3" />

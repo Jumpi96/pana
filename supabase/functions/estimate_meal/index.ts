@@ -156,24 +156,28 @@ Range sizing: Use tighter ranges for specific meals (±20%), wider ranges for le
     }
 
     // Validate that calories match macros (not including alcohol)
-    // Allow 20% tolerance for rounding and estimation variance
+    // Use 30% tolerance OR minimum 15 calories tolerance (whichever is larger)
+    // This handles both regular meals and alcohol-heavy items (like wine)
     const expectedCaloriesMin = (estimate.protein_g_min * 4) + (estimate.carbs_g_min * 4) + (estimate.fat_g_min * 9)
     const expectedCaloriesMax = (estimate.protein_g_max * 4) + (estimate.carbs_g_max * 4) + (estimate.fat_g_max * 9)
-    const toleranceMin = expectedCaloriesMin * 0.2
-    const toleranceMax = expectedCaloriesMax * 0.2
+    const toleranceMin = Math.max(expectedCaloriesMin * 0.3, 15)
+    const toleranceMax = Math.max(expectedCaloriesMax * 0.3, 15)
 
-    if (
-      Math.abs(estimate.calories_min - expectedCaloriesMin) > toleranceMin ||
-      Math.abs(estimate.calories_max - expectedCaloriesMax) > toleranceMax
-    ) {
+    const diffMin = Math.abs(estimate.calories_min - expectedCaloriesMin)
+    const diffMax = Math.abs(estimate.calories_max - expectedCaloriesMax)
+
+    if (diffMin > toleranceMin || diffMax > toleranceMax) {
       console.error('Calorie mismatch detected:', {
         provided: { min: estimate.calories_min, max: estimate.calories_max },
         expected: { min: expectedCaloriesMin, max: expectedCaloriesMax },
+        difference: { min: diffMin, max: diffMax },
+        tolerance: { min: toleranceMin, max: toleranceMax },
         macros: {
           protein: { min: estimate.protein_g_min, max: estimate.protein_g_max },
           carbs: { min: estimate.carbs_g_min, max: estimate.carbs_g_max },
           fat: { min: estimate.fat_g_min, max: estimate.fat_g_max }
-        }
+        },
+        alcohol: { g: estimate.alcohol_g, calories: estimate.alcohol_calories }
       })
       throw new Error('Calorie values do not match macros. Alcohol should not be included in calories_min/max.')
     }
