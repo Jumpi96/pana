@@ -108,25 +108,17 @@ export function WeeklyView() {
     ? calculateWeeklyRebalance(totalsCompleted.calories, expected.calories * 7, daysElapsed, daysRemaining)
     : 0
 
-  const macroOverages = (() => {
-    if (!totalsCompleted || !expected || daysElapsed === 0) return null
-    const expectedPerDay = {
-      protein_g: expected.protein_g,
-      carbs_g: expected.carbs_g,
-      fat_g: expected.fat_g
-    }
-    const expectedSoFar = {
-      protein_g: expectedPerDay.protein_g * daysElapsed,
-      carbs_g: expectedPerDay.carbs_g * daysElapsed,
-      fat_g: expectedPerDay.fat_g * daysElapsed
-    }
+  const rebalanceProtein = (totalsCompleted && expected && daysRemaining > 0)
+    ? calculateWeeklyRebalance(totalsCompleted.protein_g, expected.protein_g * 7, daysElapsed, daysRemaining, 1)
+    : 0
 
-    return {
-      protein_g: (totalsCompleted.protein_g - expectedSoFar.protein_g) / daysElapsed,
-      carbs_g: (totalsCompleted.carbs_g - expectedSoFar.carbs_g) / daysElapsed,
-      fat_g: (totalsCompleted.fat_g - expectedSoFar.fat_g) / daysElapsed
-    }
-  })()
+  const rebalanceCarbs = (totalsCompleted && expected && daysRemaining > 0)
+    ? calculateWeeklyRebalance(totalsCompleted.carbs_g, expected.carbs_g * 7, daysElapsed, daysRemaining, 1)
+    : 0
+
+  const rebalanceFat = (totalsCompleted && expected && daysRemaining > 0)
+    ? calculateWeeklyRebalance(totalsCompleted.fat_g, expected.fat_g * 7, daysElapsed, daysRemaining, 1)
+    : 0
 
   const macroTips = macroOverages ? [
     { label: 'Protein', value: macroOverages.protein_g, emoji: '🥩', msg: 'Focus on lean meats or shakes next time!' },
