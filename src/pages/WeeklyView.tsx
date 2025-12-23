@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Calendar, Home, Settings as SettingsIcon, Loader2 } from 'lucide-react'
 import { getLocalDate, getMondayOfWeek, addDays, formatDate } from '../lib/utils'
-import { fetchUserSettings, fetchWeeklyTotals } from '../lib/api'
+import { fetchDailyTotals, fetchUserSettings, fetchWeeklyTotals } from '../lib/api'
 import { calculateExpectedMacros, calculateWeeklyRebalance } from '../lib/macros'
 import { MacrosSummary } from '../components/MacrosSummary'
 import { Onboarding } from '../components/Onboarding'
@@ -14,18 +14,27 @@ export function WeeklyView() {
   )
   const [settings, setSettings] = useState<UserSettings | null>(null)
   const [totals, setTotals] = useState<DailyTotals | null>(null)
+  const [todayTotals, setTodayTotals] = useState<DailyTotals | null>(null)
   const [loading, setLoading] = useState(true)
 
   const loadData = useCallback(async () => {
     try {
       setLoading(true)
-      const [settingsData, totalsData] = await Promise.all([
+      const todayLocal = getLocalDate()
+      const todayDate = parseLocalDate(todayLocal)
+      const weekStartDate = parseLocalDate(currentWeekStart)
+      const weekEndDate = parseLocalDate(addDays(currentWeekStart, 6))
+      const isTodayInWeek = todayDate >= weekStartDate && todayDate <= weekEndDate
+
+      const [settingsData, totalsData, todayData] = await Promise.all([
         fetchUserSettings(),
-        fetchWeeklyTotals(currentWeekStart)
+        fetchWeeklyTotals(currentWeekStart),
+        isTodayInWeek ? fetchDailyTotals(todayLocal) : Promise.resolve(null)
       ])
 
       setSettings(settingsData)
       setTotals(totalsData)
+      setTodayTotals(todayData)
     } catch (error) {
       console.error('Failed to load data:', error)
     } finally {
@@ -49,25 +58,43 @@ export function WeeklyView() {
     setCurrentWeekStart(getLocalDate(getMondayOfWeek(new Date())))
   }
 
+  function parseLocalDate(dateStr: string) {
+    const [year, month, day] = dateStr.split('-').map(Number)
+    return new Date(year, month - 1, day)
+  }
+
   // Calculate days elapsed and remaining
   const today = getLocalDate()
   const weekEnd = addDays(currentWeekStart, 6)
-  const weekStartDate = new Date(currentWeekStart + 'T00:00:00')
-  const weekEndDate = new Date(weekEnd + 'T00:00:00')
-  const todayDate = new Date(today + 'T00:00:00')
+  const weekStartDate = parseLocalDate(currentWeekStart)
+  const weekEndDate = parseLocalDate(weekEnd)
+  const todayDate = parseLocalDate(today)
 
   let daysElapsed = 0
   let daysRemaining = 7
 
   if (todayDate >= weekStartDate && todayDate <= weekEndDate) {
-    // Current week
-    daysElapsed = Math.floor((todayDate.getTime() - weekStartDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
+    // Current week - only count fully completed days, not the in-progress day
+    daysElapsed = Math.floor((todayDate.getTime() - weekStartDate.getTime()) / (1000 * 60 * 60 * 24))
     daysRemaining = 7 - daysElapsed
   } else if (todayDate > weekEndDate) {
     // Past week
     daysElapsed = 7
     daysRemaining = 0
   }
+
+  const totalsCompleted = (() => {
+    if (!totals) return null
+    const isTodayInWeek = todayDate >= weekStartDate && todayDate <= weekEndDate
+    if (!isTodayInWeek || !todayTotals) return totals
+
+    return {
+      calories: totals.calories - todayTotals.calories,
+      protein_g: totals.protein_g - todayTotals.protein_g,
+      carbs_g: totals.carbs_g - todayTotals.carbs_g,
+      fat_g: totals.fat_g - todayTotals.fat_g
+    }
+  })()
 
   const expected = settings ? calculateExpectedMacros(settings) : null
   const weeklyExpected = expected ? {
@@ -77,20 +104,20 @@ export function WeeklyView() {
     fat_g: expected.fat_g * 7
   } : null
 
-  const rebalanceCalories = (totals && expected && daysRemaining > 0)
-    ? calculateWeeklyRebalance(totals.calories, expected.calories * 7, daysElapsed, daysRemaining)
+  const rebalanceCalories = (totalsCompleted && expected && daysRemaining > 0)
+    ? calculateWeeklyRebalance(totalsCompleted.calories, expected.calories * 7, daysElapsed, daysRemaining)
     : 0
 
-  const rebalanceProtein = (totals && expected && daysRemaining > 0)
-    ? calculateWeeklyRebalance(totals.protein_g, expected.protein_g * 7, daysElapsed, daysRemaining, 1)
+  const rebalanceProtein = (totalsCompleted && expected && daysRemaining > 0)
+    ? calculateWeeklyRebalance(totalsCompleted.protein_g, expected.protein_g * 7, daysElapsed, daysRemaining, 1)
     : 0
 
-  const rebalanceCarbs = (totals && expected && daysRemaining > 0)
-    ? calculateWeeklyRebalance(totals.carbs_g, expected.carbs_g * 7, daysElapsed, daysRemaining, 1)
+  const rebalanceCarbs = (totalsCompleted && expected && daysRemaining > 0)
+    ? calculateWeeklyRebalance(totalsCompleted.carbs_g, expected.carbs_g * 7, daysElapsed, daysRemaining, 1)
     : 0
 
-  const rebalanceFat = (totals && expected && daysRemaining > 0)
-    ? calculateWeeklyRebalance(totals.fat_g, expected.fat_g * 7, daysElapsed, daysRemaining, 1)
+  const rebalanceFat = (totalsCompleted && expected && daysRemaining > 0)
+    ? calculateWeeklyRebalance(totalsCompleted.fat_g, expected.fat_g * 7, daysElapsed, daysRemaining, 1)
     : 0
 
   const macroTips = [
