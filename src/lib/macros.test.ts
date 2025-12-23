@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { calculateExpectedMacros, resolveValue, calculateMealMacros, calculateWeeklyRebalance } from './macros'
+import { calculateCompletedDayAverageDelta, calculateExpectedMacros, resolveValue, calculateMealMacros, calculateWeeklyRebalance } from './macros'
 import type { UserSettings, MealEntry } from '../types'
 
 describe('calculateExpectedMacros', () => {
@@ -158,6 +158,23 @@ describe('calculateMealMacros', () => {
     expect(macros.protein_g).toBe(10)
     expect(macros.carbs_g).toBe(15)
     expect(macros.fat_g).toBe(5)
+  })
+})
+
+describe('calculateCompletedDayAverageDelta', () => {
+  it('averages the overage across completed days', () => {
+    const delta = calculateCompletedDayAverageDelta(600, 100, 1)
+    expect(delta).toBe(500)
+  })
+
+  it('handles multiple completed days', () => {
+    const delta = calculateCompletedDayAverageDelta(900, 100, 3)
+    // average actual = 300, expected per day = 100, delta = +200
+    expect(delta).toBe(200)
+  })
+
+  it('returns 0 when no days elapsed', () => {
+    expect(calculateCompletedDayAverageDelta(0, 100, 0)).toBe(0)
   })
 })
 

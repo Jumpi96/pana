@@ -35,6 +35,22 @@ export function calculateMealMacros(meal: MealEntry) {
   }
 }
 
+export function calculateCompletedDayAverageDelta(
+  actualTotal: number,
+  expectedPerDay: number,
+  daysElapsed: number,
+  precision = 1
+): number {
+  if (daysElapsed <= 0) return 0
+
+  const actualAverage = actualTotal / daysElapsed
+  const delta = actualAverage - expectedPerDay
+
+  const factor = Math.pow(10, precision)
+  const rounded = Math.round(delta * factor) / factor
+  return Object.is(rounded, -0) ? 0 : rounded
+}
+
 export function calculateWeeklyRebalance(
   actualTotal: number,
   expectedTotal: number,
