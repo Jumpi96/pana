@@ -60,8 +60,8 @@ export function WeeklyView() {
   let daysRemaining = 7
 
   if (todayDate >= weekStartDate && todayDate <= weekEndDate) {
-    // Current week
-    daysElapsed = Math.floor((todayDate.getTime() - weekStartDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
+    // Current week - only count fully completed days, not the in-progress day
+    daysElapsed = Math.floor((todayDate.getTime() - weekStartDate.getTime()) / (1000 * 60 * 60 * 24))
     daysRemaining = 7 - daysElapsed
   } else if (todayDate > weekEndDate) {
     // Past week
