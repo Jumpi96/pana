@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Calendar, Home, Settings as SettingsIcon, Loader2 } from 'lucide-react'
 import { getLocalDate, getMondayOfWeek, addDays, formatDate } from '../lib/utils'
 import { fetchDailyTotals, fetchUserSettings, fetchWeeklyTotals } from '../lib/api'
-import { calculateExpectedMacros, calculateWeeklyRebalance } from '../lib/macros'
+import { calculateCompletedDayAverageDelta, calculateExpectedMacros, calculateWeeklyRebalance } from '../lib/macros'
 import { MacrosSummary } from '../components/MacrosSummary'
 import { Onboarding } from '../components/Onboarding'
 import type { UserSettings, DailyTotals } from '../types'
@@ -108,23 +108,21 @@ export function WeeklyView() {
     ? calculateWeeklyRebalance(totalsCompleted.calories, expected.calories * 7, daysElapsed, daysRemaining)
     : 0
 
-  const rebalanceProtein = (totalsCompleted && expected && daysRemaining > 0)
-    ? calculateWeeklyRebalance(totalsCompleted.protein_g, expected.protein_g * 7, daysElapsed, daysRemaining, 1)
-    : 0
+  const macroAverages = totalsCompleted && expected && daysElapsed > 0
+    ? {
+        protein: calculateCompletedDayAverageDelta(totalsCompleted.protein_g, expected.protein_g, daysElapsed, 1),
+        carbs: calculateCompletedDayAverageDelta(totalsCompleted.carbs_g, expected.carbs_g, daysElapsed, 1),
+        fat: calculateCompletedDayAverageDelta(totalsCompleted.fat_g, expected.fat_g, daysElapsed, 1)
+      }
+    : null
 
-  const rebalanceCarbs = (totalsCompleted && expected && daysRemaining > 0)
-    ? calculateWeeklyRebalance(totalsCompleted.carbs_g, expected.carbs_g * 7, daysElapsed, daysRemaining, 1)
-    : 0
-
-  const rebalanceFat = (totalsCompleted && expected && daysRemaining > 0)
-    ? calculateWeeklyRebalance(totalsCompleted.fat_g, expected.fat_g * 7, daysElapsed, daysRemaining, 1)
-    : 0
-
-  const macroTips = [
-    { label: 'Protein', value: rebalanceProtein, emoji: '🥩', msg: 'Focus on lean meats or shakes next time!' },
-    { label: 'Carbs', value: rebalanceCarbs, emoji: '🍞', msg: 'Maybe swap the bread for some greens?' },
-    { label: 'Fat', value: rebalanceFat, emoji: '🥑', msg: 'Easy on the oils and butter today!' }
-  ].filter(tip => tip.value < -2) // Only show if they need to cut significantly
+  const macroTips = macroAverages
+    ? [
+        { label: 'Protein', value: macroAverages.protein, emoji: '🥩', msg: 'Focus on lean meats or shakes next time!' },
+        { label: 'Carbs', value: macroAverages.carbs, emoji: '🍞', msg: 'Maybe swap the bread for some greens?' },
+        { label: 'Fat', value: macroAverages.fat, emoji: '🥑', msg: 'Easy on the oils and butter today!' }
+      ].filter(tip => tip.value > 2) // Only show if they are averaging significantly over the goal so far
+    : []
 
   if (loading) {
     return (
