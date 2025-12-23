@@ -49,19 +49,24 @@ export function WeeklyView() {
     setCurrentWeekStart(getLocalDate(getMondayOfWeek(new Date())))
   }
 
+  function parseLocalDate(dateStr: string) {
+    const [year, month, day] = dateStr.split('-').map(Number)
+    return new Date(year, month - 1, day)
+  }
+
   // Calculate days elapsed and remaining
   const today = getLocalDate()
   const weekEnd = addDays(currentWeekStart, 6)
-  const weekStartDate = new Date(currentWeekStart + 'T00:00:00')
-  const weekEndDate = new Date(weekEnd + 'T00:00:00')
-  const todayDate = new Date(today + 'T00:00:00')
+  const weekStartDate = parseLocalDate(currentWeekStart)
+  const weekEndDate = parseLocalDate(weekEnd)
+  const todayDate = parseLocalDate(today)
 
   let daysElapsed = 0
   let daysRemaining = 7
 
   if (todayDate >= weekStartDate && todayDate <= weekEndDate) {
-    // Current week
-    daysElapsed = Math.floor((todayDate.getTime() - weekStartDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
+    // Current week - only count fully completed days, not the in-progress day
+    daysElapsed = Math.floor((todayDate.getTime() - weekStartDate.getTime()) / (1000 * 60 * 60 * 24))
     daysRemaining = 7 - daysElapsed
   } else if (todayDate > weekEndDate) {
     // Past week
