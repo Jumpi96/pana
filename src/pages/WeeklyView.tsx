@@ -108,11 +108,23 @@ export function WeeklyView() {
     ? calculateWeeklyRebalance(totalsCompleted.calories, expected.calories * 7, daysElapsed, daysRemaining)
     : 0
 
-  const macroTips = macroOverages ? [
-    { label: 'Protein', value: macroOverages.protein_g, emoji: '🥩', msg: 'Focus on lean meats or shakes next time!' },
-    { label: 'Carbs', value: macroOverages.carbs_g, emoji: '🍞', msg: 'Maybe swap the bread for some greens?' },
-    { label: 'Fat', value: macroOverages.fat_g, emoji: '🥑', msg: 'Easy on the oils and butter today!' }
-  ].filter(tip => tip.value > 2) : [] // Only show if they are averaging significantly over per completed day
+  const rebalanceProtein = (totalsCompleted && expected && daysRemaining > 0)
+    ? calculateWeeklyRebalance(totalsCompleted.protein_g, expected.protein_g * 7, daysElapsed, daysRemaining, 1)
+    : 0
+
+  const rebalanceCarbs = (totalsCompleted && expected && daysRemaining > 0)
+    ? calculateWeeklyRebalance(totalsCompleted.carbs_g, expected.carbs_g * 7, daysElapsed, daysRemaining, 1)
+    : 0
+
+  const rebalanceFat = (totalsCompleted && expected && daysRemaining > 0)
+    ? calculateWeeklyRebalance(totalsCompleted.fat_g, expected.fat_g * 7, daysElapsed, daysRemaining, 1)
+    : 0
+
+  const macroTips = [
+    { label: 'Protein', value: rebalanceProtein, emoji: '🥩', msg: 'Focus on lean meats or shakes next time!' },
+    { label: 'Carbs', value: rebalanceCarbs, emoji: '🍞', msg: 'Maybe swap the bread for some greens?' },
+    { label: 'Fat', value: rebalanceFat, emoji: '🥑', msg: 'Easy on the oils and butter today!' }
+  ].filter(tip => tip.value < -2) // Only show if they need to cut significantly
 
   if (loading) {
     return (
