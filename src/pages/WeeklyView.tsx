@@ -116,6 +116,41 @@ export function WeeklyView() {
       }
     : null
 
+  const calorieAverageDelta = totalsCompleted && expected && daysElapsed > 0
+    ? calculateCompletedDayAverageDelta(totalsCompleted.calories, expected.calories, daysElapsed, 0)
+    : null
+
+  const lowIntakeAlerts = [] as {
+    label: string
+    value: number
+    unit: string
+    emoji: string
+    tip: string
+    precision: number
+  }[]
+
+  if (calorieAverageDelta !== null && calorieAverageDelta < -50) {
+    lowIntakeAlerts.push({
+      label: 'Calories',
+      value: calorieAverageDelta,
+      unit: 'kcal',
+      emoji: '🔥',
+      tip: 'Add a hearty snack or bigger portion to refuel.',
+      precision: 0
+    })
+  }
+
+  if (macroAverages && macroAverages.protein < -5) {
+    lowIntakeAlerts.push({
+      label: 'Protein',
+      value: macroAverages.protein,
+      unit: 'g',
+      emoji: '🥩',
+      tip: 'Layer in a protein shake, yogurt, or lean meat.',
+      precision: 1
+    })
+  }
+
   const macroTips = macroAverages
     ? [
         { label: 'Protein', value: macroAverages.protein, emoji: '🥩', msg: 'Focus on lean meats or shakes next time!' },
@@ -244,6 +279,31 @@ export function WeeklyView() {
                 </span>
               </div>
             </div>
+
+            {lowIntakeAlerts.length > 0 && (
+              <div className="bg-red-50 dark:bg-red-900/10 rounded-3xl border-[3px] border-red-500 p-8 shadow-[8px_8px_0px_0px_rgba(239,68,68,1)] dark:shadow-[8px_8px_0px_0px_rgba(239,68,68,0.15)]">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="text-3xl">🚨</div>
+                  <h2 className="text-2xl font-black uppercase tracking-tighter italic text-red-700 dark:text-red-300">Low Intake Alerts</h2>
+                </div>
+
+                <div className="space-y-4">
+                  {lowIntakeAlerts.map(alert => (
+                    <div key={alert.label} className="flex gap-4 p-4 bg-white dark:bg-zinc-950 rounded-2xl border-2 border-red-200 animate-in slide-in-from-left-2 duration-300">
+                      <div className="text-2xl pt-1">{alert.emoji}</div>
+                      <div>
+                        <div className="text-sm font-black uppercase tracking-tighter italic text-red-600">
+                          Too low {alert.label}!
+                        </div>
+                        <div className="text-xs font-bold text-gray-600 dark:text-gray-400 mt-1">
+                          You are averaging <span className="text-black dark:text-white font-black">{Math.abs(alert.value).toFixed(alert.precision)}{alert.unit}</span> under your daily goal. {alert.tip}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Macro Recommendations */}
             {macroTips.length > 0 && (
