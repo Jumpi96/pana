@@ -1,6 +1,9 @@
 -- Migrate embeddings from OpenAI (1536 dimensions) to Google (768 dimensions)
 -- This requires dropping and recreating the embedding column and clearing existing data
 
+-- Clear existing embeddings first (can't convert dimensions with data)
+truncate table meal_embeddings;
+
 -- Drop existing index
 drop index if exists idx_meal_embeddings_vector;
 
@@ -12,10 +15,6 @@ alter table meal_embeddings
 create index idx_meal_embeddings_vector
   on meal_embeddings
   using hnsw (embedding vector_cosine_ops);
-
--- Clear existing embeddings (they need to be regenerated with the new model)
--- New embeddings will be generated automatically when meals are created/updated
-truncate table meal_embeddings;
 
 -- Update the search function to work with 768-dimensional vectors
 create or replace function search_similar_meals_vector(
