@@ -2,8 +2,11 @@ import { supabase } from './supabase'
 import type {
   UserSettings,
   MealEntry,
+  MealGroup,
+  MealUnit,
   DailyTotals,
   EstimateResponse,
+  EstimatedItem,
   SimilarMeal,
   PortionLevel
 } from '../types'
@@ -93,6 +96,102 @@ export async function deleteMealEntry(id: string) {
 
 export async function updatePortionLevel(id: string, portionLevel: PortionLevel) {
   return updateMealEntry(id, { portion_level: portionLevel })
+}
+
+// Insert multiple meal entries from a single estimation (multi-item support)
+export async function insertMealEntries(
+  items: EstimatedItem[],
+  dateLocal: string,
+  mealGroup: MealGroup,
+  startPosition: number
+): Promise<MealEntry[]> {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Not authenticated')
+
+  const entries = items.map((item, index) => ({
+    user_id: user.id,
+    date_local: dateLocal,
+    meal_group: mealGroup,
+    position: startPosition + index,
+    description: item.context_note
+      ? `${item.normalized_name} (${item.context_note})`
+      : item.normalized_name,
+    quantity: item.quantity,
+    unit: item.unit,
+    calories_min: item.calories_min,
+    calories_max: item.calories_max,
+    protein_g_min: item.protein_g_min,
+    protein_g_max: item.protein_g_max,
+    carbs_g_min: item.carbs_g_min,
+    carbs_g_max: item.carbs_g_max,
+    fat_g_min: item.fat_g_min,
+    fat_g_max: item.fat_g_max,
+    alcohol_g: item.alcohol_g,
+    alcohol_calories: item.alcohol_calories,
+    base_calories_min: item.base_calories_min,
+    base_calories_max: item.base_calories_max,
+    base_protein_g_min: item.base_protein_g_min,
+    base_protein_g_max: item.base_protein_g_max,
+    base_carbs_g_min: item.base_carbs_g_min,
+    base_carbs_g_max: item.base_carbs_g_max,
+    base_fat_g_min: item.base_fat_g_min,
+    base_fat_g_max: item.base_fat_g_max,
+    base_alcohol_g: item.base_alcohol_g,
+    base_alcohol_calories: item.base_alcohol_calories,
+    uncertainty: item.uncertainty,
+    portion_level: 'ok' as PortionLevel,
+    last_estimated_at: new Date().toISOString()
+  }))
+
+  const { data, error } = await supabase
+    .from('meal_entries')
+    .insert(entries)
+    .select()
+
+  if (error) throw error
+  return data
+}
+
+// Update meal quantity with proportional macro recalculation
+export async function updateMealQuantity(
+  id: string,
+  newQuantity: number,
+  newUnit?: MealUnit
+): Promise<MealEntry> {
+  // First fetch the current entry to get base macros
+  const { data: current, error: fetchError } = await supabase
+    .from('meal_entries')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (fetchError) throw fetchError
+
+  // Check if base macros exist
+  if (current.base_calories_min === null) {
+    throw new Error('Cannot recalculate macros: base values not available for this entry')
+  }
+
+  // Calculate new macros proportionally
+  const updates: Partial<MealEntry> = {
+    quantity: newQuantity,
+    calories_min: Math.round(current.base_calories_min * newQuantity),
+    calories_max: Math.round(current.base_calories_max * newQuantity),
+    protein_g_min: Math.round(current.base_protein_g_min * newQuantity * 10) / 10,
+    protein_g_max: Math.round(current.base_protein_g_max * newQuantity * 10) / 10,
+    carbs_g_min: Math.round(current.base_carbs_g_min * newQuantity * 10) / 10,
+    carbs_g_max: Math.round(current.base_carbs_g_max * newQuantity * 10) / 10,
+    fat_g_min: Math.round(current.base_fat_g_min * newQuantity * 10) / 10,
+    fat_g_max: Math.round(current.base_fat_g_max * newQuantity * 10) / 10,
+    alcohol_g: Math.round(current.base_alcohol_g * newQuantity * 10) / 10,
+    alcohol_calories: Math.round(current.base_alcohol_calories * newQuantity),
+  }
+
+  if (newUnit) {
+    updates.unit = newUnit
+  }
+
+  return updateMealEntry(id, updates)
 }
 
 // Daily Totals

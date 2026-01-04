@@ -11,6 +11,8 @@ interface SearchRequest {
 interface SimilarMeal {
   id: string
   description: string
+  quantity: number
+  unit: string
   calories_min: number
   calories_max: number
   protein_g_min: number
@@ -21,6 +23,16 @@ interface SimilarMeal {
   fat_g_max: number
   alcohol_g: number
   alcohol_calories: number
+  base_calories_min: number | null
+  base_calories_max: number | null
+  base_protein_g_min: number | null
+  base_protein_g_max: number | null
+  base_carbs_g_min: number | null
+  base_carbs_g_max: number | null
+  base_fat_g_min: number | null
+  base_fat_g_max: number | null
+  base_alcohol_g: number | null
+  base_alcohol_calories: number | null
   uncertainty: boolean
   date_local: string
   similarity: number

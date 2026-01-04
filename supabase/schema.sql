@@ -39,6 +39,23 @@ create table meal_entries (
   alcohol_g numeric not null default 0 check (alcohol_g >= 0),
   alcohol_calories numeric not null default 0 check (alcohol_calories >= 0),
 
+  -- Quantity and unit (e.g., 50g, 2 pieces, 1 cup)
+  quantity numeric not null default 1 check (quantity > 0),
+  unit text not null default 'portion' check (unit in ('portion', 'g', 'ml', 'spoon', 'piece', 'cup')),
+
+  -- Base macros per 1 unit (for proportional recalculation when quantity changes)
+  -- NULL for legacy entries (quantity editing disabled)
+  base_calories_min numeric check (base_calories_min is null or base_calories_min >= 0),
+  base_calories_max numeric check (base_calories_max is null or base_calories_max >= 0),
+  base_protein_g_min numeric check (base_protein_g_min is null or base_protein_g_min >= 0),
+  base_protein_g_max numeric check (base_protein_g_max is null or base_protein_g_max >= 0),
+  base_carbs_g_min numeric check (base_carbs_g_min is null or base_carbs_g_min >= 0),
+  base_carbs_g_max numeric check (base_carbs_g_max is null or base_carbs_g_max >= 0),
+  base_fat_g_min numeric check (base_fat_g_min is null or base_fat_g_min >= 0),
+  base_fat_g_max numeric check (base_fat_g_max is null or base_fat_g_max >= 0),
+  base_alcohol_g numeric check (base_alcohol_g is null or base_alcohol_g >= 0),
+  base_alcohol_calories numeric check (base_alcohol_calories is null or base_alcohol_calories >= 0),
+
   -- Uncertainty and portion selection
   uncertainty boolean not null default false,
   portion_level text not null default 'ok' check (portion_level in ('light', 'ok', 'heavy')),

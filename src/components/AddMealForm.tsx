@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Loader2, AlertCircle } from 'lucide-react'
-import { insertMealEntry, estimateMeal, searchSimilarMeals, updateMealEmbedding } from '../lib/api'
+import { insertMealEntry, insertMealEntries, estimateMeal, searchSimilarMeals, updateMealEmbedding } from '../lib/api'
 import type { MealGroup, SimilarMeal } from '../types'
 import { useDebounce } from '../hooks/useDebounce'
 
@@ -88,21 +88,23 @@ export function AddMealForm({ mealGroup, date, position, onSave, onCancel }: Pro
       setError('')
       setIsEstimating(true)
 
-      const estimate = await estimateMeal(description)
+      // Get estimation with multi-item support
+      const response = await estimateMeal(description)
 
-      const entry = await insertMealEntry({
-        date_local: date,
-        meal_group: mealGroup,
-        position,
-        description: description.trim(),
-        ...estimate,
-        portion_level: 'ok',
-        last_estimated_at: new Date().toISOString()
-      })
+      // Insert all items (may be multiple if AI detected multiple foods)
+      const entries = await insertMealEntries(
+        response.items,
+        date,
+        mealGroup,
+        position
+      )
 
-      // Update embedding asynchronously (non-blocking)
-      updateMealEmbedding(entry.id, description.trim()).catch(err => {
-        console.error('Failed to update embedding:', err)
+      // Update embeddings for all entries asynchronously
+      entries.forEach((entry, index) => {
+        const item = response.items[index]
+        updateMealEmbedding(entry.id, item.normalized_name).catch(err => {
+          console.error('Failed to update embedding:', err)
+        })
       })
 
       onSave()
@@ -125,6 +127,8 @@ export function AddMealForm({ mealGroup, date, position, onSave, onCancel }: Pro
         meal_group: mealGroup,
         position,
         description: suggestion.description,
+        quantity: suggestion.quantity,
+        unit: suggestion.unit,
         calories_min: suggestion.calories_min,
         calories_max: suggestion.calories_max,
         protein_g_min: suggestion.protein_g_min,
@@ -135,6 +139,16 @@ export function AddMealForm({ mealGroup, date, position, onSave, onCancel }: Pro
         fat_g_max: suggestion.fat_g_max,
         alcohol_g: suggestion.alcohol_g,
         alcohol_calories: suggestion.alcohol_calories,
+        base_calories_min: suggestion.base_calories_min,
+        base_calories_max: suggestion.base_calories_max,
+        base_protein_g_min: suggestion.base_protein_g_min,
+        base_protein_g_max: suggestion.base_protein_g_max,
+        base_carbs_g_min: suggestion.base_carbs_g_min,
+        base_carbs_g_max: suggestion.base_carbs_g_max,
+        base_fat_g_min: suggestion.base_fat_g_min,
+        base_fat_g_max: suggestion.base_fat_g_max,
+        base_alcohol_g: suggestion.base_alcohol_g,
+        base_alcohol_calories: suggestion.base_alcohol_calories,
         uncertainty: suggestion.uncertainty,
         portion_level: 'ok',
         last_estimated_at: new Date().toISOString()

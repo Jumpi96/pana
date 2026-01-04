@@ -37,3 +37,6 @@ terraform/terraform.tfstate*
 terraform/package.zip
 terraform/lambdas/*/package/
 terraform/lambdas/*/package.zip
+
+# Supabase
+supabase/.temp/

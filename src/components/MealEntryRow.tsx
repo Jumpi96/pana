@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Trash2, Edit2, Check, X, AlertCircle } from 'lucide-react'
-import { updatePortionLevel, deleteMealEntry, estimateMeal, updateMealEntry, updateMealEmbedding } from '../lib/api'
-import { calculateMealMacros } from '../lib/macros'
+import { updatePortionLevel, deleteMealEntry, estimateMeal, updateMealEntry, updateMealEmbedding, updateMealQuantity } from '../lib/api'
+import { calculateMealMacros, canEditQuantity } from '../lib/macros'
+import { UNIT_LABELS } from '../lib/units'
 import type { MealEntry, PortionLevel } from '../types'
 import { cn } from '../lib/utils'
 
@@ -16,8 +17,12 @@ export function MealEntryRow({ meal, onUpdate, isOnline }: Props) {
   const [isEditing, setIsEditing] = useState(false)
   const [editedDescription, setEditedDescription] = useState(meal.description)
   const [isSaving, setIsSaving] = useState(false)
+  const [isEditingQuantity, setIsEditingQuantity] = useState(false)
+  const [editedQuantity, setEditedQuantity] = useState(meal.quantity.toString())
+  const [isSavingQuantity, setIsSavingQuantity] = useState(false)
 
   const macros = calculateMealMacros(meal)
+  const quantityEditable = canEditQuantity(meal)
 
   async function handlePortionChange(level: PortionLevel) {
     try {
@@ -88,6 +93,33 @@ export function MealEntryRow({ meal, onUpdate, isOnline }: Props) {
     setIsEditing(false)
   }
 
+  async function handleSaveQuantity() {
+    if (!isOnline) return
+
+    const newQuantity = parseFloat(editedQuantity)
+    if (isNaN(newQuantity) || newQuantity <= 0) {
+      alert('Please enter a valid quantity greater than 0')
+      return
+    }
+
+    try {
+      setIsSavingQuantity(true)
+      await updateMealQuantity(meal.id, newQuantity)
+      setIsEditingQuantity(false)
+      onUpdate()
+    } catch (error) {
+      console.error('Failed to update quantity:', error)
+      alert('Failed to update quantity')
+    } finally {
+      setIsSavingQuantity(false)
+    }
+  }
+
+  function handleCancelQuantityEdit() {
+    setEditedQuantity(meal.quantity.toString())
+    setIsEditingQuantity(false)
+  }
+
   return (
     <div className="px-6 py-4 hover:bg-gray-50 dark:hover:bg-zinc-900 transition-colors">
       <div className="flex items-start justify-between gap-4">
@@ -132,6 +164,56 @@ export function MealEntryRow({ meal, onUpdate, isOnline }: Props) {
               </div>
             )}
           </div>
+
+          {/* Quantity Editor - shown when not editing description and quantity is editable */}
+          {!isEditing && quantityEditable && (
+            <div className="mt-2">
+              {isEditingQuantity ? (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    value={editedQuantity}
+                    onChange={e => setEditedQuantity(e.target.value)}
+                    min="0.1"
+                    step="0.1"
+                    className="w-20 px-2 py-1 text-sm border rounded-lg border-green-300 dark:border-green-700 bg-white dark:bg-zinc-950 focus:ring-2 focus:ring-green-500 outline-none"
+                    disabled={isSavingQuantity}
+                    autoFocus
+                  />
+                  <span className="text-xs text-gray-500">{UNIT_LABELS[meal.unit]}</span>
+                  <button
+                    onClick={handleSaveQuantity}
+                    disabled={isSavingQuantity}
+                    className="p-1 rounded hover:bg-green-100 dark:hover:bg-green-900/20 text-green-600 dark:text-green-400 transition-colors disabled:opacity-50"
+                    title="Save quantity"
+                  >
+                    <Check className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={handleCancelQuantityEdit}
+                    disabled={isSavingQuantity}
+                    className="p-1 rounded hover:bg-gray-200 dark:hover:bg-zinc-800 transition-colors disabled:opacity-50"
+                    title="Cancel"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    setEditedQuantity(meal.quantity.toString())
+                    setIsEditingQuantity(true)
+                  }}
+                  disabled={!isOnline}
+                  className="text-xs text-gray-500 hover:text-green-600 dark:hover:text-green-400 flex items-center gap-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Edit quantity"
+                >
+                  <span>{meal.quantity} {UNIT_LABELS[meal.unit]}</span>
+                  <Edit2 className="w-3 h-3" />
+                </button>
+              )}
+            </div>
+          )}
 
           {/* Portion Level Buttons - hidden when editing */}
           {!isEditing && (

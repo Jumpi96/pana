@@ -35,6 +35,36 @@ export function calculateMealMacros(meal: MealEntry) {
   }
 }
 
+// Check if a meal entry can have its quantity edited
+// (only entries with base macros can be recalculated)
+export function canEditQuantity(meal: MealEntry): boolean {
+  return meal.base_calories_min !== null
+}
+
+// Scale macros by a new quantity (returns partial update object)
+export function scaleMacros(
+  meal: MealEntry,
+  newQuantity: number
+): Partial<MealEntry> | null {
+  if (meal.base_calories_min === null) {
+    return null
+  }
+
+  return {
+    quantity: newQuantity,
+    calories_min: Math.round(meal.base_calories_min * newQuantity),
+    calories_max: Math.round(meal.base_calories_max! * newQuantity),
+    protein_g_min: Math.round(meal.base_protein_g_min! * newQuantity * 10) / 10,
+    protein_g_max: Math.round(meal.base_protein_g_max! * newQuantity * 10) / 10,
+    carbs_g_min: Math.round(meal.base_carbs_g_min! * newQuantity * 10) / 10,
+    carbs_g_max: Math.round(meal.base_carbs_g_max! * newQuantity * 10) / 10,
+    fat_g_min: Math.round(meal.base_fat_g_min! * newQuantity * 10) / 10,
+    fat_g_max: Math.round(meal.base_fat_g_max! * newQuantity * 10) / 10,
+    alcohol_g: Math.round(meal.base_alcohol_g! * newQuantity * 10) / 10,
+    alcohol_calories: Math.round(meal.base_alcohol_calories! * newQuantity),
+  }
+}
+
 export function calculateCompletedDayAverageDelta(
   actualTotal: number,
   expectedPerDay: number,

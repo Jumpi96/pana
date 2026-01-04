@@ -7,7 +7,14 @@ interface EstimateRequest {
   description: string
 }
 
-interface EstimateResponse {
+type MealUnit = 'portion' | 'g' | 'ml' | 'spoon' | 'piece' | 'cup'
+
+interface EstimatedItem {
+  normalized_name: string
+  quantity: number
+  unit: MealUnit
+  context_note: string | null
+  // Current macros (for specified quantity)
   calories_min: number
   calories_max: number
   protein_g_min: number
@@ -19,6 +26,21 @@ interface EstimateResponse {
   alcohol_g: number
   alcohol_calories: number
   uncertainty: boolean
+  // Base macros (per 1 unit)
+  base_calories_min: number
+  base_calories_max: number
+  base_protein_g_min: number
+  base_protein_g_max: number
+  base_carbs_g_min: number
+  base_carbs_g_max: number
+  base_fat_g_min: number
+  base_fat_g_max: number
+  base_alcohol_g: number
+  base_alcohol_calories: number
+}
+
+interface EstimateResponse {
+  items: EstimatedItem[]
 }
 
 serve(async (req) => {
@@ -59,48 +81,93 @@ serve(async (req) => {
     }
 
     // Call OpenAI API
-    const prompt = `You are a nutrition expert. Estimate the macronutrients for this meal: "${description}".
+    const prompt = `You are a nutrition expert. Analyze this meal description and extract individual food items with quantities: "${description}".
 
-IMPORTANT - Calorie Calculation Rules:
-- calories_min/max should ONLY include food macros (protein + carbs + fat)
-- Formula: calories = (protein_g * 4) + (carbs_g * 4) + (fat_g * 9)
-- alcohol_g and alcohol_calories (7 cal/g) MUST be provided separately
-- DO NOT include alcohol in calories_min/max
+## TASK 1 - ITEM DETECTION
+Split the description into separate food items:
+- "Dos presas de pollo, un poco de ensalada" → 2 items: pollo and ensalada
+- "Crackers con queso" → 2 items: crackers and queso
+- "50g crackers" → 1 item
+- Single item descriptions → return array with 1 item
 
-Example for "light beer (95 kcal)":
-- Macros: 0g protein, 3g carbs, 0g fat
-- calories_min/max: 12 (from 3g carbs * 4)
-- alcohol_g: 12
-- alcohol_calories: 84 (from 12g * 7)
-- Total: 12 + 84 = 96 cal
+## TASK 2 - QUANTITY EXTRACTION
+Extract explicit quantities and convert to standard units:
+- "50g crackers" → quantity: 50, unit: "g"
+- "Una cucharada de miel" / "1 spoon of honey" → quantity: 1, unit: "spoon"
+- "2 huevos" / "two eggs" → quantity: 2, unit: "piece"
+- "Un vaso de leche" / "a glass of milk" → quantity: 250, unit: "ml"
+- "Dos presas de pollo" → quantity: 2, unit: "piece"
+- "Un poco de ensalada" → quantity: 1, unit: "portion" (small/light portion)
+- No explicit quantity → quantity: 1, unit: "portion"
 
-Provide RANGES (minimum and maximum) for protein, carbs, fat, and food calories.
-Ensure they are mathematically consistent.
+SUPPORTED UNITS (use these exact English values):
+- "portion" - default for undefined amounts or servings
+- "g" - grams
+- "ml" - milliliters
+- "spoon" - tablespoon/cucharada
+- "piece" - individual countable items (eggs, fruits, chicken pieces)
+- "cup" - cups/tazas
 
-UNCERTAINTY GUIDELINES - Only set uncertainty=true when the description is VERY vague:
-- ✅ CERTAIN (uncertainty=false): Specific quantities + named foods, even if homemade
-  Examples: "2 eggs", "chicken breast with rice", "2 tostadas con jalea", "bowl of oatmeal with banana"
-- ❌ UNCERTAIN (uncertainty=true): Generic descriptions without specifics
-  Examples: "pasta", "salad", "sandwich", "snack", "lunch"
+## TASK 3 - NAME NORMALIZATION
+- Keep food name in the ORIGINAL language of the description
+- Capitalize first letter only
+- Remove quantity/unit from name: "50g crackers" → "Crackers"
+- Remove leading articles: "una manzana" → "Manzana"
+- Preserve important context as context_note:
+  - "galleta de arroz instead of bread" → name: "Galleta de arroz", context_note: "instead of bread"
+  - "pollo sin piel" → name: "Pollo sin piel", context_note: null (modifier is part of the food)
+  - "2 sanguches (pero con galleta de arroz)" → name: "Sanguches con galleta de arroz", context_note: null
 
-If you can make a reasonable estimate with a normal range, set uncertainty=false.
+## TASK 4 - MACRO CALCULATION
+For each item provide TWO sets of macros:
 
-Return JSON in this exact format:
+A) CURRENT MACROS - for the SPECIFIED quantity:
+   - calories_min/max, protein_g_min/max, carbs_g_min/max, fat_g_min/max
+   - alcohol_g, alcohol_calories (7 cal/g, NOT included in calories_min/max)
+
+B) BASE MACROS - per 1 UNIT (for recalculation when user changes quantity):
+   - base_calories_min/max, base_protein_g_min/max, etc.
+   - If quantity is 50g, base macros are per 1g
+   - If quantity is 2 pieces, base macros are per 1 piece
+
+CALORIE FORMULA: calories = (protein_g * 4) + (carbs_g * 4) + (fat_g * 9)
+DO NOT include alcohol in calories_min/max!
+
+Example: "50g crackers" (roughly 200 cal for 50g)
+- quantity: 50, unit: "g"
+- calories_min: 190, calories_max: 210 (for 50g)
+- base_calories_min: 3.8, base_calories_max: 4.2 (per 1g)
+
+## UNCERTAINTY
+- uncertainty=false: Specific quantities or named foods ("2 eggs", "chicken breast")
+- uncertainty=true: Very vague descriptions ("pasta", "salad", "snack")
+
+## RANGE SIZING
+- Specific meals: ±20% ranges
+- Less specific meals: ±40% ranges
+
+Return JSON:
 {
-  "calories_min": <number>,
-  "calories_max": <number>,
-  "protein_g_min": <number>,
-  "protein_g_max": <number>,
-  "carbs_g_min": <number>,
-  "carbs_g_max": <number>,
-  "fat_g_min": <number>,
-  "fat_g_max": <number>,
-  "alcohol_g": <number>,
-  "alcohol_calories": <number>,
-  "uncertainty": <boolean>
-}
-
-Range sizing: Use tighter ranges for specific meals (±20%), wider ranges for less specific meals (±40%).`
+  "items": [
+    {
+      "normalized_name": "Food Name",
+      "quantity": 1,
+      "unit": "portion",
+      "context_note": null,
+      "calories_min": 0, "calories_max": 0,
+      "protein_g_min": 0, "protein_g_max": 0,
+      "carbs_g_min": 0, "carbs_g_max": 0,
+      "fat_g_min": 0, "fat_g_max": 0,
+      "alcohol_g": 0, "alcohol_calories": 0,
+      "uncertainty": false,
+      "base_calories_min": 0, "base_calories_max": 0,
+      "base_protein_g_min": 0, "base_protein_g_max": 0,
+      "base_carbs_g_min": 0, "base_carbs_g_max": 0,
+      "base_fat_g_min": 0, "base_fat_g_max": 0,
+      "base_alcohol_g": 0, "base_alcohol_calories": 0
+    }
+  ]
+}`
 
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -126,67 +193,123 @@ Range sizing: Use tighter ranges for specific meals (±20%), wider ranges for le
 
     const openaiData = await openaiResponse.json()
     const content = openaiData.choices[0].message.content
-    const estimate: EstimateResponse = JSON.parse(content)
+    const response: EstimateResponse = JSON.parse(content)
 
-    // Validate response
-    if (
-      typeof estimate.calories_min !== 'number' ||
-      typeof estimate.calories_max !== 'number' ||
-      estimate.calories_min < 0 ||
-      estimate.calories_max < estimate.calories_min ||
-      typeof estimate.protein_g_min !== 'number' ||
-      typeof estimate.protein_g_max !== 'number' ||
-      estimate.protein_g_min < 0 ||
-      estimate.protein_g_max < estimate.protein_g_min ||
-      typeof estimate.carbs_g_min !== 'number' ||
-      typeof estimate.carbs_g_max !== 'number' ||
-      estimate.carbs_g_min < 0 ||
-      estimate.carbs_g_max < estimate.carbs_g_min ||
-      typeof estimate.fat_g_min !== 'number' ||
-      typeof estimate.fat_g_max !== 'number' ||
-      estimate.fat_g_min < 0 ||
-      estimate.fat_g_max < estimate.fat_g_min ||
-      typeof estimate.alcohol_g !== 'number' ||
-      estimate.alcohol_g < 0 ||
-      typeof estimate.alcohol_calories !== 'number' ||
-      estimate.alcohol_calories < 0 ||
-      typeof estimate.uncertainty !== 'boolean'
-    ) {
-      throw new Error('Invalid estimation response from OpenAI')
+    // Validate response structure
+    if (!response.items || !Array.isArray(response.items) || response.items.length === 0) {
+      throw new Error('Invalid response: expected items array')
     }
 
-    // Reconcile calories with macros
-    // We trust the macro grams (P/C/F) more and recalculate calories to ensure 100% mathematical consistency
-    const expectedFoodMin = (estimate.protein_g_min * 4) + (estimate.carbs_g_min * 4) + (estimate.fat_g_min * 9)
-    const expectedFoodMax = (estimate.protein_g_max * 4) + (estimate.carbs_g_max * 4) + (estimate.fat_g_max * 9)
-    const expectedAlcoholCals = Math.round(estimate.alcohol_g * 7)
+    const validUnits = ['portion', 'g', 'ml', 'spoon', 'piece', 'cup']
 
-    // Define tolerance for validation (50% OR 15 cals)
-    const toleranceMin = Math.max(expectedFoodMin * 0.5, 15)
-    const toleranceMax = Math.max(expectedFoodMax * 0.5, 15)
-    const alcoholTolerance = Math.max(expectedAlcoholCals * 0.5, 10)
+    // Validate and reconcile each item
+    for (const item of response.items) {
+      // Validate required fields
+      if (
+        typeof item.normalized_name !== 'string' ||
+        item.normalized_name.length === 0 ||
+        typeof item.quantity !== 'number' ||
+        item.quantity <= 0 ||
+        typeof item.unit !== 'string' ||
+        !validUnits.includes(item.unit)
+      ) {
+        throw new Error(`Invalid item structure: ${JSON.stringify(item)}`)
+      }
 
-    const diffFoodMin = Math.abs(estimate.calories_min - expectedFoodMin)
-    const diffFoodMax = Math.abs(estimate.calories_max - expectedFoodMax)
-    const diffAlcohol = Math.abs(estimate.alcohol_calories - expectedAlcoholCals)
+      // Validate macro fields
+      if (
+        typeof item.calories_min !== 'number' ||
+        typeof item.calories_max !== 'number' ||
+        item.calories_min < 0 ||
+        item.calories_max < item.calories_min ||
+        typeof item.protein_g_min !== 'number' ||
+        typeof item.protein_g_max !== 'number' ||
+        item.protein_g_min < 0 ||
+        item.protein_g_max < item.protein_g_min ||
+        typeof item.carbs_g_min !== 'number' ||
+        typeof item.carbs_g_max !== 'number' ||
+        item.carbs_g_min < 0 ||
+        item.carbs_g_max < item.carbs_g_min ||
+        typeof item.fat_g_min !== 'number' ||
+        typeof item.fat_g_max !== 'number' ||
+        item.fat_g_min < 0 ||
+        item.fat_g_max < item.fat_g_min ||
+        typeof item.alcohol_g !== 'number' ||
+        item.alcohol_g < 0 ||
+        typeof item.alcohol_calories !== 'number' ||
+        item.alcohol_calories < 0 ||
+        typeof item.uncertainty !== 'boolean'
+      ) {
+        throw new Error(`Invalid macro values for item: ${item.normalized_name}`)
+      }
 
-    // If OpenAI's calories are reasonably close, we overwrite them with our perfectly calculated ones
-    if (diffFoodMin <= toleranceMin && diffFoodMax <= toleranceMax && diffAlcohol <= alcoholTolerance) {
-      estimate.calories_min = Math.round(expectedFoodMin)
-      estimate.calories_max = Math.round(expectedFoodMax)
-      estimate.alcohol_calories = expectedAlcoholCals
-    } else {
-      // Significant mismatch detected - log the raw response for debugging
-      console.error('Significant calorie mismatch detected:', {
-        estimate,
-        expected: { foodMin: expectedFoodMin, foodMax: expectedFoodMax, alcoholCals: expectedAlcoholCals },
-        differences: { foodMin: diffFoodMin, foodMax: diffFoodMax, alcohol: diffAlcohol }
-      })
-      throw new Error('Could not generate a consistent nutrition estimate. Please try a more specific description.')
+      // Validate base macro fields
+      if (
+        typeof item.base_calories_min !== 'number' ||
+        typeof item.base_calories_max !== 'number' ||
+        item.base_calories_min < 0 ||
+        typeof item.base_protein_g_min !== 'number' ||
+        typeof item.base_protein_g_max !== 'number' ||
+        item.base_protein_g_min < 0 ||
+        typeof item.base_carbs_g_min !== 'number' ||
+        typeof item.base_carbs_g_max !== 'number' ||
+        item.base_carbs_g_min < 0 ||
+        typeof item.base_fat_g_min !== 'number' ||
+        typeof item.base_fat_g_max !== 'number' ||
+        item.base_fat_g_min < 0 ||
+        typeof item.base_alcohol_g !== 'number' ||
+        item.base_alcohol_g < 0 ||
+        typeof item.base_alcohol_calories !== 'number' ||
+        item.base_alcohol_calories < 0
+      ) {
+        throw new Error(`Invalid base macro values for item: ${item.normalized_name}`)
+      }
+
+      // Reconcile calories with macros for current values
+      const expectedFoodMin = (item.protein_g_min * 4) + (item.carbs_g_min * 4) + (item.fat_g_min * 9)
+      const expectedFoodMax = (item.protein_g_max * 4) + (item.carbs_g_max * 4) + (item.fat_g_max * 9)
+      const expectedAlcoholCals = Math.round(item.alcohol_g * 7)
+
+      // Define tolerance for validation (50% OR 15 cals)
+      const toleranceMin = Math.max(expectedFoodMin * 0.5, 15)
+      const toleranceMax = Math.max(expectedFoodMax * 0.5, 15)
+      const alcoholTolerance = Math.max(expectedAlcoholCals * 0.5, 10)
+
+      const diffFoodMin = Math.abs(item.calories_min - expectedFoodMin)
+      const diffFoodMax = Math.abs(item.calories_max - expectedFoodMax)
+      const diffAlcohol = Math.abs(item.alcohol_calories - expectedAlcoholCals)
+
+      // If OpenAI's calories are reasonably close, overwrite with calculated values
+      if (diffFoodMin <= toleranceMin && diffFoodMax <= toleranceMax && diffAlcohol <= alcoholTolerance) {
+        item.calories_min = Math.round(expectedFoodMin)
+        item.calories_max = Math.round(expectedFoodMax)
+        item.alcohol_calories = expectedAlcoholCals
+      } else {
+        console.error('Significant calorie mismatch detected:', {
+          item: item.normalized_name,
+          estimate: { calories_min: item.calories_min, calories_max: item.calories_max },
+          expected: { foodMin: expectedFoodMin, foodMax: expectedFoodMax, alcoholCals: expectedAlcoholCals }
+        })
+        throw new Error(`Could not generate consistent nutrition for "${item.normalized_name}". Please try a more specific description.`)
+      }
+
+      // Reconcile base calories with base macros
+      const expectedBaseFoodMin = (item.base_protein_g_min * 4) + (item.base_carbs_g_min * 4) + (item.base_fat_g_min * 9)
+      const expectedBaseFoodMax = (item.base_protein_g_max * 4) + (item.base_carbs_g_max * 4) + (item.base_fat_g_max * 9)
+      const expectedBaseAlcoholCals = Math.round(item.base_alcohol_g * 7)
+
+      item.base_calories_min = Math.round(expectedBaseFoodMin * 100) / 100
+      item.base_calories_max = Math.round(expectedBaseFoodMax * 100) / 100
+      item.base_alcohol_calories = Math.round(expectedBaseAlcoholCals * 100) / 100
+
+      // Ensure context_note is null or string
+      if (item.context_note !== null && typeof item.context_note !== 'string') {
+        item.context_note = null
+      }
     }
 
     return new Response(
-      JSON.stringify(estimate),
+      JSON.stringify(response),
       {
         headers: {
           'Content-Type': 'application/json',
