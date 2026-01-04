@@ -89,7 +89,7 @@ async function runBenchmark(): Promise<BenchmarkResults> {
   const results: TestResult[] = []
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
 
-  let totalRequests = providers.length * testCases.length
+  const totalRequests = providers.length * testCases.length
   let completedRequests = 0
 
   for (const provider of providers) {

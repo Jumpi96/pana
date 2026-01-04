@@ -5,7 +5,7 @@
  * Lower MAPE = more accurate predictions.
  */
 
-import type { ExpectedItem, EstimatedItem, TestResult, TestCase, ProviderSummary } from './types'
+import type { ExpectedItem, EstimatedItem, TestResult, ProviderSummary } from './types'
 
 /**
  * Calculate percentage error between actual and expected values.
@@ -55,10 +55,10 @@ export function calculateItemMetrics(
   // In a real scenario, we might want to match by name similarity
   const numToCompare = Math.min(expectedItems.length, actualItems.length)
 
-  let caloriesErrors: number[] = []
-  let proteinErrors: number[] = []
-  let carbsErrors: number[] = []
-  let fatErrors: number[] = []
+  const caloriesErrors: number[] = []
+  const proteinErrors: number[] = []
+  const carbsErrors: number[] = []
+  const fatErrors: number[] = []
 
   for (let i = 0; i < numToCompare; i++) {
     const expected = expectedItems[i]

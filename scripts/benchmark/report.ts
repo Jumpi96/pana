@@ -5,7 +5,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { fileURLToPath } from 'url'
-import type { BenchmarkResults, ProviderSummary, TestResult } from './types'
+import type { BenchmarkResults } from './types'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const RESULTS_DIR = path.join(__dirname, 'results')
