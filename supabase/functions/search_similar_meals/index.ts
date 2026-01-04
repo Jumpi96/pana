@@ -41,6 +41,18 @@ interface SimilarMeal {
 }
 
 serve(async (req) => {
+  const requestId = crypto.randomUUID().slice(0, 8)
+  const log = (level: string, message: string, data?: Record<string, unknown>) => {
+    console.log(JSON.stringify({
+      timestamp: new Date().toISOString(),
+      requestId,
+      level,
+      function: 'search_similar_meals',
+      message,
+      ...data
+    }))
+  }
+
   try {
     // CORS
     if (req.method === 'OPTIONS') {
@@ -55,7 +67,10 @@ serve(async (req) => {
 
     // Auth
     const authHeader = req.headers.get('Authorization')
-    if (!authHeader) throw new Error('Missing authorization header')
+    if (!authHeader) {
+      log('error', 'Missing authorization header')
+      throw new Error('Missing authorization header')
+    }
 
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
@@ -78,7 +93,10 @@ serve(async (req) => {
       })
     }
 
+    log('info', 'Searching similar meals', { query, limit })
+
     // Generate embedding for query using Google's API
+    const startTime = Date.now()
     const embeddingResponse = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${GOOGLE_API_KEY}`,
       {
@@ -95,8 +113,15 @@ serve(async (req) => {
       }
     )
 
+    const embeddingLatencyMs = Date.now() - startTime
+
     if (!embeddingResponse.ok) {
       const error = await embeddingResponse.text()
+      log('error', 'Google embedding API error', {
+        status: embeddingResponse.status,
+        error,
+        latencyMs: embeddingLatencyMs
+      })
       throw new Error(`Failed to generate embedding: ${error}`)
     }
 
@@ -104,16 +129,27 @@ serve(async (req) => {
     const queryEmbedding = embeddingData.embedding?.values
 
     if (!queryEmbedding) {
+      log('error', 'No embedding in response', { embeddingData })
       throw new Error('No embedding in response')
     }
 
+    log('info', 'Query embedding generated', { latencyMs: embeddingLatencyMs })
+
     // Search similar meals using pgvector
+    const searchStartTime = Date.now()
     const { data: results, error } = await supabaseClient.rpc('search_similar_meals_vector', {
       query_embedding: queryEmbedding,
       match_limit: limit * 2, // Fetch more for recency filtering
     })
 
-    if (error) throw error
+    const searchLatencyMs = Date.now() - searchStartTime
+
+    if (error) {
+      log('error', 'Database search failed', { error: error.message })
+      throw error
+    }
+
+    log('info', 'Database search complete', { searchLatencyMs, resultCount: results?.length ?? 0 })
 
     // Apply recency bias: prioritize recent meals
     const now = new Date()
@@ -139,6 +175,8 @@ serve(async (req) => {
       .sort((a, b) => b.adjusted_similarity - a.adjusted_similarity)
       .slice(0, limit)
 
+    log('info', 'Search complete', { returnedCount: topResults.length })
+
     return new Response(
       JSON.stringify(topResults),
       {
@@ -150,7 +188,7 @@ serve(async (req) => {
     )
 
   } catch (error) {
-    console.error('Error:', error)
+    log('error', 'Request failed', { error: error.message, stack: error.stack })
     return new Response(
       JSON.stringify({ error: error.message }),
       {

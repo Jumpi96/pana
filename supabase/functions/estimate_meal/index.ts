@@ -45,6 +45,18 @@ interface EstimateResponse {
 }
 
 serve(async (req) => {
+  const requestId = crypto.randomUUID().slice(0, 8)
+  const log = (level: string, message: string, data?: Record<string, unknown>) => {
+    console.log(JSON.stringify({
+      timestamp: new Date().toISOString(),
+      requestId,
+      level,
+      function: 'estimate_meal',
+      message,
+      ...data
+    }))
+  }
+
   try {
     // CORS handling
     if (req.method === 'OPTIONS') {
@@ -60,6 +72,7 @@ serve(async (req) => {
     // Authentication check
     const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
+      log('error', 'Missing authorization header')
       throw new Error('Missing authorization header')
     }
 
@@ -78,8 +91,11 @@ serve(async (req) => {
     const { description }: EstimateRequest = await req.json()
 
     if (!description || description.length === 0 || description.length > 140) {
+      log('error', 'Invalid description length', { length: description?.length })
       throw new Error('Description must be 1-140 characters')
     }
+
+    log('info', 'Processing meal estimation', { description })
 
     // Build prompt for Gemini
     const prompt = `You are a nutrition expert. Analyze this meal description and extract individual food items with quantities: "${description}".
@@ -174,6 +190,9 @@ Return JSON:
     // Call Google Gemini API
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GOOGLE_API_KEY}`
 
+    log('info', 'Calling Gemini API', { model: GEMINI_MODEL })
+    const startTime = Date.now()
+
     const geminiResponse = await fetch(geminiUrl, {
       method: 'POST',
       headers: {
@@ -192,16 +211,30 @@ Return JSON:
       }),
     })
 
+    const latencyMs = Date.now() - startTime
+
     if (!geminiResponse.ok) {
       const error = await geminiResponse.text()
+      log('error', 'Gemini API error', {
+        status: geminiResponse.status,
+        statusText: geminiResponse.statusText,
+        error,
+        latencyMs
+      })
       throw new Error(`Gemini API error: ${error}`)
     }
 
     const geminiData = await geminiResponse.json()
+    log('info', 'Gemini API response received', { latencyMs })
 
     // Extract text content from Gemini response
     const textContent = geminiData.candidates?.[0]?.content?.parts?.[0]?.text
     if (!textContent) {
+      log('error', 'No content in Gemini response', {
+        candidates: geminiData.candidates?.length,
+        finishReason: geminiData.candidates?.[0]?.finishReason,
+        promptFeedback: geminiData.promptFeedback
+      })
       throw new Error('No content in Gemini response')
     }
 
@@ -212,12 +245,24 @@ Return JSON:
       jsonText = jsonText.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
     }
 
-    const response: EstimateResponse = JSON.parse(jsonText)
+    let response: EstimateResponse
+    try {
+      response = JSON.parse(jsonText)
+    } catch (parseError) {
+      log('error', 'Failed to parse Gemini response as JSON', {
+        rawResponse: textContent.substring(0, 500),
+        parseError: String(parseError)
+      })
+      throw new Error('Failed to parse nutrition response')
+    }
 
     // Validate response structure
     if (!response.items || !Array.isArray(response.items) || response.items.length === 0) {
+      log('error', 'Invalid response structure', { response })
       throw new Error('Invalid response: expected items array')
     }
+
+    log('info', 'Validating items', { itemCount: response.items.length })
 
     const validUnits = ['portion', 'g', 'ml', 'spoon', 'piece', 'cup']
 
@@ -232,6 +277,7 @@ Return JSON:
         typeof item.unit !== 'string' ||
         !validUnits.includes(item.unit)
       ) {
+        log('error', 'Invalid item structure', { item })
         throw new Error(`Invalid item structure: ${JSON.stringify(item)}`)
       }
 
@@ -304,10 +350,15 @@ Return JSON:
         item.calories_max = Math.round(expectedFoodMax)
         item.alcohol_calories = expectedAlcoholCals
       } else {
-        console.error('Significant calorie mismatch detected:', {
-          item: item.normalized_name,
+        log('error', 'Significant calorie mismatch detected', {
+          itemName: item.normalized_name,
           estimate: { calories_min: item.calories_min, calories_max: item.calories_max },
-          expected: { foodMin: expectedFoodMin, foodMax: expectedFoodMax, alcoholCals: expectedAlcoholCals }
+          expected: { foodMin: expectedFoodMin, foodMax: expectedFoodMax, alcoholCals: expectedAlcoholCals },
+          macros: {
+            protein: { min: item.protein_g_min, max: item.protein_g_max },
+            carbs: { min: item.carbs_g_min, max: item.carbs_g_max },
+            fat: { min: item.fat_g_min, max: item.fat_g_max }
+          }
         })
         throw new Error(`Could not generate consistent nutrition for "${item.normalized_name}". Please try a more specific description.`)
       }
@@ -327,6 +378,11 @@ Return JSON:
       }
     }
 
+    log('info', 'Estimation successful', {
+      itemCount: response.items.length,
+      items: response.items.map(i => ({ name: i.normalized_name, quantity: i.quantity, unit: i.unit }))
+    })
+
     return new Response(
       JSON.stringify(response),
       {
@@ -338,7 +394,10 @@ Return JSON:
     )
 
   } catch (error) {
-    console.error('Error:', error)
+    log('error', 'Request failed', {
+      error: error.message,
+      stack: error.stack
+    })
     return new Response(
       JSON.stringify({ error: error.message }),
       {
