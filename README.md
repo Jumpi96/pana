@@ -176,7 +176,7 @@ supabase functions deploy search_similar_meals
 supabase functions deploy update_meal_embedding
 
 # Set OpenAI API key
-supabase secrets set OPENAI_API_KEY=your-openai-api-key
+supabase secrets set GOOGLE_API_KEY=your-google-api-key
 ```
 
 ### 5. Configure Environment Variables
@@ -404,7 +404,7 @@ The project uses GitHub Actions for automatic deployment on releases.
    - `SUPABASE_ACCESS_TOKEN` - Generate at https://supabase.com/dashboard/account/tokens
    - `SUPABASE_PROJECT_ID` - From Supabase Dashboard → Settings → General
    - `SUPABASE_DB_PASSWORD` - Your database password
-   - `OPENAI_API_KEY` - Your OpenAI API key
+   - `GOOGLE_API_KEY` - Your Google API key
 
    **AWS/Terraform** (optional, for backups):
    - `AWS_ACCESS_KEY_ID` - AWS credentials

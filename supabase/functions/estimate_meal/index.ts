@@ -1,7 +1,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')
+const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY')
+const GEMINI_MODEL = 'gemini-2.5-flash-lite'
 
 interface EstimateRequest {
   description: string
@@ -80,7 +81,7 @@ serve(async (req) => {
       throw new Error('Description must be 1-140 characters')
     }
 
-    // Call OpenAI API
+    // Build prompt for Gemini
     const prompt = `You are a nutrition expert. Analyze this meal description and extract individual food items with quantities: "${description}".
 
 ## TASK 1 - ITEM DETECTION
@@ -96,6 +97,7 @@ Extract explicit quantities and convert to standard units:
 - "Una cucharada de miel" / "1 spoon of honey" → quantity: 1, unit: "spoon"
 - "2 huevos" / "two eggs" → quantity: 2, unit: "piece"
 - "Un vaso de leche" / "a glass of milk" → quantity: 250, unit: "ml"
+- "Una copa de vino" / "a glass of wine" → quantity: 1, unit: "portion" (standard serving)
 - "Dos presas de pollo" → quantity: 2, unit: "piece"
 - "Un poco de ensalada" → quantity: 1, unit: "portion" (small/light portion)
 - No explicit quantity → quantity: 1, unit: "portion"
@@ -169,31 +171,48 @@ Return JSON:
   ]
 }`
 
-    const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+    // Call Google Gemini API
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GOOGLE_API_KEY}`
+
+    const geminiResponse = await fetch(geminiUrl, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: 'You are a helpful nutrition expert. Always respond with valid JSON only.' },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.3,
-        response_format: { type: 'json_object' }
+        contents: [{
+          parts: [{
+            text: prompt
+          }]
+        }],
+        generationConfig: {
+          temperature: 0.3,
+          responseMimeType: 'application/json'
+        }
       }),
     })
 
-    if (!openaiResponse.ok) {
-      const error = await openaiResponse.text()
-      throw new Error(`OpenAI API error: ${error}`)
+    if (!geminiResponse.ok) {
+      const error = await geminiResponse.text()
+      throw new Error(`Gemini API error: ${error}`)
     }
 
-    const openaiData = await openaiResponse.json()
-    const content = openaiData.choices[0].message.content
-    const response: EstimateResponse = JSON.parse(content)
+    const geminiData = await geminiResponse.json()
+
+    // Extract text content from Gemini response
+    const textContent = geminiData.candidates?.[0]?.content?.parts?.[0]?.text
+    if (!textContent) {
+      throw new Error('No content in Gemini response')
+    }
+
+    // Parse JSON response
+    let jsonText = textContent.trim()
+    // Remove markdown code blocks if present
+    if (jsonText.startsWith('```')) {
+      jsonText = jsonText.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
+    }
+
+    const response: EstimateResponse = JSON.parse(jsonText)
 
     // Validate response structure
     if (!response.items || !Array.isArray(response.items) || response.items.length === 0) {
@@ -279,7 +298,7 @@ Return JSON:
       const diffFoodMax = Math.abs(item.calories_max - expectedFoodMax)
       const diffAlcohol = Math.abs(item.alcohol_calories - expectedAlcoholCals)
 
-      // If OpenAI's calories are reasonably close, overwrite with calculated values
+      // If Gemini's calories are reasonably close, overwrite with calculated values
       if (diffFoodMin <= toleranceMin && diffFoodMax <= toleranceMax && diffAlcohol <= alcoholTolerance) {
         item.calories_min = Math.round(expectedFoodMin)
         item.calories_max = Math.round(expectedFoodMax)

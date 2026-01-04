@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')
+const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY')
 
 interface UpdateEmbeddingRequest {
   meal_entry_id: string
@@ -57,25 +57,34 @@ serve(async (req) => {
       throw new Error('Unauthorized: meal entry does not belong to user')
     }
 
-    // Generate embedding
-    const embeddingResponse = await fetch('https://api.openai.com/v1/embeddings', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'text-embedding-3-small',
-        input: description.trim(),
-      }),
-    })
+    // Generate embedding using Google's API
+    const embeddingResponse = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${GOOGLE_API_KEY}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'models/text-embedding-004',
+          content: {
+            parts: [{ text: description.trim() }]
+          }
+        }),
+      }
+    )
 
     if (!embeddingResponse.ok) {
-      throw new Error('Failed to generate embedding')
+      const error = await embeddingResponse.text()
+      throw new Error(`Failed to generate embedding: ${error}`)
     }
 
     const embeddingData = await embeddingResponse.json()
-    const embedding = embeddingData.data[0].embedding
+    const embedding = embeddingData.embedding?.values
+
+    if (!embedding) {
+      throw new Error('No embedding in response')
+    }
 
     // Upsert embedding
     const { error } = await supabaseClient

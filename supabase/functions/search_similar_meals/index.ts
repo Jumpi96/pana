@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')
+const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY')
 
 interface SearchRequest {
   query: string
@@ -78,25 +78,34 @@ serve(async (req) => {
       })
     }
 
-    // Generate embedding for query
-    const embeddingResponse = await fetch('https://api.openai.com/v1/embeddings', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'text-embedding-3-small',
-        input: query.trim(),
-      }),
-    })
+    // Generate embedding for query using Google's API
+    const embeddingResponse = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${GOOGLE_API_KEY}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'models/text-embedding-004',
+          content: {
+            parts: [{ text: query.trim() }]
+          }
+        }),
+      }
+    )
 
     if (!embeddingResponse.ok) {
-      throw new Error('Failed to generate embedding')
+      const error = await embeddingResponse.text()
+      throw new Error(`Failed to generate embedding: ${error}`)
     }
 
     const embeddingData = await embeddingResponse.json()
-    const queryEmbedding = embeddingData.data[0].embedding
+    const queryEmbedding = embeddingData.embedding?.values
+
+    if (!queryEmbedding) {
+      throw new Error('No embedding in response')
+    }
 
     // Search similar meals using pgvector
     const { data: results, error } = await supabaseClient.rpc('search_similar_meals_vector', {
