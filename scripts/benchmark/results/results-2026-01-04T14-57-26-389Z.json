@@ -1,0 +1,5610 @@
+{
+  "timestamp": "2026-01-04T14-57-26-389Z",
+  "testCases": 20,
+  "providers": [
+    "Anthropic",
+    "Google-gemini-2.5-flash-lite",
+    "Google-gemini-2.5-flash",
+    "Google-gemini-2.0-flash"
+  ],
+  "results": [
+    {
+      "testCaseId": "simple-1",
+      "description": "2 eggs",
+      "category": "simple",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 2609,
+      "inputTokens": 854,
+      "outputTokens": 174,
+      "cost": 0.000431,
+      "expectedItems": [
+        {
+          "name": "Eggs",
+          "quantity": 2,
+          "unit": "piece",
+          "calories": {
+            "min": 140,
+            "max": 180
+          },
+          "protein_g": {
+            "min": 11,
+            "max": 14
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 9,
+            "max": 12
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Egg",
+          "quantity": 2,
+          "unit": "piece",
+          "calories_min": 136,
+          "calories_max": 164,
+          "protein_g_min": 12.4,
+          "protein_g_max": 14.8,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0,
+          "fat_g_min": 9.4,
+          "fat_g_max": 11.2,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 6.25,
+        "proteinMAPE": 8.800000000000011,
+        "carbsMAPE": 100,
+        "fatMAPE": 1.904761904761898,
+        "overallMAPE": 29.238690476190477
+      }
+    },
+    {
+      "testCaseId": "simple-2",
+      "description": "100g chicken breast",
+      "category": "quantity",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 1844,
+      "inputTokens": 855,
+      "outputTokens": 176,
+      "cost": 0.00043375,
+      "expectedItems": [
+        {
+          "name": "Chicken breast",
+          "quantity": 100,
+          "unit": "g",
+          "calories": {
+            "min": 150,
+            "max": 180
+          },
+          "protein_g": {
+            "min": 28,
+            "max": 35
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 1
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 5
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Chicken Breast",
+          "quantity": 100,
+          "unit": "g",
+          "calories_min": 165,
+          "calories_max": 198,
+          "protein_g_min": 30.7,
+          "protein_g_max": 36.8,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0,
+          "fat_g_min": 3.1,
+          "fat_g_max": 3.7,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 10,
+        "proteinMAPE": 7.142857142857142,
+        "carbsMAPE": 100,
+        "fatMAPE": 2.857142857142847,
+        "overallMAPE": 29.999999999999996
+      }
+    },
+    {
+      "testCaseId": "simple-3",
+      "description": "1 banana",
+      "category": "simple",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 1750,
+      "inputTokens": 854,
+      "outputTokens": 166,
+      "cost": 0.00042100000000000004,
+      "expectedItems": [
+        {
+          "name": "Banana",
+          "quantity": 1,
+          "unit": "piece",
+          "calories": {
+            "min": 90,
+            "max": 120
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 2
+          },
+          "carbs_g": {
+            "min": 22,
+            "max": 30
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 1
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Banana",
+          "quantity": 1,
+          "unit": "piece",
+          "calories_min": 90,
+          "calories_max": 110,
+          "protein_g_min": 1,
+          "protein_g_max": 2,
+          "carbs_g_min": 23,
+          "carbs_g_max": 28,
+          "fat_g_min": 0,
+          "fat_g_max": 1,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 4.761904761904762,
+        "proteinMAPE": 0,
+        "carbsMAPE": 1.9230769230769231,
+        "fatMAPE": 0,
+        "overallMAPE": 1.6712454212454213
+      }
+    },
+    {
+      "testCaseId": "simple-4",
+      "description": "50g oatmeal",
+      "category": "quantity",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 2466,
+      "inputTokens": 857,
+      "outputTokens": 181,
+      "cost": 0.00044050000000000003,
+      "expectedItems": [
+        {
+          "name": "Oatmeal",
+          "quantity": 50,
+          "unit": "g",
+          "calories": {
+            "min": 170,
+            "max": 210
+          },
+          "protein_g": {
+            "min": 5,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 28,
+            "max": 35
+          },
+          "fat_g": {
+            "min": 3,
+            "max": 5
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Oatmeal",
+          "quantity": 50,
+          "unit": "g",
+          "calories_min": 170,
+          "calories_max": 204,
+          "protein_g_min": 5.5,
+          "protein_g_max": 6.6,
+          "carbs_g_min": 27,
+          "carbs_g_max": 32.4,
+          "fat_g_min": 3.5,
+          "fat_g_max": 4.2,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 1.5789473684210527,
+        "proteinMAPE": 6.923076923076926,
+        "carbsMAPE": 5.714285714285717,
+        "fatMAPE": 3.749999999999998,
+        "overallMAPE": 4.491577501445923
+      }
+    },
+    {
+      "testCaseId": "spanish-1",
+      "description": "Una cucharada de miel",
+      "category": "spanish",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 2017,
+      "inputTokens": 858,
+      "outputTokens": 168,
+      "cost": 0.00042449999999999996,
+      "expectedItems": [
+        {
+          "name": "Miel",
+          "quantity": 1,
+          "unit": "spoon",
+          "calories": {
+            "min": 55,
+            "max": 75
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 15,
+            "max": 21
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Miel",
+          "quantity": 1,
+          "unit": "spoon",
+          "calories_min": 64,
+          "calories_max": 96,
+          "protein_g_min": 0,
+          "protein_g_max": 0,
+          "carbs_g_min": 16,
+          "carbs_g_max": 24,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 23.076923076923077,
+        "proteinMAPE": 100,
+        "carbsMAPE": 11.11111111111111,
+        "fatMAPE": 0,
+        "overallMAPE": 33.547008547008545
+      }
+    },
+    {
+      "testCaseId": "spanish-2",
+      "description": "Dos huevos fritos",
+      "category": "spanish",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 2660,
+      "inputTokens": 858,
+      "outputTokens": 168,
+      "cost": 0.00042449999999999996,
+      "expectedItems": [
+        {
+          "name": "Huevos fritos",
+          "quantity": 2,
+          "unit": "piece",
+          "calories": {
+            "min": 180,
+            "max": 240
+          },
+          "protein_g": {
+            "min": 11,
+            "max": 14
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 14,
+            "max": 20
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Huevos",
+          "quantity": 2,
+          "unit": "piece",
+          "calories_min": 140,
+          "calories_max": 200,
+          "protein_g_min": 12,
+          "protein_g_max": 18,
+          "carbs_g_min": 0,
+          "carbs_g_max": 2,
+          "fat_g_min": 10,
+          "fat_g_max": 15,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 19.047619047619047,
+        "proteinMAPE": 20,
+        "carbsMAPE": 0,
+        "fatMAPE": 26.47058823529412,
+        "overallMAPE": 16.37955182072829
+      }
+    },
+    {
+      "testCaseId": "spanish-3",
+      "description": "200ml de leche",
+      "category": "spanish",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 1770,
+      "inputTokens": 856,
+      "outputTokens": 179,
+      "cost": 0.00043775,
+      "expectedItems": [
+        {
+          "name": "Leche",
+          "quantity": 200,
+          "unit": "ml",
+          "calories": {
+            "min": 80,
+            "max": 130
+          },
+          "protein_g": {
+            "min": 6,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 9,
+            "max": 12
+          },
+          "fat_g": {
+            "min": 3,
+            "max": 7
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Leche",
+          "quantity": 200,
+          "unit": "ml",
+          "calories_min": 130,
+          "calories_max": 156,
+          "protein_g_min": 6.6,
+          "protein_g_max": 7.9,
+          "carbs_g_min": 12,
+          "carbs_g_max": 14.4,
+          "fat_g_min": 7.4,
+          "fat_g_max": 8.8,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 36.19047619047619,
+        "proteinMAPE": 3.571428571428571,
+        "carbsMAPE": 25.714285714285705,
+        "fatMAPE": 62.000000000000036,
+        "overallMAPE": 31.869047619047628
+      }
+    },
+    {
+      "testCaseId": "multi-1",
+      "description": "Toast with butter and jam",
+      "category": "multi-item",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 4063,
+      "inputTokens": 856,
+      "outputTokens": 467,
+      "cost": 0.0007977500000000001,
+      "expectedItems": [
+        {
+          "name": "Toast",
+          "quantity": 1,
+          "unit": "piece",
+          "calories": {
+            "min": 60,
+            "max": 90
+          },
+          "protein_g": {
+            "min": 2,
+            "max": 4
+          },
+          "carbs_g": {
+            "min": 12,
+            "max": 18
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 2
+          }
+        },
+        {
+          "name": "Butter",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 70,
+            "max": 110
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 1
+          },
+          "fat_g": {
+            "min": 8,
+            "max": 12
+          }
+        },
+        {
+          "name": "Jam",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 40,
+            "max": 60
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 10,
+            "max": 15
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Toast",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 80,
+          "calories_max": 120,
+          "protein_g_min": 2,
+          "protein_g_max": 4,
+          "carbs_g_min": 12,
+          "carbs_g_max": 18,
+          "fat_g_min": 2,
+          "fat_g_max": 4,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Butter",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 50,
+          "calories_max": 70,
+          "protein_g_min": 0,
+          "protein_g_max": 0,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0,
+          "fat_g_min": 5,
+          "fat_g_max": 7,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Jam",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 30,
+          "calories_max": 50,
+          "protein_g_min": 0,
+          "protein_g_max": 0,
+          "carbs_g_min": 8,
+          "carbs_g_max": 12,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 28.888888888888886,
+        "proteinMAPE": 66.66666666666667,
+        "carbsMAPE": 40,
+        "fatMAPE": 80,
+        "overallMAPE": 53.888888888888886
+      }
+    },
+    {
+      "testCaseId": "multi-2",
+      "description": "Arroz con pollo y ensalada",
+      "category": "multi-item",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 4077,
+      "inputTokens": 861,
+      "outputTokens": 472,
+      "cost": 0.00080525,
+      "expectedItems": [
+        {
+          "name": "Arroz",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 150,
+            "max": 250
+          },
+          "protein_g": {
+            "min": 3,
+            "max": 6
+          },
+          "carbs_g": {
+            "min": 35,
+            "max": 55
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 2
+          }
+        },
+        {
+          "name": "Pollo",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 150,
+            "max": 250
+          },
+          "protein_g": {
+            "min": 25,
+            "max": 40
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 4,
+            "max": 12
+          }
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 30,
+            "max": 80
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 3
+          },
+          "carbs_g": {
+            "min": 4,
+            "max": 10
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 5
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Arroz",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 200,
+          "calories_max": 300,
+          "protein_g_min": 4,
+          "protein_g_max": 6,
+          "carbs_g_min": 40,
+          "carbs_g_max": 50,
+          "fat_g_min": 2,
+          "fat_g_max": 4,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Pollo",
+          "quantity": 2,
+          "unit": "piece",
+          "calories_min": 200,
+          "calories_max": 300,
+          "protein_g_min": 25,
+          "protein_g_max": 35,
+          "carbs_g_min": 0,
+          "carbs_g_max": 2,
+          "fat_g_min": 10,
+          "fat_g_max": 15,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 50,
+          "calories_max": 100,
+          "protein_g_min": 2,
+          "protein_g_max": 4,
+          "carbs_g_min": 5,
+          "carbs_g_max": 10,
+          "fat_g_min": 2,
+          "fat_g_max": 4,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 28.787878787878793,
+        "proteinMAPE": 22.934472934472936,
+        "carbsMAPE": 2.380952380952381,
+        "fatMAPE": 92.08333333333333,
+        "overallMAPE": 36.546659359159364
+      }
+    },
+    {
+      "testCaseId": "multi-3",
+      "description": "Dos presas de pollo, un poco de ensalada",
+      "category": "multi-item",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 3309,
+      "inputTokens": 865,
+      "outputTokens": 300,
+      "cost": 0.00059125,
+      "expectedItems": [
+        {
+          "name": "Presas de pollo",
+          "quantity": 2,
+          "unit": "piece",
+          "calories": {
+            "min": 280,
+            "max": 400
+          },
+          "protein_g": {
+            "min": 35,
+            "max": 55
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 3
+          },
+          "fat_g": {
+            "min": 12,
+            "max": 24
+          }
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 20,
+            "max": 60
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 3
+          },
+          "carbs_g": {
+            "min": 3,
+            "max": 8
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 4
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Pollo",
+          "quantity": 2,
+          "unit": "piece",
+          "calories_min": 200,
+          "calories_max": 300,
+          "protein_g_min": 30,
+          "protein_g_max": 45,
+          "carbs_g_min": 0,
+          "carbs_g_max": 5,
+          "fat_g_min": 10,
+          "fat_g_max": 15,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 50,
+          "calories_max": 100,
+          "protein_g_min": 2,
+          "protein_g_max": 5,
+          "carbs_g_min": 5,
+          "carbs_g_max": 10,
+          "fat_g_min": 2,
+          "fat_g_max": 5,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 56.98529411764706,
+        "proteinMAPE": 45.83333333333333,
+        "carbsMAPE": 51.515151515151516,
+        "fatMAPE": 52.77777777777778,
+        "overallMAPE": 51.777889185977415
+      }
+    },
+    {
+      "testCaseId": "multi-4",
+      "description": "Crackers con queso",
+      "category": "multi-item",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 3018,
+      "inputTokens": 857,
+      "outputTokens": 319,
+      "cost": 0.000613,
+      "expectedItems": [
+        {
+          "name": "Crackers",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 80,
+            "max": 140
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 3
+          },
+          "carbs_g": {
+            "min": 14,
+            "max": 22
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 6
+          }
+        },
+        {
+          "name": "Queso",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 80,
+            "max": 130
+          },
+          "protein_g": {
+            "min": 5,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 6,
+            "max": 10
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Crackers",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 80,
+          "calories_max": 120,
+          "protein_g_min": 1,
+          "protein_g_max": 3,
+          "carbs_g_min": 10,
+          "carbs_g_max": 15,
+          "fat_g_min": 3,
+          "fat_g_max": 5,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Queso",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 80,
+          "calories_max": 120,
+          "protein_g_min": 5,
+          "protein_g_max": 8,
+          "carbs_g_min": 1,
+          "carbs_g_max": 3,
+          "fat_g_min": 6,
+          "fat_g_max": 9,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 6.926406926406926,
+        "proteinMAPE": 0,
+        "carbsMAPE": 65.27777777777777,
+        "fatMAPE": 3.125,
+        "overallMAPE": 18.832296176046174
+      }
+    },
+    {
+      "testCaseId": "quantity-1",
+      "description": "50g crackers",
+      "category": "quantity",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 2327,
+      "inputTokens": 855,
+      "outputTokens": 167,
+      "cost": 0.0004225,
+      "expectedItems": [
+        {
+          "name": "Crackers",
+          "quantity": 50,
+          "unit": "g",
+          "calories": {
+            "min": 190,
+            "max": 250
+          },
+          "protein_g": {
+            "min": 4,
+            "max": 7
+          },
+          "carbs_g": {
+            "min": 30,
+            "max": 42
+          },
+          "fat_g": {
+            "min": 6,
+            "max": 11
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Crackers",
+          "quantity": 50,
+          "unit": "g",
+          "calories_min": 160,
+          "calories_max": 240,
+          "protein_g_min": 5,
+          "protein_g_max": 8,
+          "carbs_g_min": 20,
+          "carbs_g_max": 30,
+          "fat_g_min": 5,
+          "fat_g_max": 8,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 9.090909090909092,
+        "proteinMAPE": 18.181818181818183,
+        "carbsMAPE": 30.555555555555557,
+        "fatMAPE": 23.52941176470588,
+        "overallMAPE": 20.339423648247177
+      }
+    },
+    {
+      "testCaseId": "quantity-2",
+      "description": "250ml milk",
+      "category": "quantity",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 2951,
+      "inputTokens": 854,
+      "outputTokens": 166,
+      "cost": 0.00042100000000000004,
+      "expectedItems": [
+        {
+          "name": "Milk",
+          "quantity": 250,
+          "unit": "ml",
+          "calories": {
+            "min": 100,
+            "max": 160
+          },
+          "protein_g": {
+            "min": 7,
+            "max": 10
+          },
+          "carbs_g": {
+            "min": 11,
+            "max": 14
+          },
+          "fat_g": {
+            "min": 4,
+            "max": 9
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Milk",
+          "quantity": 250,
+          "unit": "ml",
+          "calories_min": 120,
+          "calories_max": 180,
+          "protein_g_min": 8,
+          "protein_g_max": 12,
+          "carbs_g_min": 12,
+          "carbs_g_max": 18,
+          "fat_g_min": 2,
+          "fat_g_max": 4,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 15.384615384615385,
+        "proteinMAPE": 17.647058823529413,
+        "carbsMAPE": 20,
+        "fatMAPE": 53.84615384615385,
+        "overallMAPE": 26.71945701357466
+      }
+    },
+    {
+      "testCaseId": "quantity-3",
+      "description": "30g almonds",
+      "category": "quantity",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 2106,
+      "inputTokens": 855,
+      "outputTokens": 179,
+      "cost": 0.0004375,
+      "expectedItems": [
+        {
+          "name": "Almonds",
+          "quantity": 30,
+          "unit": "g",
+          "calories": {
+            "min": 160,
+            "max": 200
+          },
+          "protein_g": {
+            "min": 5,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 4,
+            "max": 8
+          },
+          "fat_g": {
+            "min": 14,
+            "max": 18
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Almonds",
+          "quantity": 30,
+          "unit": "g",
+          "calories_min": 196,
+          "calories_max": 235,
+          "protein_g_min": 5.7,
+          "protein_g_max": 6.9,
+          "carbs_g_min": 6.3,
+          "carbs_g_max": 7.6,
+          "fat_g_min": 16.5,
+          "fat_g_max": 19.8,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 19.72222222222222,
+        "proteinMAPE": 3.076923076923066,
+        "carbsMAPE": 15.833333333333321,
+        "fatMAPE": 13.437499999999991,
+        "overallMAPE": 13.01749465811965
+      }
+    },
+    {
+      "testCaseId": "vague-1",
+      "description": "A salad",
+      "category": "vague",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 1726,
+      "inputTokens": 854,
+      "outputTokens": 168,
+      "cost": 0.0004235,
+      "expectedItems": [
+        {
+          "name": "Salad",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 50,
+            "max": 200
+          },
+          "protein_g": {
+            "min": 2,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 5,
+            "max": 20
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 15
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 50,
+          "calories_max": 150,
+          "protein_g_min": 2,
+          "protein_g_max": 5,
+          "carbs_g_min": 5,
+          "carbs_g_max": 15,
+          "fat_g_min": 2,
+          "fat_g_max": 8,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 20,
+        "proteinMAPE": 30,
+        "carbsMAPE": 20,
+        "fatMAPE": 41.17647058823529,
+        "overallMAPE": 27.794117647058822
+      }
+    },
+    {
+      "testCaseId": "vague-2",
+      "description": "Some pasta",
+      "category": "vague",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 1621,
+      "inputTokens": 853,
+      "outputTokens": 166,
+      "cost": 0.00042075,
+      "expectedItems": [
+        {
+          "name": "Pasta",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 200,
+            "max": 450
+          },
+          "protein_g": {
+            "min": 7,
+            "max": 15
+          },
+          "carbs_g": {
+            "min": 40,
+            "max": 80
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 15
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Pasta",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 200,
+          "calories_max": 400,
+          "protein_g_min": 8,
+          "protein_g_max": 16,
+          "carbs_g_min": 30,
+          "carbs_g_max": 60,
+          "fat_g_min": 2,
+          "fat_g_max": 4,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 7.6923076923076925,
+        "proteinMAPE": 9.090909090909092,
+        "carbsMAPE": 25,
+        "fatMAPE": 64.70588235294117,
+        "overallMAPE": 26.62227478403949
+      }
+    },
+    {
+      "testCaseId": "vague-3",
+      "description": "Un snack",
+      "category": "vague",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 1850,
+      "inputTokens": 854,
+      "outputTokens": 167,
+      "cost": 0.00042225,
+      "expectedItems": [
+        {
+          "name": "Snack",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 100,
+            "max": 300
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 10,
+            "max": 40
+          },
+          "fat_g": {
+            "min": 3,
+            "max": 18
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Snack",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 0,
+          "calories_max": 0,
+          "protein_g_min": 0,
+          "protein_g_max": 0,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 100,
+        "proteinMAPE": 100,
+        "carbsMAPE": 100,
+        "fatMAPE": 100,
+        "overallMAPE": 100
+      }
+    },
+    {
+      "testCaseId": "alcohol-1",
+      "description": "1 light beer",
+      "category": "alcohol",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 1855,
+      "inputTokens": 855,
+      "outputTokens": 167,
+      "cost": 0.0004225,
+      "expectedItems": [
+        {
+          "name": "Light beer",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 8,
+            "max": 20
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 2,
+            "max": 5
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          },
+          "alcohol_g": 10
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Light Beer",
+          "quantity": 1,
+          "unit": "piece",
+          "calories_min": 95,
+          "calories_max": 115,
+          "protein_g_min": 0,
+          "protein_g_max": 1,
+          "carbs_g_min": 6,
+          "carbs_g_max": 8,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 4,
+          "alcohol_calories": 28
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 58.333333333333336,
+        "proteinMAPE": 0,
+        "carbsMAPE": 100,
+        "fatMAPE": 0,
+        "overallMAPE": 39.583333333333336
+      }
+    },
+    {
+      "testCaseId": "alcohol-2",
+      "description": "Glass of red wine",
+      "category": "alcohol",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 1854,
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "cost": 0,
+      "expectedItems": [
+        {
+          "name": "Red wine",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 5,
+            "max": 20
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 1,
+            "max": 5
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          },
+          "alcohol_g": 14
+        }
+      ],
+      "actualItems": [],
+      "metrics": {
+        "itemCountMatch": false,
+        "caloriesMAPE": 100,
+        "proteinMAPE": 100,
+        "carbsMAPE": 100,
+        "fatMAPE": 100,
+        "overallMAPE": 100
+      },
+      "error": "Invalid item: invalid unit \"glass\" for Red Wine"
+    },
+    {
+      "testCaseId": "alcohol-3",
+      "description": "Una cerveza",
+      "category": "alcohol",
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "latencyMs": 2714,
+      "inputTokens": 854,
+      "outputTokens": 177,
+      "cost": 0.00043475,
+      "expectedItems": [
+        {
+          "name": "Cerveza",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 10,
+            "max": 30
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 2
+          },
+          "carbs_g": {
+            "min": 3,
+            "max": 10
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          },
+          "alcohol_g": 12
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Cerveza",
+          "quantity": 1,
+          "unit": "piece",
+          "calories_min": 142,
+          "calories_max": 170,
+          "protein_g_min": 1.2,
+          "protein_g_max": 1.5,
+          "carbs_g_min": 11.4,
+          "carbs_g_max": 13.7,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 12.8,
+          "alcohol_calories": 90
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 136.53846153846155,
+        "proteinMAPE": 35.00000000000001,
+        "carbsMAPE": 93.0769230769231,
+        "fatMAPE": 0,
+        "overallMAPE": 66.15384615384616
+      }
+    },
+    {
+      "testCaseId": "simple-1",
+      "description": "2 eggs",
+      "category": "simple",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 2290,
+      "inputTokens": 790,
+      "outputTokens": 170,
+      "cost": 0.00011025,
+      "expectedItems": [
+        {
+          "name": "Eggs",
+          "quantity": 2,
+          "unit": "piece",
+          "calories": {
+            "min": 140,
+            "max": 180
+          },
+          "protein_g": {
+            "min": 11,
+            "max": 14
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 9,
+            "max": 12
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Eggs",
+          "quantity": 2,
+          "unit": "piece",
+          "calories_min": 120,
+          "calories_max": 180,
+          "protein_g_min": 10,
+          "protein_g_max": 15,
+          "carbs_g_min": 1,
+          "carbs_g_max": 2,
+          "fat_g_min": 8,
+          "fat_g_max": 12,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 6.25,
+        "proteinMAPE": 0,
+        "carbsMAPE": 50,
+        "fatMAPE": 4.761904761904762,
+        "overallMAPE": 15.25297619047619
+      }
+    },
+    {
+      "testCaseId": "simple-2",
+      "description": "100g chicken breast",
+      "category": "quantity",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 1613,
+      "inputTokens": 794,
+      "outputTokens": 176,
+      "cost": 0.00011235,
+      "expectedItems": [
+        {
+          "name": "Chicken breast",
+          "quantity": 100,
+          "unit": "g",
+          "calories": {
+            "min": 150,
+            "max": 180
+          },
+          "protein_g": {
+            "min": 28,
+            "max": 35
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 1
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 5
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Chicken breast",
+          "quantity": 100,
+          "unit": "g",
+          "calories_min": 165,
+          "calories_max": 195,
+          "protein_g_min": 31,
+          "protein_g_max": 37,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0,
+          "fat_g_min": 3.6,
+          "fat_g_max": 4.4,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 9.090909090909092,
+        "proteinMAPE": 7.936507936507936,
+        "carbsMAPE": 100,
+        "fatMAPE": 14.285714285714285,
+        "overallMAPE": 32.82828282828283
+      }
+    },
+    {
+      "testCaseId": "simple-3",
+      "description": "1 banana",
+      "category": "simple",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 1614,
+      "inputTokens": 790,
+      "outputTokens": 174,
+      "cost": 0.00011145,
+      "expectedItems": [
+        {
+          "name": "Banana",
+          "quantity": 1,
+          "unit": "piece",
+          "calories": {
+            "min": 90,
+            "max": 120
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 2
+          },
+          "carbs_g": {
+            "min": 22,
+            "max": 30
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 1
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Banana",
+          "quantity": 1,
+          "unit": "piece",
+          "calories_min": 90,
+          "calories_max": 110,
+          "protein_g_min": 1,
+          "protein_g_max": 1.5,
+          "carbs_g_min": 23,
+          "carbs_g_max": 27,
+          "fat_g_min": 0.3,
+          "fat_g_max": 0.5,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 4.761904761904762,
+        "proteinMAPE": 16.666666666666664,
+        "carbsMAPE": 3.8461538461538463,
+        "fatMAPE": 19.999999999999996,
+        "overallMAPE": 11.318681318681318
+      }
+    },
+    {
+      "testCaseId": "simple-4",
+      "description": "50g oatmeal",
+      "category": "quantity",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 1566,
+      "inputTokens": 792,
+      "outputTokens": 172,
+      "cost": 0.000111,
+      "expectedItems": [
+        {
+          "name": "Oatmeal",
+          "quantity": 50,
+          "unit": "g",
+          "calories": {
+            "min": 170,
+            "max": 210
+          },
+          "protein_g": {
+            "min": 5,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 28,
+            "max": 35
+          },
+          "fat_g": {
+            "min": 3,
+            "max": 5
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Oatmeal",
+          "quantity": 50,
+          "unit": "g",
+          "calories_min": 185,
+          "calories_max": 225,
+          "protein_g_min": 6,
+          "protein_g_max": 8,
+          "carbs_g_min": 30,
+          "carbs_g_max": 36,
+          "fat_g_min": 3,
+          "fat_g_max": 5,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 7.894736842105263,
+        "proteinMAPE": 7.6923076923076925,
+        "carbsMAPE": 4.761904761904762,
+        "fatMAPE": 0,
+        "overallMAPE": 5.087237324079429
+      }
+    },
+    {
+      "testCaseId": "spanish-1",
+      "description": "Una cucharada de miel",
+      "category": "spanish",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 1628,
+      "inputTokens": 793,
+      "outputTokens": 168,
+      "cost": 0.000109875,
+      "expectedItems": [
+        {
+          "name": "Miel",
+          "quantity": 1,
+          "unit": "spoon",
+          "calories": {
+            "min": 55,
+            "max": 75
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 15,
+            "max": 21
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Miel",
+          "quantity": 1,
+          "unit": "spoon",
+          "calories_min": 60,
+          "calories_max": 70,
+          "protein_g_min": 0,
+          "protein_g_max": 0,
+          "carbs_g_min": 15,
+          "carbs_g_max": 17,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 0,
+        "proteinMAPE": 100,
+        "carbsMAPE": 11.11111111111111,
+        "fatMAPE": 0,
+        "overallMAPE": 27.77777777777778
+      }
+    },
+    {
+      "testCaseId": "spanish-2",
+      "description": "Dos huevos fritos",
+      "category": "spanish",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 1133,
+      "inputTokens": 792,
+      "outputTokens": 172,
+      "cost": 0.000111,
+      "expectedItems": [
+        {
+          "name": "Huevos fritos",
+          "quantity": 2,
+          "unit": "piece",
+          "calories": {
+            "min": 180,
+            "max": 240
+          },
+          "protein_g": {
+            "min": 11,
+            "max": 14
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 14,
+            "max": 20
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Huevos",
+          "quantity": 2,
+          "unit": "piece",
+          "calories_min": 140,
+          "calories_max": 180,
+          "protein_g_min": 12,
+          "protein_g_max": 16,
+          "carbs_g_min": 1,
+          "carbs_g_max": 2,
+          "fat_g_min": 10,
+          "fat_g_max": 14,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 23.809523809523807,
+        "proteinMAPE": 12,
+        "carbsMAPE": 50,
+        "fatMAPE": 29.411764705882355,
+        "overallMAPE": 28.805322128851543
+      }
+    },
+    {
+      "testCaseId": "spanish-3",
+      "description": "200ml de leche",
+      "category": "spanish",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 1574,
+      "inputTokens": 794,
+      "outputTokens": 182,
+      "cost": 0.00011415,
+      "expectedItems": [
+        {
+          "name": "Leche",
+          "quantity": 200,
+          "unit": "ml",
+          "calories": {
+            "min": 80,
+            "max": 130
+          },
+          "protein_g": {
+            "min": 6,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 9,
+            "max": 12
+          },
+          "fat_g": {
+            "min": 3,
+            "max": 7
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Leche",
+          "quantity": 200,
+          "unit": "ml",
+          "calories_min": 96,
+          "calories_max": 112,
+          "protein_g_min": 6.4,
+          "protein_g_max": 7.2,
+          "carbs_g_min": 9.6,
+          "carbs_g_max": 11.2,
+          "fat_g_min": 4.8,
+          "fat_g_max": 5.6,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 0.9523809523809524,
+        "proteinMAPE": 2.857142857142847,
+        "carbsMAPE": 0.952380952380966,
+        "fatMAPE": 3.9999999999999853,
+        "overallMAPE": 2.1904761904761876
+      }
+    },
+    {
+      "testCaseId": "multi-1",
+      "description": "Toast with butter and jam",
+      "category": "multi-item",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 2951,
+      "inputTokens": 793,
+      "outputTokens": 479,
+      "cost": 0.000203175,
+      "expectedItems": [
+        {
+          "name": "Toast",
+          "quantity": 1,
+          "unit": "piece",
+          "calories": {
+            "min": 60,
+            "max": 90
+          },
+          "protein_g": {
+            "min": 2,
+            "max": 4
+          },
+          "carbs_g": {
+            "min": 12,
+            "max": 18
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 2
+          }
+        },
+        {
+          "name": "Butter",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 70,
+            "max": 110
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 1
+          },
+          "fat_g": {
+            "min": 8,
+            "max": 12
+          }
+        },
+        {
+          "name": "Jam",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 40,
+            "max": 60
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 10,
+            "max": 15
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Toast",
+          "quantity": 1,
+          "unit": "piece",
+          "calories_min": 70,
+          "calories_max": 90,
+          "protein_g_min": 2,
+          "protein_g_max": 3,
+          "carbs_g_min": 13,
+          "carbs_g_max": 17,
+          "fat_g_min": 1,
+          "fat_g_max": 2,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Butter",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 35,
+          "calories_max": 55,
+          "protein_g_min": 0,
+          "protein_g_max": 0.5,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0.5,
+          "fat_g_min": 4,
+          "fat_g_max": 6,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Jam",
+          "quantity": 1,
+          "unit": "spoon",
+          "calories_min": 50,
+          "calories_max": 70,
+          "protein_g_min": 0,
+          "protein_g_max": 0,
+          "carbs_g_min": 13,
+          "carbs_g_max": 17,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 25.555555555555554,
+        "proteinMAPE": 55.55555555555555,
+        "carbsMAPE": 23.333333333333332,
+        "fatMAPE": 33.333333333333336,
+        "overallMAPE": 34.44444444444444
+      }
+    },
+    {
+      "testCaseId": "multi-2",
+      "description": "Arroz con pollo y ensalada",
+      "category": "multi-item",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 2364,
+      "inputTokens": 795,
+      "outputTokens": 486,
+      "cost": 0.000205425,
+      "expectedItems": [
+        {
+          "name": "Arroz",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 150,
+            "max": 250
+          },
+          "protein_g": {
+            "min": 3,
+            "max": 6
+          },
+          "carbs_g": {
+            "min": 35,
+            "max": 55
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 2
+          }
+        },
+        {
+          "name": "Pollo",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 150,
+            "max": 250
+          },
+          "protein_g": {
+            "min": 25,
+            "max": 40
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 4,
+            "max": 12
+          }
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 30,
+            "max": 80
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 3
+          },
+          "carbs_g": {
+            "min": 4,
+            "max": 10
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 5
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Arroz",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 100,
+          "calories_max": 150,
+          "protein_g_min": 2,
+          "protein_g_max": 3,
+          "carbs_g_min": 20,
+          "carbs_g_max": 30,
+          "fat_g_min": 1,
+          "fat_g_max": 2,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Pollo",
+          "quantity": 1,
+          "unit": "piece",
+          "calories_min": 150,
+          "calories_max": 250,
+          "protein_g_min": 20,
+          "protein_g_max": 30,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0,
+          "fat_g_min": 7,
+          "fat_g_max": 15,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 50,
+          "calories_max": 100,
+          "protein_g_min": 1,
+          "protein_g_max": 3,
+          "carbs_g_min": 5,
+          "carbs_g_max": 10,
+          "fat_g_min": 2,
+          "fat_g_max": 5,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 24.621212121212125,
+        "proteinMAPE": 22.507122507122507,
+        "carbsMAPE": 50.52910052910053,
+        "fatMAPE": 42.5,
+        "overallMAPE": 35.039358789358786
+      }
+    },
+    {
+      "testCaseId": "multi-3",
+      "description": "Dos presas de pollo, un poco de ensalada",
+      "category": "multi-item",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 2126,
+      "inputTokens": 799,
+      "outputTokens": 329,
+      "cost": 0.000158625,
+      "expectedItems": [
+        {
+          "name": "Presas de pollo",
+          "quantity": 2,
+          "unit": "piece",
+          "calories": {
+            "min": 280,
+            "max": 400
+          },
+          "protein_g": {
+            "min": 35,
+            "max": 55
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 3
+          },
+          "fat_g": {
+            "min": 12,
+            "max": 24
+          }
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 20,
+            "max": 60
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 3
+          },
+          "carbs_g": {
+            "min": 3,
+            "max": 8
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 4
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Pollo",
+          "quantity": 2,
+          "unit": "piece",
+          "calories_min": 300,
+          "calories_max": 450,
+          "protein_g_min": 40,
+          "protein_g_max": 60,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0,
+          "fat_g_min": 15,
+          "fat_g_max": 25,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 50,
+          "calories_max": 150,
+          "protein_g_min": 1,
+          "protein_g_max": 5,
+          "carbs_g_min": 5,
+          "carbs_g_max": 15,
+          "fat_g_min": 1,
+          "fat_g_max": 5,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 80.1470588235294,
+        "proteinMAPE": 30.555555555555557,
+        "carbsMAPE": 90.9090909090909,
+        "fatMAPE": 30.555555555555557,
+        "overallMAPE": 58.04181521093285
+      }
+    },
+    {
+      "testCaseId": "multi-4",
+      "description": "Crackers con queso",
+      "category": "multi-item",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 2374,
+      "inputTokens": 792,
+      "outputTokens": 327,
+      "cost": 0.0001575,
+      "expectedItems": [
+        {
+          "name": "Crackers",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 80,
+            "max": 140
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 3
+          },
+          "carbs_g": {
+            "min": 14,
+            "max": 22
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 6
+          }
+        },
+        {
+          "name": "Queso",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 80,
+            "max": 130
+          },
+          "protein_g": {
+            "min": 5,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 6,
+            "max": 10
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Crackers",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 100,
+          "calories_max": 120,
+          "protein_g_min": 2,
+          "protein_g_max": 3,
+          "carbs_g_min": 15,
+          "carbs_g_max": 18,
+          "fat_g_min": 4,
+          "fat_g_max": 5,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Queso",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 100,
+          "calories_max": 120,
+          "protein_g_min": 7,
+          "protein_g_max": 8,
+          "carbs_g_min": 1,
+          "carbs_g_max": 2,
+          "fat_g_min": 8,
+          "fat_g_max": 9,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 2.380952380952381,
+        "proteinMAPE": 20.192307692307693,
+        "carbsMAPE": 29.166666666666664,
+        "fatMAPE": 9.375,
+        "overallMAPE": 15.278731684981684
+      }
+    },
+    {
+      "testCaseId": "quantity-1",
+      "description": "50g crackers",
+      "category": "quantity",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 1571,
+      "inputTokens": 792,
+      "outputTokens": 171,
+      "cost": 0.00011070000000000001,
+      "expectedItems": [
+        {
+          "name": "Crackers",
+          "quantity": 50,
+          "unit": "g",
+          "calories": {
+            "min": 190,
+            "max": 250
+          },
+          "protein_g": {
+            "min": 4,
+            "max": 7
+          },
+          "carbs_g": {
+            "min": 30,
+            "max": 42
+          },
+          "fat_g": {
+            "min": 6,
+            "max": 11
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Crackers",
+          "quantity": 50,
+          "unit": "g",
+          "calories_min": 170,
+          "calories_max": 210,
+          "protein_g_min": 4,
+          "protein_g_max": 6,
+          "carbs_g_min": 35,
+          "carbs_g_max": 45,
+          "fat_g_min": 2,
+          "fat_g_max": 4,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 13.636363636363635,
+        "proteinMAPE": 9.090909090909092,
+        "carbsMAPE": 11.11111111111111,
+        "fatMAPE": 64.70588235294117,
+        "overallMAPE": 24.636066547831252
+      }
+    },
+    {
+      "testCaseId": "quantity-2",
+      "description": "250ml milk",
+      "category": "quantity",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 1400,
+      "inputTokens": 793,
+      "outputTokens": 177,
+      "cost": 0.00011257499999999999,
+      "expectedItems": [
+        {
+          "name": "Milk",
+          "quantity": 250,
+          "unit": "ml",
+          "calories": {
+            "min": 100,
+            "max": 160
+          },
+          "protein_g": {
+            "min": 7,
+            "max": 10
+          },
+          "carbs_g": {
+            "min": 11,
+            "max": 14
+          },
+          "fat_g": {
+            "min": 4,
+            "max": 9
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Milk",
+          "quantity": 250,
+          "unit": "ml",
+          "calories_min": 120,
+          "calories_max": 144,
+          "protein_g_min": 7.5,
+          "protein_g_max": 9,
+          "carbs_g_min": 11.5,
+          "carbs_g_max": 13.8,
+          "fat_g_min": 5,
+          "fat_g_max": 6,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 1.5384615384615385,
+        "proteinMAPE": 2.941176470588235,
+        "carbsMAPE": 1.2000000000000028,
+        "fatMAPE": 15.384615384615385,
+        "overallMAPE": 5.26606334841629
+      }
+    },
+    {
+      "testCaseId": "quantity-3",
+      "description": "30g almonds",
+      "category": "quantity",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 1334,
+      "inputTokens": 792,
+      "outputTokens": 171,
+      "cost": 0.00011070000000000001,
+      "expectedItems": [
+        {
+          "name": "Almonds",
+          "quantity": 30,
+          "unit": "g",
+          "calories": {
+            "min": 160,
+            "max": 200
+          },
+          "protein_g": {
+            "min": 5,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 4,
+            "max": 8
+          },
+          "fat_g": {
+            "min": 14,
+            "max": 18
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Almonds",
+          "quantity": 30,
+          "unit": "g",
+          "calories_min": 174,
+          "calories_max": 212,
+          "protein_g_min": 6,
+          "protein_g_max": 7,
+          "carbs_g_min": 6,
+          "carbs_g_max": 7,
+          "fat_g_min": 15,
+          "fat_g_max": 18,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 7.222222222222221,
+        "proteinMAPE": 0,
+        "carbsMAPE": 8.333333333333332,
+        "fatMAPE": 3.125,
+        "overallMAPE": 4.670138888888888
+      }
+    },
+    {
+      "testCaseId": "vague-1",
+      "description": "A salad",
+      "category": "vague",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 1397,
+      "inputTokens": 790,
+      "outputTokens": 168,
+      "cost": 0.00010965,
+      "expectedItems": [
+        {
+          "name": "Salad",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 50,
+            "max": 200
+          },
+          "protein_g": {
+            "min": 2,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 5,
+            "max": 20
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 15
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Salad",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 50,
+          "calories_max": 100,
+          "protein_g_min": 1,
+          "protein_g_max": 3,
+          "carbs_g_min": 5,
+          "carbs_g_max": 15,
+          "fat_g_min": 2,
+          "fat_g_max": 8,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 40,
+        "proteinMAPE": 60,
+        "carbsMAPE": 20,
+        "fatMAPE": 41.17647058823529,
+        "overallMAPE": 40.294117647058826
+      }
+    },
+    {
+      "testCaseId": "vague-2",
+      "description": "Some pasta",
+      "category": "vague",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 1646,
+      "inputTokens": 790,
+      "outputTokens": 169,
+      "cost": 0.00010994999999999999,
+      "expectedItems": [
+        {
+          "name": "Pasta",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 200,
+            "max": 450
+          },
+          "protein_g": {
+            "min": 7,
+            "max": 15
+          },
+          "carbs_g": {
+            "min": 40,
+            "max": 80
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 15
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Pasta",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 100,
+          "calories_max": 180,
+          "protein_g_min": 3,
+          "protein_g_max": 6,
+          "carbs_g_min": 20,
+          "carbs_g_max": 40,
+          "fat_g_min": 1,
+          "fat_g_max": 3,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 56.92307692307692,
+        "proteinMAPE": 59.09090909090909,
+        "carbsMAPE": 50,
+        "fatMAPE": 76.47058823529412,
+        "overallMAPE": 60.621143562320036
+      }
+    },
+    {
+      "testCaseId": "vague-3",
+      "description": "Un snack",
+      "category": "vague",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 710,
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "cost": 0,
+      "expectedItems": [
+        {
+          "name": "Snack",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 100,
+            "max": 300
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 10,
+            "max": 40
+          },
+          "fat_g": {
+            "min": 3,
+            "max": 18
+          }
+        }
+      ],
+      "actualItems": [],
+      "metrics": {
+        "itemCountMatch": false,
+        "caloriesMAPE": 100,
+        "proteinMAPE": 100,
+        "carbsMAPE": 100,
+        "fatMAPE": 100,
+        "overallMAPE": 100
+      },
+      "error": "Google API error: {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"The model is overloaded. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n"
+    },
+    {
+      "testCaseId": "alcohol-1",
+      "description": "1 light beer",
+      "category": "alcohol",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 1254,
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "cost": 0,
+      "expectedItems": [
+        {
+          "name": "Light beer",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 8,
+            "max": 20
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 2,
+            "max": 5
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          },
+          "alcohol_g": 10
+        }
+      ],
+      "actualItems": [],
+      "metrics": {
+        "itemCountMatch": false,
+        "caloriesMAPE": 100,
+        "proteinMAPE": 100,
+        "carbsMAPE": 100,
+        "fatMAPE": 100,
+        "overallMAPE": 100
+      },
+      "error": "Google API error: {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"The model is overloaded. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n"
+    },
+    {
+      "testCaseId": "alcohol-2",
+      "description": "Glass of red wine",
+      "category": "alcohol",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 1629,
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "cost": 0,
+      "expectedItems": [
+        {
+          "name": "Red wine",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 5,
+            "max": 20
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 1,
+            "max": 5
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          },
+          "alcohol_g": 14
+        }
+      ],
+      "actualItems": [],
+      "metrics": {
+        "itemCountMatch": false,
+        "caloriesMAPE": 100,
+        "proteinMAPE": 100,
+        "carbsMAPE": 100,
+        "fatMAPE": 100,
+        "overallMAPE": 100
+      },
+      "error": "Invalid item: invalid unit \"glass\" for Vino"
+    },
+    {
+      "testCaseId": "alcohol-3",
+      "description": "Una cerveza",
+      "category": "alcohol",
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "latencyMs": 1260,
+      "inputTokens": 790,
+      "outputTokens": 174,
+      "cost": 0.00011145,
+      "expectedItems": [
+        {
+          "name": "Cerveza",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 10,
+            "max": 30
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 2
+          },
+          "carbs_g": {
+            "min": 3,
+            "max": 10
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          },
+          "alcohol_g": 12
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Cerveza",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 150,
+          "calories_max": 200,
+          "protein_g_min": 1,
+          "protein_g_max": 2,
+          "carbs_g_min": 10,
+          "carbs_g_max": 15,
+          "fat_g_min": 0,
+          "fat_g_max": 1,
+          "alcohol_g": 15,
+          "alcohol_calories": 105
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 169.23076923076923,
+        "proteinMAPE": 50,
+        "carbsMAPE": 92.3076923076923,
+        "fatMAPE": 100,
+        "overallMAPE": 102.88461538461539
+      }
+    },
+    {
+      "testCaseId": "simple-1",
+      "description": "2 eggs",
+      "category": "simple",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 6525,
+      "inputTokens": 790,
+      "outputTokens": 170,
+      "cost": 0.0002205,
+      "expectedItems": [
+        {
+          "name": "Eggs",
+          "quantity": 2,
+          "unit": "piece",
+          "calories": {
+            "min": 140,
+            "max": 180
+          },
+          "protein_g": {
+            "min": 11,
+            "max": 14
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 9,
+            "max": 12
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Eggs",
+          "quantity": 2,
+          "unit": "piece",
+          "calories_min": 121,
+          "calories_max": 181,
+          "protein_g_min": 10,
+          "protein_g_max": 15,
+          "carbs_g_min": 1,
+          "carbs_g_max": 1,
+          "fat_g_min": 8,
+          "fat_g_max": 13,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 5.625,
+        "proteinMAPE": 0,
+        "carbsMAPE": 0,
+        "fatMAPE": 0,
+        "overallMAPE": 1.40625
+      }
+    },
+    {
+      "testCaseId": "simple-2",
+      "description": "100g chicken breast",
+      "category": "quantity",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 6378,
+      "inputTokens": 794,
+      "outputTokens": 182,
+      "cost": 0.0002283,
+      "expectedItems": [
+        {
+          "name": "Chicken breast",
+          "quantity": 100,
+          "unit": "g",
+          "calories": {
+            "min": 150,
+            "max": 180
+          },
+          "protein_g": {
+            "min": 28,
+            "max": 35
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 1
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 5
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Chicken breast",
+          "quantity": 100,
+          "unit": "g",
+          "calories_min": 125,
+          "calories_max": 188,
+          "protein_g_min": 24.8,
+          "protein_g_max": 37.2,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0,
+          "fat_g_min": 2.88,
+          "fat_g_max": 4.32,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 5.151515151515151,
+        "proteinMAPE": 1.5873015873015872,
+        "carbsMAPE": 100,
+        "fatMAPE": 2.85714285714286,
+        "overallMAPE": 27.3989898989899
+      }
+    },
+    {
+      "testCaseId": "simple-3",
+      "description": "1 banana",
+      "category": "simple",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 4227,
+      "inputTokens": 790,
+      "outputTokens": 184,
+      "cost": 0.00022889999999999998,
+      "expectedItems": [
+        {
+          "name": "Banana",
+          "quantity": 1,
+          "unit": "piece",
+          "calories": {
+            "min": 90,
+            "max": 120
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 2
+          },
+          "carbs_g": {
+            "min": 22,
+            "max": 30
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 1
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Banana",
+          "quantity": 1,
+          "unit": "piece",
+          "calories_min": 84,
+          "calories_max": 126,
+          "protein_g_min": 1.04,
+          "protein_g_max": 1.56,
+          "carbs_g_min": 21.6,
+          "carbs_g_max": 32.4,
+          "fat_g_min": 0.32,
+          "fat_g_max": 0.48,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 0,
+        "proteinMAPE": 13.33333333333333,
+        "carbsMAPE": 3.8461538461538463,
+        "fatMAPE": 19.999999999999996,
+        "overallMAPE": 9.294871794871792
+      }
+    },
+    {
+      "testCaseId": "simple-4",
+      "description": "50g oatmeal",
+      "category": "quantity",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 10205,
+      "inputTokens": 792,
+      "outputTokens": 188,
+      "cost": 0.0002316,
+      "expectedItems": [
+        {
+          "name": "Oatmeal",
+          "quantity": 50,
+          "unit": "g",
+          "calories": {
+            "min": 170,
+            "max": 210
+          },
+          "protein_g": {
+            "min": 5,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 28,
+            "max": 35
+          },
+          "fat_g": {
+            "min": 3,
+            "max": 5
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Oatmeal",
+          "quantity": 50,
+          "unit": "g",
+          "calories_min": 151.6,
+          "calories_max": 227.4,
+          "protein_g_min": 5.2,
+          "protein_g_max": 7.8,
+          "carbs_g_min": 26.4,
+          "carbs_g_max": 39.6,
+          "fat_g_min": 2.8,
+          "fat_g_max": 4.2,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 0.2631578947368421,
+        "proteinMAPE": 0,
+        "carbsMAPE": 4.761904761904762,
+        "fatMAPE": 12.5,
+        "overallMAPE": 4.381265664160401
+      }
+    },
+    {
+      "testCaseId": "spanish-1",
+      "description": "Una cucharada de miel",
+      "category": "spanish",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 77064,
+      "inputTokens": 793,
+      "outputTokens": 170,
+      "cost": 0.00022094999999999998,
+      "expectedItems": [
+        {
+          "name": "Miel",
+          "quantity": 1,
+          "unit": "spoon",
+          "calories": {
+            "min": 55,
+            "max": 75
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 15,
+            "max": 21
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Miel",
+          "quantity": 1,
+          "unit": "spoon",
+          "calories_min": 56,
+          "calories_max": 83,
+          "protein_g_min": 0,
+          "protein_g_max": 0.1,
+          "carbs_g_min": 14,
+          "carbs_g_max": 21,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 6.923076923076923,
+        "proteinMAPE": 90,
+        "carbsMAPE": 2.7777777777777777,
+        "fatMAPE": 0,
+        "overallMAPE": 24.925213675213673
+      }
+    },
+    {
+      "testCaseId": "spanish-2",
+      "description": "Dos huevos fritos",
+      "category": "spanish",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 9942,
+      "inputTokens": 792,
+      "outputTokens": 186,
+      "cost": 0.0002304,
+      "expectedItems": [
+        {
+          "name": "Huevos fritos",
+          "quantity": 2,
+          "unit": "piece",
+          "calories": {
+            "min": 180,
+            "max": 240
+          },
+          "protein_g": {
+            "min": 11,
+            "max": 14
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 14,
+            "max": 20
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Huevos fritos",
+          "quantity": 2,
+          "unit": "piece",
+          "calories_min": 232,
+          "calories_max": 348,
+          "protein_g_min": 10.4,
+          "protein_g_max": 15.6,
+          "carbs_g_min": 0.8,
+          "carbs_g_max": 1.2,
+          "fat_g_min": 20.8,
+          "fat_g_max": 31.2,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 38.095238095238095,
+        "proteinMAPE": 4,
+        "carbsMAPE": 0,
+        "fatMAPE": 52.94117647058824,
+        "overallMAPE": 23.759103641456583
+      }
+    },
+    {
+      "testCaseId": "spanish-3",
+      "description": "200ml de leche",
+      "category": "spanish",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 5847,
+      "inputTokens": 794,
+      "outputTokens": 183,
+      "cost": 0.00022889999999999998,
+      "expectedItems": [
+        {
+          "name": "Leche",
+          "quantity": 200,
+          "unit": "ml",
+          "calories": {
+            "min": 80,
+            "max": 130
+          },
+          "protein_g": {
+            "min": 6,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 9,
+            "max": 12
+          },
+          "fat_g": {
+            "min": 3,
+            "max": 7
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Leche",
+          "quantity": 200,
+          "unit": "ml",
+          "calories_min": 104,
+          "calories_max": 156,
+          "protein_g_min": 5.3,
+          "protein_g_max": 7.9,
+          "carbs_g_min": 7.8,
+          "carbs_g_max": 11.6,
+          "fat_g_min": 5.8,
+          "fat_g_max": 8.8,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 23.809523809523807,
+        "proteinMAPE": 5.71428571428572,
+        "carbsMAPE": 7.619047619047626,
+        "fatMAPE": 46.000000000000014,
+        "overallMAPE": 20.785714285714292
+      }
+    },
+    {
+      "testCaseId": "multi-1",
+      "description": "Toast with butter and jam",
+      "category": "multi-item",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 12520,
+      "inputTokens": 793,
+      "outputTokens": 503,
+      "cost": 0.00042074999999999995,
+      "expectedItems": [
+        {
+          "name": "Toast",
+          "quantity": 1,
+          "unit": "piece",
+          "calories": {
+            "min": 60,
+            "max": 90
+          },
+          "protein_g": {
+            "min": 2,
+            "max": 4
+          },
+          "carbs_g": {
+            "min": 12,
+            "max": 18
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 2
+          }
+        },
+        {
+          "name": "Butter",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 70,
+            "max": 110
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 1
+          },
+          "fat_g": {
+            "min": 8,
+            "max": 12
+          }
+        },
+        {
+          "name": "Jam",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 40,
+            "max": 60
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 10,
+            "max": 15
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Toast",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 64.8,
+          "calories_max": 97.2,
+          "protein_g_min": 2.4,
+          "protein_g_max": 3.6,
+          "carbs_g_min": 12,
+          "carbs_g_max": 18,
+          "fat_g_min": 0.8,
+          "fat_g_max": 1.2,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Butter",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 57.6,
+          "calories_max": 86.4,
+          "protein_g_min": 0,
+          "protein_g_max": 0,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0,
+          "fat_g_min": 6.4,
+          "fat_g_max": 9.6,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Jam",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 41.6,
+          "calories_max": 62.4,
+          "protein_g_min": 0,
+          "protein_g_max": 0,
+          "carbs_g_min": 10.4,
+          "carbs_g_max": 15.6,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 10.666666666666666,
+        "proteinMAPE": 66.66666666666667,
+        "carbsMAPE": 34.666666666666664,
+        "fatMAPE": 6.666666666666667,
+        "overallMAPE": 29.666666666666668
+      }
+    },
+    {
+      "testCaseId": "multi-2",
+      "description": "Arroz con pollo y ensalada",
+      "category": "multi-item",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 11624,
+      "inputTokens": 795,
+      "outputTokens": 483,
+      "cost": 0.00040905,
+      "expectedItems": [
+        {
+          "name": "Arroz",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 150,
+            "max": 250
+          },
+          "protein_g": {
+            "min": 3,
+            "max": 6
+          },
+          "carbs_g": {
+            "min": 35,
+            "max": 55
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 2
+          }
+        },
+        {
+          "name": "Pollo",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 150,
+            "max": 250
+          },
+          "protein_g": {
+            "min": 25,
+            "max": 40
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 4,
+            "max": 12
+          }
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 30,
+            "max": 80
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 3
+          },
+          "carbs_g": {
+            "min": 4,
+            "max": 10
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 5
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Arroz",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 114,
+          "calories_max": 267,
+          "protein_g_min": 3,
+          "protein_g_max": 6,
+          "carbs_g_min": 25,
+          "carbs_g_max": 59,
+          "fat_g_min": 0,
+          "fat_g_max": 1,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Pollo",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 89,
+          "calories_max": 207,
+          "protein_g_min": 17,
+          "protein_g_max": 39,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0,
+          "fat_g_min": 2,
+          "fat_g_max": 6,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 41,
+          "calories_max": 95,
+          "protein_g_min": 1,
+          "protein_g_max": 3,
+          "carbs_g_min": 4,
+          "carbs_g_max": 10,
+          "fat_g_min": 2,
+          "fat_g_max": 5,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 18.12878787878788,
+        "proteinMAPE": 4.615384615384616,
+        "carbsMAPE": 35.55555555555556,
+        "fatMAPE": 46.666666666666664,
+        "overallMAPE": 26.24159867909868
+      }
+    },
+    {
+      "testCaseId": "multi-3",
+      "description": "Dos presas de pollo, un poco de ensalada",
+      "category": "multi-item",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 12035,
+      "inputTokens": 799,
+      "outputTokens": 337,
+      "cost": 0.00032205,
+      "expectedItems": [
+        {
+          "name": "Presas de pollo",
+          "quantity": 2,
+          "unit": "piece",
+          "calories": {
+            "min": 280,
+            "max": 400
+          },
+          "protein_g": {
+            "min": 35,
+            "max": 55
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 3
+          },
+          "fat_g": {
+            "min": 12,
+            "max": 24
+          }
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 20,
+            "max": 60
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 3
+          },
+          "carbs_g": {
+            "min": 3,
+            "max": 8
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 4
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Pollo",
+          "quantity": 2,
+          "unit": "piece",
+          "calories_min": 392,
+          "calories_max": 588,
+          "protein_g_min": 80,
+          "protein_g_max": 120,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0,
+          "fat_g_min": 8,
+          "fat_g_max": 12,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 69,
+          "calories_max": 161,
+          "protein_g_min": 1.8,
+          "protein_g_max": 4.2,
+          "carbs_g_min": 6,
+          "carbs_g_max": 14,
+          "fat_g_min": 4.2,
+          "fat_g_max": 9.8,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 115.80882352941177,
+        "proteinMAPE": 86.11111111111111,
+        "carbsMAPE": 90.9090909090909,
+        "fatMAPE": 147.22222222222223,
+        "overallMAPE": 110.012811942959
+      }
+    },
+    {
+      "testCaseId": "multi-4",
+      "description": "Crackers con queso",
+      "category": "multi-item",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 7439,
+      "inputTokens": 792,
+      "outputTokens": 351,
+      "cost": 0.0003294,
+      "expectedItems": [
+        {
+          "name": "Crackers",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 80,
+            "max": 140
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 3
+          },
+          "carbs_g": {
+            "min": 14,
+            "max": 22
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 6
+          }
+        },
+        {
+          "name": "Queso",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 80,
+            "max": 130
+          },
+          "protein_g": {
+            "min": 5,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 6,
+            "max": 10
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Crackers",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 117,
+          "calories_max": 175,
+          "protein_g_min": 2.4,
+          "protein_g_max": 3.6,
+          "carbs_g_min": 16,
+          "carbs_g_max": 24,
+          "fat_g_min": 4.8,
+          "fat_g_max": 7.2,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Queso",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 90,
+          "calories_max": 136,
+          "protein_g_min": 5.6,
+          "protein_g_max": 8.4,
+          "carbs_g_min": 0.8,
+          "carbs_g_max": 1.2,
+          "fat_g_min": 7.2,
+          "fat_g_max": 10.8,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 20.173160173160174,
+        "proteinMAPE": 28.846153846153847,
+        "carbsMAPE": 5.555555555555555,
+        "fatMAPE": 31.25,
+        "overallMAPE": 21.456217393717395
+      }
+    },
+    {
+      "testCaseId": "quantity-1",
+      "description": "50g crackers",
+      "category": "quantity",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 5278,
+      "inputTokens": 792,
+      "outputTokens": 172,
+      "cost": 0.000222,
+      "expectedItems": [
+        {
+          "name": "Crackers",
+          "quantity": 50,
+          "unit": "g",
+          "calories": {
+            "min": 190,
+            "max": 250
+          },
+          "protein_g": {
+            "min": 4,
+            "max": 7
+          },
+          "carbs_g": {
+            "min": 30,
+            "max": 42
+          },
+          "fat_g": {
+            "min": 6,
+            "max": 11
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Crackers",
+          "quantity": 50,
+          "unit": "g",
+          "calories_min": 200,
+          "calories_max": 300,
+          "protein_g_min": 4,
+          "protein_g_max": 6,
+          "carbs_g_min": 28,
+          "carbs_g_max": 42,
+          "fat_g_min": 8,
+          "fat_g_max": 12,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 13.636363636363635,
+        "proteinMAPE": 9.090909090909092,
+        "carbsMAPE": 2.7777777777777777,
+        "fatMAPE": 17.647058823529413,
+        "overallMAPE": 10.78802733214498
+      }
+    },
+    {
+      "testCaseId": "quantity-2",
+      "description": "250ml milk",
+      "category": "quantity",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 7921,
+      "inputTokens": 793,
+      "outputTokens": 183,
+      "cost": 0.00022875,
+      "expectedItems": [
+        {
+          "name": "Milk",
+          "quantity": 250,
+          "unit": "ml",
+          "calories": {
+            "min": 100,
+            "max": 160
+          },
+          "protein_g": {
+            "min": 7,
+            "max": 10
+          },
+          "carbs_g": {
+            "min": 11,
+            "max": 14
+          },
+          "fat_g": {
+            "min": 4,
+            "max": 9
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Milk",
+          "quantity": 250,
+          "unit": "ml",
+          "calories_min": 127,
+          "calories_max": 191,
+          "protein_g_min": 6.6,
+          "protein_g_max": 9.9,
+          "carbs_g_min": 9.4,
+          "carbs_g_max": 14.1,
+          "fat_g_min": 7,
+          "fat_g_max": 10.5,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 22.30769230769231,
+        "proteinMAPE": 2.941176470588235,
+        "carbsMAPE": 6,
+        "fatMAPE": 34.61538461538461,
+        "overallMAPE": 16.46606334841629
+      }
+    },
+    {
+      "testCaseId": "quantity-3",
+      "description": "30g almonds",
+      "category": "quantity",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 7028,
+      "inputTokens": 792,
+      "outputTokens": 183,
+      "cost": 0.0002286,
+      "expectedItems": [
+        {
+          "name": "Almonds",
+          "quantity": 30,
+          "unit": "g",
+          "calories": {
+            "min": 160,
+            "max": 200
+          },
+          "protein_g": {
+            "min": 5,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 4,
+            "max": 8
+          },
+          "fat_g": {
+            "min": 14,
+            "max": 18
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Almonds",
+          "quantity": 30,
+          "unit": "g",
+          "calories_min": 149,
+          "calories_max": 223,
+          "protein_g_min": 5.1,
+          "protein_g_max": 7.6,
+          "carbs_g_min": 5.2,
+          "carbs_g_max": 7.8,
+          "fat_g_min": 12,
+          "fat_g_max": 18,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 3.3333333333333335,
+        "proteinMAPE": 2.307692307692313,
+        "carbsMAPE": 8.333333333333332,
+        "fatMAPE": 6.25,
+        "overallMAPE": 5.0560897435897445
+      }
+    },
+    {
+      "testCaseId": "vague-1",
+      "description": "A salad",
+      "category": "vague",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 7201,
+      "inputTokens": 790,
+      "outputTokens": 169,
+      "cost": 0.00021989999999999998,
+      "expectedItems": [
+        {
+          "name": "Salad",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 50,
+            "max": 200
+          },
+          "protein_g": {
+            "min": 2,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 5,
+            "max": 20
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 15
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Salad",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 81,
+          "calories_max": 183,
+          "protein_g_min": 2,
+          "protein_g_max": 4,
+          "carbs_g_min": 7,
+          "carbs_g_max": 17,
+          "fat_g_min": 5,
+          "fat_g_max": 11,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 5.6000000000000005,
+        "proteinMAPE": 40,
+        "carbsMAPE": 4,
+        "fatMAPE": 5.88235294117647,
+        "overallMAPE": 13.870588235294118
+      }
+    },
+    {
+      "testCaseId": "vague-2",
+      "description": "Some pasta",
+      "category": "vague",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 6923,
+      "inputTokens": 790,
+      "outputTokens": 170,
+      "cost": 0.0002205,
+      "expectedItems": [
+        {
+          "name": "Pasta",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 200,
+            "max": 450
+          },
+          "protein_g": {
+            "min": 7,
+            "max": 15
+          },
+          "carbs_g": {
+            "min": 40,
+            "max": 80
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 15
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Pasta",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 135,
+          "calories_max": 316,
+          "protein_g_min": 5,
+          "protein_g_max": 11,
+          "carbs_g_min": 27,
+          "carbs_g_max": 63,
+          "fat_g_min": 1,
+          "fat_g_max": 2,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 30.615384615384617,
+        "proteinMAPE": 27.27272727272727,
+        "carbsMAPE": 25,
+        "fatMAPE": 82.35294117647058,
+        "overallMAPE": 41.31026326614562
+      }
+    },
+    {
+      "testCaseId": "vague-3",
+      "description": "Un snack",
+      "category": "vague",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 5818,
+      "inputTokens": 790,
+      "outputTokens": 169,
+      "cost": 0.00021989999999999998,
+      "expectedItems": [
+        {
+          "name": "Snack",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 100,
+            "max": 300
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 10,
+            "max": 40
+          },
+          "fat_g": {
+            "min": 3,
+            "max": 18
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Snack",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 90,
+          "calories_max": 210,
+          "protein_g_min": 3,
+          "protein_g_max": 7,
+          "carbs_g_min": 12,
+          "carbs_g_max": 28,
+          "fat_g_min": 3,
+          "fat_g_max": 7,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 25,
+        "proteinMAPE": 11.11111111111111,
+        "carbsMAPE": 20,
+        "fatMAPE": 52.38095238095239,
+        "overallMAPE": 27.123015873015873
+      }
+    },
+    {
+      "testCaseId": "alcohol-1",
+      "description": "1 light beer",
+      "category": "alcohol",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 9409,
+      "inputTokens": 791,
+      "outputTokens": 172,
+      "cost": 0.00022185,
+      "expectedItems": [
+        {
+          "name": "Light beer",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 8,
+            "max": 20
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 2,
+            "max": 5
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          },
+          "alcohol_g": 10
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Light beer",
+          "quantity": 1,
+          "unit": "piece",
+          "calories_min": 19,
+          "calories_max": 29,
+          "protein_g_min": 0.8,
+          "protein_g_max": 1.2,
+          "carbs_g_min": 4,
+          "carbs_g_max": 6,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 11,
+          "alcohol_calories": 77
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 20.238095238095237,
+        "proteinMAPE": 100,
+        "carbsMAPE": 42.857142857142854,
+        "fatMAPE": 0,
+        "overallMAPE": 40.773809523809526
+      }
+    },
+    {
+      "testCaseId": "alcohol-2",
+      "description": "Glass of red wine",
+      "category": "alcohol",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 10046,
+      "inputTokens": 792,
+      "outputTokens": 178,
+      "cost": 0.0002256,
+      "expectedItems": [
+        {
+          "name": "Red wine",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 5,
+            "max": 20
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 1,
+            "max": 5
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          },
+          "alcohol_g": 14
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Red wine",
+          "quantity": 250,
+          "unit": "ml",
+          "calories_min": 26,
+          "calories_max": 40,
+          "protein_g_min": 0,
+          "protein_g_max": 0,
+          "carbs_g_min": 6.6,
+          "carbs_g_max": 10,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 25.6,
+          "alcohol_calories": 179
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 91.8552036199095,
+        "proteinMAPE": 100,
+        "carbsMAPE": 176.66666666666669,
+        "fatMAPE": 0,
+        "overallMAPE": 92.13046757164405
+      }
+    },
+    {
+      "testCaseId": "alcohol-3",
+      "description": "Una cerveza",
+      "category": "alcohol",
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "latencyMs": 7988,
+      "inputTokens": 790,
+      "outputTokens": 171,
+      "cost": 0.0002211,
+      "expectedItems": [
+        {
+          "name": "Cerveza",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 10,
+            "max": 30
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 2
+          },
+          "carbs_g": {
+            "min": 3,
+            "max": 10
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          },
+          "alcohol_g": 12
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Cerveza",
+          "quantity": 1,
+          "unit": "piece",
+          "calories_min": 44,
+          "calories_max": 64,
+          "protein_g_min": 1,
+          "protein_g_max": 2,
+          "carbs_g_min": 10,
+          "carbs_g_max": 14,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 13,
+          "alcohol_calories": 91
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 39.42307692307692,
+        "proteinMAPE": 50,
+        "carbsMAPE": 84.61538461538461,
+        "fatMAPE": 0,
+        "overallMAPE": 43.50961538461539
+      }
+    },
+    {
+      "testCaseId": "simple-1",
+      "description": "2 eggs",
+      "category": "simple",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 3158,
+      "inputTokens": 790,
+      "outputTokens": 187,
+      "cost": 0.0001538,
+      "expectedItems": [
+        {
+          "name": "Eggs",
+          "quantity": 2,
+          "unit": "piece",
+          "calories": {
+            "min": 140,
+            "max": 180
+          },
+          "protein_g": {
+            "min": 11,
+            "max": 14
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 9,
+            "max": 12
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Eggs",
+          "quantity": 2,
+          "unit": "piece",
+          "calories_min": 144,
+          "calories_max": 176,
+          "protein_g_min": 11.52,
+          "protein_g_max": 14.08,
+          "carbs_g_min": 0.72,
+          "carbs_g_max": 0.88,
+          "fat_g_min": 9.6,
+          "fat_g_max": 11.73,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 0,
+        "proteinMAPE": 2.4000000000000057,
+        "carbsMAPE": 19.999999999999996,
+        "fatMAPE": 1.5714285714285632,
+        "overallMAPE": 5.992857142857141
+      }
+    },
+    {
+      "testCaseId": "simple-2",
+      "description": "100g chicken breast",
+      "category": "quantity",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 1579,
+      "inputTokens": 794,
+      "outputTokens": 174,
+      "cost": 0.00014900000000000002,
+      "expectedItems": [
+        {
+          "name": "Chicken breast",
+          "quantity": 100,
+          "unit": "g",
+          "calories": {
+            "min": 150,
+            "max": 180
+          },
+          "protein_g": {
+            "min": 28,
+            "max": 35
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 1
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 5
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Chicken breast",
+          "quantity": 100,
+          "unit": "g",
+          "calories_min": 132,
+          "calories_max": 198,
+          "protein_g_min": 26,
+          "protein_g_max": 39,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0,
+          "fat_g_min": 1,
+          "fat_g_max": 1.5,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 0,
+        "proteinMAPE": 3.1746031746031744,
+        "carbsMAPE": 100,
+        "fatMAPE": 64.28571428571429,
+        "overallMAPE": 41.86507936507937
+      }
+    },
+    {
+      "testCaseId": "simple-3",
+      "description": "1 banana",
+      "category": "simple",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 1957,
+      "inputTokens": 790,
+      "outputTokens": 180,
+      "cost": 0.000151,
+      "expectedItems": [
+        {
+          "name": "Banana",
+          "quantity": 1,
+          "unit": "piece",
+          "calories": {
+            "min": 90,
+            "max": 120
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 2
+          },
+          "carbs_g": {
+            "min": 22,
+            "max": 30
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 1
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Banana",
+          "quantity": 1,
+          "unit": "piece",
+          "calories_min": 90,
+          "calories_max": 126,
+          "protein_g_min": 1,
+          "protein_g_max": 1.4,
+          "carbs_g_min": 20.8,
+          "carbs_g_max": 29.12,
+          "fat_g_min": 0.3,
+          "fat_g_max": 0.42,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 2.857142857142857,
+        "proteinMAPE": 20.000000000000004,
+        "carbsMAPE": 3.9999999999999964,
+        "fatMAPE": 28.000000000000004,
+        "overallMAPE": 13.714285714285715
+      }
+    },
+    {
+      "testCaseId": "simple-4",
+      "description": "50g oatmeal",
+      "category": "quantity",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 1751,
+      "inputTokens": 792,
+      "outputTokens": 172,
+      "cost": 0.00014800000000000002,
+      "expectedItems": [
+        {
+          "name": "Oatmeal",
+          "quantity": 50,
+          "unit": "g",
+          "calories": {
+            "min": 170,
+            "max": 210
+          },
+          "protein_g": {
+            "min": 5,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 28,
+            "max": 35
+          },
+          "fat_g": {
+            "min": 3,
+            "max": 5
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Oatmeal",
+          "quantity": 50,
+          "unit": "g",
+          "calories_min": 160,
+          "calories_max": 240,
+          "protein_g_min": 4,
+          "protein_g_max": 6,
+          "carbs_g_min": 24,
+          "carbs_g_max": 36,
+          "fat_g_min": 2,
+          "fat_g_max": 3,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 5.263157894736842,
+        "proteinMAPE": 23.076923076923077,
+        "carbsMAPE": 4.761904761904762,
+        "fatMAPE": 37.5,
+        "overallMAPE": 17.65049643339117
+      }
+    },
+    {
+      "testCaseId": "spanish-1",
+      "description": "Una cucharada de miel",
+      "category": "spanish",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 1445,
+      "inputTokens": 793,
+      "outputTokens": 171,
+      "cost": 0.0001477,
+      "expectedItems": [
+        {
+          "name": "Miel",
+          "quantity": 1,
+          "unit": "spoon",
+          "calories": {
+            "min": 55,
+            "max": 75
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 15,
+            "max": 21
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Miel",
+          "quantity": 1,
+          "unit": "spoon",
+          "calories_min": 48,
+          "calories_max": 72,
+          "protein_g_min": 0,
+          "protein_g_max": 0.06,
+          "carbs_g_min": 12,
+          "carbs_g_max": 18,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 7.6923076923076925,
+        "proteinMAPE": 94,
+        "carbsMAPE": 16.666666666666664,
+        "fatMAPE": 0,
+        "overallMAPE": 29.58974358974359
+      }
+    },
+    {
+      "testCaseId": "spanish-2",
+      "description": "Dos huevos fritos",
+      "category": "spanish",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 1552,
+      "inputTokens": 792,
+      "outputTokens": 190,
+      "cost": 0.0001552,
+      "expectedItems": [
+        {
+          "name": "Huevos fritos",
+          "quantity": 2,
+          "unit": "piece",
+          "calories": {
+            "min": 180,
+            "max": 240
+          },
+          "protein_g": {
+            "min": 11,
+            "max": 14
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 14,
+            "max": 20
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Huevos fritos",
+          "quantity": 2,
+          "unit": "piece",
+          "calories_min": 154,
+          "calories_max": 231,
+          "protein_g_min": 10.24,
+          "protein_g_max": 15.36,
+          "carbs_g_min": 1.04,
+          "carbs_g_max": 1.56,
+          "fat_g_min": 11.2,
+          "fat_g_max": 16.8,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 8.333333333333332,
+        "proteinMAPE": 2.4000000000000057,
+        "carbsMAPE": 30.000000000000004,
+        "fatMAPE": 17.647058823529413,
+        "overallMAPE": 14.595098039215689
+      }
+    },
+    {
+      "testCaseId": "spanish-3",
+      "description": "200ml de leche",
+      "category": "spanish",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 1588,
+      "inputTokens": 794,
+      "outputTokens": 182,
+      "cost": 0.0001522,
+      "expectedItems": [
+        {
+          "name": "Leche",
+          "quantity": 200,
+          "unit": "ml",
+          "calories": {
+            "min": 80,
+            "max": 130
+          },
+          "protein_g": {
+            "min": 6,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 9,
+            "max": 12
+          },
+          "fat_g": {
+            "min": 3,
+            "max": 7
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Leche",
+          "quantity": 200,
+          "unit": "ml",
+          "calories_min": 96,
+          "calories_max": 144,
+          "protein_g_min": 6.4,
+          "protein_g_max": 9.6,
+          "carbs_g_min": 9.6,
+          "carbs_g_max": 14.4,
+          "fat_g_min": 4,
+          "fat_g_max": 6,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 14.285714285714285,
+        "proteinMAPE": 14.285714285714285,
+        "carbsMAPE": 14.285714285714285,
+        "fatMAPE": 0,
+        "overallMAPE": 10.714285714285714
+      }
+    },
+    {
+      "testCaseId": "multi-1",
+      "description": "Toast with butter and jam",
+      "category": "multi-item",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 5182,
+      "inputTokens": 793,
+      "outputTokens": 485,
+      "cost": 0.00027330000000000003,
+      "expectedItems": [
+        {
+          "name": "Toast",
+          "quantity": 1,
+          "unit": "piece",
+          "calories": {
+            "min": 60,
+            "max": 90
+          },
+          "protein_g": {
+            "min": 2,
+            "max": 4
+          },
+          "carbs_g": {
+            "min": 12,
+            "max": 18
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 2
+          }
+        },
+        {
+          "name": "Butter",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 70,
+            "max": 110
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 1
+          },
+          "fat_g": {
+            "min": 8,
+            "max": 12
+          }
+        },
+        {
+          "name": "Jam",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 40,
+            "max": 60
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 10,
+            "max": 15
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Toast",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 60,
+          "calories_max": 100,
+          "protein_g_min": 2,
+          "protein_g_max": 4,
+          "carbs_g_min": 10,
+          "carbs_g_max": 16,
+          "fat_g_min": 0.5,
+          "fat_g_max": 1.5,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Butter",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 32,
+          "calories_max": 53,
+          "protein_g_min": 0,
+          "protein_g_max": 1,
+          "carbs_g_min": 0,
+          "carbs_g_max": 1,
+          "fat_g_min": 3.6,
+          "fat_g_max": 6,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Jam",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 35,
+          "calories_max": 58,
+          "protein_g_min": 0,
+          "protein_g_max": 0.3,
+          "carbs_g_min": 8,
+          "carbs_g_max": 14,
+          "fat_g_min": 0,
+          "fat_g_max": 0.1,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 22.14814814814815,
+        "proteinMAPE": 23.333333333333332,
+        "carbsMAPE": 8.444444444444445,
+        "fatMAPE": 50.666666666666664,
+        "overallMAPE": 26.148148148148145
+      }
+    },
+    {
+      "testCaseId": "multi-2",
+      "description": "Arroz con pollo y ensalada",
+      "category": "multi-item",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 2876,
+      "inputTokens": 795,
+      "outputTokens": 483,
+      "cost": 0.0002727,
+      "expectedItems": [
+        {
+          "name": "Arroz",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 150,
+            "max": 250
+          },
+          "protein_g": {
+            "min": 3,
+            "max": 6
+          },
+          "carbs_g": {
+            "min": 35,
+            "max": 55
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 2
+          }
+        },
+        {
+          "name": "Pollo",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 150,
+            "max": 250
+          },
+          "protein_g": {
+            "min": 25,
+            "max": 40
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 4,
+            "max": 12
+          }
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 30,
+            "max": 80
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 3
+          },
+          "carbs_g": {
+            "min": 4,
+            "max": 10
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 5
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Arroz",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 160,
+          "calories_max": 240,
+          "protein_g_min": 3,
+          "protein_g_max": 5,
+          "carbs_g_min": 30,
+          "carbs_g_max": 45,
+          "fat_g_min": 0,
+          "fat_g_max": 1,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Pollo",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 160,
+          "calories_max": 240,
+          "protein_g_min": 24,
+          "protein_g_max": 36,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0,
+          "fat_g_min": 6,
+          "fat_g_max": 9,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 40,
+          "calories_max": 60,
+          "protein_g_min": 1,
+          "protein_g_max": 2,
+          "carbs_g_min": 5,
+          "carbs_g_max": 7,
+          "fat_g_min": 1,
+          "fat_g_max": 2,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 3.0303030303030307,
+        "proteinMAPE": 14.601139601139602,
+        "carbsMAPE": 43.650793650793645,
+        "fatMAPE": 32.083333333333336,
+        "overallMAPE": 23.341392403892403
+      }
+    },
+    {
+      "testCaseId": "multi-3",
+      "description": "Dos presas de pollo, un poco de ensalada",
+      "category": "multi-item",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 2367,
+      "inputTokens": 799,
+      "outputTokens": 347,
+      "cost": 0.0002187,
+      "expectedItems": [
+        {
+          "name": "Presas de pollo",
+          "quantity": 2,
+          "unit": "piece",
+          "calories": {
+            "min": 280,
+            "max": 400
+          },
+          "protein_g": {
+            "min": 35,
+            "max": 55
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 3
+          },
+          "fat_g": {
+            "min": 12,
+            "max": 24
+          }
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 20,
+            "max": 60
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 3
+          },
+          "carbs_g": {
+            "min": 3,
+            "max": 8
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 4
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Presas de pollo",
+          "quantity": 2,
+          "unit": "piece",
+          "calories_min": 400,
+          "calories_max": 560,
+          "protein_g_min": 56,
+          "protein_g_max": 78.4,
+          "carbs_g_min": 0,
+          "carbs_g_max": 0,
+          "fat_g_min": 18,
+          "fat_g_max": 25.2,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Ensalada",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 48,
+          "calories_max": 112,
+          "protein_g_min": 2.4,
+          "protein_g_max": 5.6,
+          "carbs_g_min": 4.8,
+          "carbs_g_max": 11.2,
+          "fat_g_min": 2.4,
+          "fat_g_max": 5.6,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 70.58823529411765,
+        "proteinMAPE": 74.66666666666667,
+        "carbsMAPE": 72.72727272727272,
+        "fatMAPE": 60,
+        "overallMAPE": 69.49554367201426
+      }
+    },
+    {
+      "testCaseId": "multi-4",
+      "description": "Crackers con queso",
+      "category": "multi-item",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 2923,
+      "inputTokens": 792,
+      "outputTokens": 326,
+      "cost": 0.0002096,
+      "expectedItems": [
+        {
+          "name": "Crackers",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 80,
+            "max": 140
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 3
+          },
+          "carbs_g": {
+            "min": 14,
+            "max": 22
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 6
+          }
+        },
+        {
+          "name": "Queso",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 80,
+            "max": 130
+          },
+          "protein_g": {
+            "min": 5,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 0,
+            "max": 2
+          },
+          "fat_g": {
+            "min": 6,
+            "max": 10
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Crackers",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 60,
+          "calories_max": 100,
+          "protein_g_min": 1,
+          "protein_g_max": 2,
+          "carbs_g_min": 10,
+          "carbs_g_max": 16,
+          "fat_g_min": 1,
+          "fat_g_max": 2,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        },
+        {
+          "name": "Queso",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 80,
+          "calories_max": 133,
+          "protein_g_min": 5,
+          "protein_g_max": 8,
+          "carbs_g_min": 0,
+          "carbs_g_max": 1,
+          "fat_g_min": 6,
+          "fat_g_max": 10,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 14.350649350649348,
+        "proteinMAPE": 12.5,
+        "carbsMAPE": 38.888888888888886,
+        "fatMAPE": 31.25,
+        "overallMAPE": 24.24738455988456
+      }
+    },
+    {
+      "testCaseId": "quantity-1",
+      "description": "50g crackers",
+      "category": "quantity",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 2155,
+      "inputTokens": 792,
+      "outputTokens": 172,
+      "cost": 0.00014800000000000002,
+      "expectedItems": [
+        {
+          "name": "Crackers",
+          "quantity": 50,
+          "unit": "g",
+          "calories": {
+            "min": 190,
+            "max": 250
+          },
+          "protein_g": {
+            "min": 4,
+            "max": 7
+          },
+          "carbs_g": {
+            "min": 30,
+            "max": 42
+          },
+          "fat_g": {
+            "min": 6,
+            "max": 11
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Crackers",
+          "quantity": 50,
+          "unit": "g",
+          "calories_min": 200,
+          "calories_max": 280,
+          "protein_g_min": 3,
+          "protein_g_max": 5,
+          "carbs_g_min": 30,
+          "carbs_g_max": 42,
+          "fat_g_min": 6,
+          "fat_g_max": 10,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 9.090909090909092,
+        "proteinMAPE": 27.27272727272727,
+        "carbsMAPE": 0,
+        "fatMAPE": 5.88235294117647,
+        "overallMAPE": 10.561497326203208
+      }
+    },
+    {
+      "testCaseId": "quantity-2",
+      "description": "250ml milk",
+      "category": "quantity",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 1506,
+      "inputTokens": 793,
+      "outputTokens": 171,
+      "cost": 0.0001477,
+      "expectedItems": [
+        {
+          "name": "Milk",
+          "quantity": 250,
+          "unit": "ml",
+          "calories": {
+            "min": 100,
+            "max": 160
+          },
+          "protein_g": {
+            "min": 7,
+            "max": 10
+          },
+          "carbs_g": {
+            "min": 11,
+            "max": 14
+          },
+          "fat_g": {
+            "min": 4,
+            "max": 9
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Milk",
+          "quantity": 250,
+          "unit": "ml",
+          "calories_min": 120,
+          "calories_max": 180,
+          "protein_g_min": 7,
+          "protein_g_max": 11,
+          "carbs_g_min": 9,
+          "carbs_g_max": 13,
+          "fat_g_min": 5,
+          "fat_g_max": 9,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 15.384615384615385,
+        "proteinMAPE": 5.88235294117647,
+        "carbsMAPE": 12,
+        "fatMAPE": 7.6923076923076925,
+        "overallMAPE": 10.239819004524886
+      }
+    },
+    {
+      "testCaseId": "quantity-3",
+      "description": "30g almonds",
+      "category": "quantity",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 1548,
+      "inputTokens": 792,
+      "outputTokens": 187,
+      "cost": 0.000154,
+      "expectedItems": [
+        {
+          "name": "Almonds",
+          "quantity": 30,
+          "unit": "g",
+          "calories": {
+            "min": 160,
+            "max": 200
+          },
+          "protein_g": {
+            "min": 5,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 4,
+            "max": 8
+          },
+          "fat_g": {
+            "min": 14,
+            "max": 18
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Almonds",
+          "quantity": 30,
+          "unit": "g",
+          "calories_min": 172.8,
+          "calories_max": 259.2,
+          "protein_g_min": 4.8,
+          "protein_g_max": 7.2,
+          "carbs_g_min": 4.8,
+          "carbs_g_max": 7.2,
+          "fat_g_min": 14.4,
+          "fat_g_max": 21.6,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 20,
+        "proteinMAPE": 7.6923076923076925,
+        "carbsMAPE": 0,
+        "fatMAPE": 12.5,
+        "overallMAPE": 10.048076923076923
+      }
+    },
+    {
+      "testCaseId": "vague-1",
+      "description": "A salad",
+      "category": "vague",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 2056,
+      "inputTokens": 790,
+      "outputTokens": 180,
+      "cost": 0.000151,
+      "expectedItems": [
+        {
+          "name": "Salad",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 50,
+            "max": 200
+          },
+          "protein_g": {
+            "min": 2,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 5,
+            "max": 20
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 15
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Salad",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 48,
+          "calories_max": 112,
+          "protein_g_min": 2.4,
+          "protein_g_max": 5.6,
+          "carbs_g_min": 4.8,
+          "carbs_g_max": 11.2,
+          "fat_g_min": 2.4,
+          "fat_g_max": 5.6,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 36,
+        "proteinMAPE": 20,
+        "carbsMAPE": 36,
+        "fatMAPE": 52.94117647058824,
+        "overallMAPE": 36.23529411764706
+      }
+    },
+    {
+      "testCaseId": "vague-2",
+      "description": "Some pasta",
+      "category": "vague",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 2204,
+      "inputTokens": 790,
+      "outputTokens": 182,
+      "cost": 0.0001518,
+      "expectedItems": [
+        {
+          "name": "Pasta",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 200,
+            "max": 450
+          },
+          "protein_g": {
+            "min": 7,
+            "max": 15
+          },
+          "carbs_g": {
+            "min": 40,
+            "max": 80
+          },
+          "fat_g": {
+            "min": 2,
+            "max": 15
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Pasta",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 132,
+          "calories_max": 308,
+          "protein_g_min": 4.8,
+          "protein_g_max": 11.2,
+          "carbs_g_min": 22.4,
+          "carbs_g_max": 52.2,
+          "fat_g_min": 0.4,
+          "fat_g_max": 0.9,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 32.30769230769231,
+        "proteinMAPE": 27.27272727272727,
+        "carbsMAPE": 37.833333333333336,
+        "fatMAPE": 92.35294117647058,
+        "overallMAPE": 47.441673522555874
+      }
+    },
+    {
+      "testCaseId": "vague-3",
+      "description": "Un snack",
+      "category": "vague",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 1422,
+      "inputTokens": 790,
+      "outputTokens": 172,
+      "cost": 0.00014780000000000001,
+      "expectedItems": [
+        {
+          "name": "Snack",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 100,
+            "max": 300
+          },
+          "protein_g": {
+            "min": 1,
+            "max": 8
+          },
+          "carbs_g": {
+            "min": 10,
+            "max": 40
+          },
+          "fat_g": {
+            "min": 3,
+            "max": 18
+          }
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Snack",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 120,
+          "calories_max": 280,
+          "protein_g_min": 5,
+          "protein_g_max": 15,
+          "carbs_g_min": 10,
+          "carbs_g_max": 30,
+          "fat_g_min": 5,
+          "fat_g_max": 15,
+          "alcohol_g": 0,
+          "alcohol_calories": 0
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 0,
+        "proteinMAPE": 122.22222222222223,
+        "carbsMAPE": 20,
+        "fatMAPE": 4.761904761904762,
+        "overallMAPE": 36.74603174603175
+      }
+    },
+    {
+      "testCaseId": "alcohol-1",
+      "description": "1 light beer",
+      "category": "alcohol",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 1421,
+      "inputTokens": 791,
+      "outputTokens": 177,
+      "cost": 0.0001499,
+      "expectedItems": [
+        {
+          "name": "Light beer",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 8,
+            "max": 20
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 2,
+            "max": 5
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          },
+          "alcohol_g": 10
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Light beer",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 80,
+          "calories_max": 120,
+          "protein_g_min": 0.6,
+          "protein_g_max": 1.4,
+          "carbs_g_min": 2.4,
+          "carbs_g_max": 7.2,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 11,
+          "alcohol_calories": 77
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 110.71428571428572,
+        "proteinMAPE": 100,
+        "carbsMAPE": 37.14285714285714,
+        "fatMAPE": 0,
+        "overallMAPE": 61.964285714285715
+      }
+    },
+    {
+      "testCaseId": "alcohol-2",
+      "description": "Glass of red wine",
+      "category": "alcohol",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 2225,
+      "inputTokens": 792,
+      "outputTokens": 174,
+      "cost": 0.0001488,
+      "expectedItems": [
+        {
+          "name": "Red wine",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 5,
+            "max": 20
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 1
+          },
+          "carbs_g": {
+            "min": 1,
+            "max": 5
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          },
+          "alcohol_g": 14
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Red wine",
+          "quantity": 150,
+          "unit": "ml",
+          "calories_min": 96,
+          "calories_max": 144,
+          "protein_g_min": 0,
+          "protein_g_max": 0,
+          "carbs_g_min": 3,
+          "carbs_g_max": 4.5,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 16,
+          "alcohol_calories": 112
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 109.95475113122173,
+        "proteinMAPE": 100,
+        "carbsMAPE": 25,
+        "fatMAPE": 0,
+        "overallMAPE": 58.73868778280543
+      }
+    },
+    {
+      "testCaseId": "alcohol-3",
+      "description": "Una cerveza",
+      "category": "alcohol",
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "latencyMs": 2197,
+      "inputTokens": 790,
+      "outputTokens": 175,
+      "cost": 0.00014900000000000002,
+      "expectedItems": [
+        {
+          "name": "Cerveza",
+          "quantity": 1,
+          "unit": "portion",
+          "calories": {
+            "min": 10,
+            "max": 30
+          },
+          "protein_g": {
+            "min": 0,
+            "max": 2
+          },
+          "carbs_g": {
+            "min": 3,
+            "max": 10
+          },
+          "fat_g": {
+            "min": 0,
+            "max": 0
+          },
+          "alcohol_g": 12
+        }
+      ],
+      "actualItems": [
+        {
+          "name": "Cerveza",
+          "quantity": 1,
+          "unit": "portion",
+          "calories_min": 128,
+          "calories_max": 213,
+          "protein_g_min": 1,
+          "protein_g_max": 2,
+          "carbs_g_min": 10,
+          "carbs_g_max": 17,
+          "fat_g_min": 0,
+          "fat_g_max": 0,
+          "alcohol_g": 13.2,
+          "alcohol_calories": 92
+        }
+      ],
+      "metrics": {
+        "itemCountMatch": true,
+        "caloriesMAPE": 152.40384615384613,
+        "proteinMAPE": 50,
+        "carbsMAPE": 107.6923076923077,
+        "fatMAPE": 0,
+        "overallMAPE": 77.52403846153845
+      }
+    }
+  ],
+  "summaries": [
+    {
+      "provider": "Anthropic",
+      "model": "claude-3-haiku-20240307",
+      "totalTests": 20,
+      "successfulTests": 19,
+      "avgLatencyMs": 2460,
+      "avgCaloriesMAPE": 31,
+      "avgProteinMAPE": 26,
+      "avgCarbsMAPE": 42.5,
+      "avgFatMAPE": 32.7,
+      "avgOverallMAPE": 33.1,
+      "totalCost": 0.00923,
+      "costPer1000Calls": 0.46,
+      "itemCountAccuracy": 100
+    },
+    {
+      "provider": "Google-gemini-2.5-flash-lite",
+      "model": "gemini-2.5-flash-lite",
+      "totalTests": 20,
+      "successfulTests": 17,
+      "avgLatencyMs": 1755,
+      "avgCaloriesMAPE": 27.9,
+      "avgProteinMAPE": 26.9,
+      "avgCarbsMAPE": 35.2,
+      "avgFatMAPE": 28.8,
+      "avgOverallMAPE": 29.7,
+      "totalCost": 0.00217,
+      "costPer1000Calls": 0.11,
+      "itemCountAccuracy": 100
+    },
+    {
+      "provider": "Google-gemini-2.5-flash",
+      "model": "gemini-2.5-flash",
+      "totalTests": 20,
+      "successfulTests": 20,
+      "avgLatencyMs": 11571,
+      "avgCaloriesMAPE": 24.8,
+      "avgProteinMAPE": 32.2,
+      "avgCarbsMAPE": 32.8,
+      "avgFatMAPE": 28.3,
+      "avgOverallMAPE": 29.5,
+      "totalCost": 0.00508,
+      "costPer1000Calls": 0.25,
+      "itemCountAccuracy": 100
+    },
+    {
+      "provider": "Google-gemini-2.0-flash",
+      "model": "gemini-2.0-flash",
+      "totalTests": 20,
+      "successfulTests": 20,
+      "avgLatencyMs": 2156,
+      "avgCaloriesMAPE": 31.7,
+      "avgProteinMAPE": 37.2,
+      "avgCarbsMAPE": 31.5,
+      "avgFatMAPE": 25,
+      "avgOverallMAPE": 31.3,
+      "totalCost": 0.00338,
+      "costPer1000Calls": 0.17,
+      "itemCountAccuracy": 100
+    }
+  ]
+}
