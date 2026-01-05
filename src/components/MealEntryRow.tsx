@@ -66,15 +66,42 @@ export function MealEntryRow({ meal, onUpdate, isOnline }: Props) {
       // Re-estimate with new description
       const estimate = await estimateMeal(editedDescription.trim())
 
-      // Update meal entry
+      // Use the first item from the estimate (editing doesn't support multi-item)
+      const item = estimate.items[0]
+
+      // Update meal entry with the new estimation
       await updateMealEntry(meal.id, {
-        description: editedDescription.trim(),
-        ...estimate,
+        description: item.context_note
+          ? `${item.normalized_name} (${item.context_note})`
+          : item.normalized_name,
+        quantity: item.quantity,
+        unit: item.unit,
+        calories_min: item.calories_min,
+        calories_max: item.calories_max,
+        protein_g_min: item.protein_g_min,
+        protein_g_max: item.protein_g_max,
+        carbs_g_min: item.carbs_g_min,
+        carbs_g_max: item.carbs_g_max,
+        fat_g_min: item.fat_g_min,
+        fat_g_max: item.fat_g_max,
+        alcohol_g: item.alcohol_g,
+        alcohol_calories: item.alcohol_calories,
+        base_calories_min: item.base_calories_min,
+        base_calories_max: item.base_calories_max,
+        base_protein_g_min: item.base_protein_g_min,
+        base_protein_g_max: item.base_protein_g_max,
+        base_carbs_g_min: item.base_carbs_g_min,
+        base_carbs_g_max: item.base_carbs_g_max,
+        base_fat_g_min: item.base_fat_g_min,
+        base_fat_g_max: item.base_fat_g_max,
+        base_alcohol_g: item.base_alcohol_g,
+        base_alcohol_calories: item.base_alcohol_calories,
+        uncertainty: item.uncertainty,
         last_estimated_at: new Date().toISOString()
       })
 
       // Update embedding asynchronously
-      updateMealEmbedding(meal.id, editedDescription.trim()).catch(err => {
+      updateMealEmbedding(meal.id, item.normalized_name).catch(err => {
         console.error('Failed to update embedding:', err)
       })
 

@@ -13,11 +13,21 @@ export function generatePrompt(description: string): string {
   return `You are a nutrition expert. Analyze this meal description and extract individual food items with quantities: "${description}".
 
 ## TASK 1 - ITEM DETECTION
-Split the description into separate food items:
-- "Dos presas de pollo, un poco de ensalada" → 2 items: pollo and ensalada
-- "Crackers con queso" → 2 items: crackers and queso
-- "50g crackers" → 1 item
-- Single item descriptions → return array with 1 item
+Determine if description contains MULTIPLE SEPARATE foods or ONE compound food:
+
+SPLIT into multiple items ONLY when:
+- Comma-separated distinct foods: "Dos presas de pollo, un poco de ensalada" → 2 items
+- "y"/"and" connecting different foods: "huevos y tocino" → 2 items
+- Clearly separate accompaniments: "arroz con pollo y ensalada" → 3 items
+
+DO NOT SPLIT (keep as ONE item):
+- Food with topping/spread: "2 tostadas con mermelada" → 1 item (toast with jam, qty 2)
+- Prepared dishes: "sandwich de jamón" → 1 item
+- Food with sauce/dressing: "ensalada con aderezo" → 1 item
+- Compound names: "huevos revueltos" → 1 item
+
+The key: if "con/with" describes HOW the food is prepared/served, it's ONE item.
+If items could be eaten separately, they are MULTIPLE items.
 
 ## TASK 2 - QUANTITY EXTRACTION
 Extract explicit quantities and convert to standard units:
