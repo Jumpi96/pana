@@ -354,13 +354,13 @@ Return JSON:
       const diffFoodMax = Math.abs(item.calories_max - expectedFoodMax)
       const diffAlcohol = Math.abs(item.alcohol_calories - expectedAlcoholCals)
 
-      // If Gemini's calories are reasonably close, overwrite with calculated values
-      if (diffFoodMin <= toleranceMin && diffFoodMax <= toleranceMax && diffAlcohol <= alcoholTolerance) {
-        item.calories_min = Math.round(expectedFoodMin)
-        item.calories_max = Math.round(expectedFoodMax)
-        item.alcohol_calories = expectedAlcoholCals
-      } else {
-        log('error', 'Significant calorie mismatch detected', {
+      const withinTolerance =
+        diffFoodMin <= toleranceMin &&
+        diffFoodMax <= toleranceMax &&
+        diffAlcohol <= alcoholTolerance
+
+      if (!withinTolerance) {
+        log('warn', 'Calorie mismatch detected; normalizing to macro-derived values', {
           itemName: item.normalized_name,
           estimate: { calories_min: item.calories_min, calories_max: item.calories_max },
           expected: { foodMin: expectedFoodMin, foodMax: expectedFoodMax, alcoholCals: expectedAlcoholCals },
@@ -370,8 +370,13 @@ Return JSON:
             fat: { min: item.fat_g_min, max: item.fat_g_max }
           }
         })
-        throw new Error(`Could not generate consistent nutrition for "${item.normalized_name}". Please try a more specific description.`)
+        item.uncertainty = true
       }
+
+      // Always normalize to macro-derived values to keep consistency.
+      item.calories_min = Math.round(expectedFoodMin)
+      item.calories_max = Math.round(expectedFoodMax)
+      item.alcohol_calories = expectedAlcoholCals
 
       // Reconcile base calories with base macros
       const expectedBaseFoodMin = (item.base_protein_g_min * 4) + (item.base_carbs_g_min * 4) + (item.base_fat_g_min * 9)
