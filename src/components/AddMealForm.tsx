@@ -91,12 +91,17 @@ export function AddMealForm({ mealGroup, date, position, onSave, onCancel }: Pro
       // Get estimation with multi-item support
       const response = await estimateMeal(description)
 
+      // If we have multiple items, adjust start position to avoid collisions with existing items
+      // We want the last item to be at the 'position' (which is min - 1)
+      // and previous items at lower positions.
+      const startPosition = position - (response.items.length - 1)
+
       // Insert all items (may be multiple if AI detected multiple foods)
       const entries = await insertMealEntries(
         response.items,
         date,
         mealGroup,
-        position
+        startPosition
       )
 
       // Update embeddings for all entries asynchronously
