@@ -11,6 +11,7 @@ interface Props {
   meals: MealEntry[]
   onMealsChange: () => void
   isOnline: boolean
+  isRefreshing: boolean
 }
 
 const groupLabels: Record<MealGroup, string> = {
@@ -20,7 +21,7 @@ const groupLabels: Record<MealGroup, string> = {
   dinner: '🌙 Dinner Night!'
 }
 
-export function MealGroupSection({ mealGroup, date, meals, onMealsChange, isOnline }: Props) {
+export function MealGroupSection({ mealGroup, date, meals, onMealsChange, isOnline, isRefreshing }: Props) {
   const [showAddForm, setShowAddForm] = useState(false)
 
   return (
@@ -31,7 +32,7 @@ export function MealGroupSection({ mealGroup, date, meals, onMealsChange, isOnli
         </h2>
         <button
           onClick={() => setShowAddForm(true)}
-          disabled={!isOnline}
+          disabled={!isOnline || isRefreshing}
           className="flex items-center gap-2 px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-xl hover:scale-105 active:scale-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs font-black uppercase tracking-widest shadow-[3px_3px_0px_0px_rgba(34,197,94,1)]"
         >
           <Plus className="w-4 h-4" />

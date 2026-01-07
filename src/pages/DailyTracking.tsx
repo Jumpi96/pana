@@ -166,6 +166,7 @@ export function DailyTracking() {
             meals={meals.filter(m => m.meal_group === group)}
             onMealsChange={loadData}
             isOnline={isOnline}
+            isRefreshing={isRefreshing}
           />
         ))}
       </main>
