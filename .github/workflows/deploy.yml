@@ -100,9 +100,9 @@ jobs:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
-          supabase functions deploy estimate_meal --no-verify-jwt --import-map supabase/functions/import_map.json
-          supabase functions deploy search_similar_meals --no-verify-jwt --import-map supabase/functions/import_map.json
-          supabase functions deploy update_meal_embedding --no-verify-jwt --import-map supabase/functions/import_map.json
+          supabase functions deploy estimate_meal --no-verify-jwt
+          supabase functions deploy search_similar_meals --no-verify-jwt
+          supabase functions deploy update_meal_embedding --no-verify-jwt
 
           # Set secrets for Edge Functions
           supabase secrets set GOOGLE_API_KEY=$GOOGLE_API_KEY
