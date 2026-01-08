@@ -25,6 +25,10 @@ export function MealEntryRow({ meal, onUpdate, isOnline }: Props) {
   const quantityEditable = canEditQuantity(meal)
 
   async function handlePortionChange(level: PortionLevel) {
+    if (!isOnline) {
+      alert('Network Required for this action 🌐')
+      return
+    }
     try {
       await updatePortionLevel(meal.id, level)
       onUpdate()
@@ -35,6 +39,10 @@ export function MealEntryRow({ meal, onUpdate, isOnline }: Props) {
   }
 
   async function handleDelete() {
+    if (!isOnline) {
+      alert('Network Required for this action 🌐')
+      return
+    }
     if (!confirm('Delete this meal?')) return
 
     try {

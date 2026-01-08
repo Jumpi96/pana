@@ -14,6 +14,20 @@ export function Settings() {
   const [proteinPct, setProteinPct] = useState(30)
   const [carbsPct, setCarbsPct] = useState(40)
   const [fatPct, setFatPct] = useState(30)
+  const [isOnline, setIsOnline] = useState(navigator.onLine)
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true)
+    const handleOffline = () => setIsOnline(false)
+
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+
+    return () => {
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
+  }, [])
 
   useEffect(() => {
     loadSettings()
@@ -228,10 +242,10 @@ export function Settings() {
         <div className="flex flex-col gap-4 py-10">
           <button
             onClick={handleSave}
-            disabled={!isValidTotal || saving}
+            disabled={!isValidTotal || saving || !isOnline}
             className="w-full px-6 py-5 bg-black dark:bg-white text-white dark:text-black rounded-2xl font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[6px_6px_0px_0px_rgba(34,197,94,1)] text-lg italic"
           >
-            {saving ? 'Locking it in...' : 'Lock in Settings! 🔒'}
+            {!isOnline ? 'Network Required 🌐' : saving ? 'Locking it in...' : 'Lock in Settings! 🔒'}
           </button>
 
           <button

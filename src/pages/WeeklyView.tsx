@@ -5,6 +5,7 @@ import { getLocalDate, getMondayOfWeek, addDays, formatDate } from '../lib/utils
 import { fetchDailyTotals, fetchUserSettings, fetchWeeklyTotals } from '../lib/api'
 import { calculateCompletedDayAverageDelta, calculateExpectedMacros, calculateWeeklyRebalance } from '../lib/macros'
 import { MacrosSummary } from '../components/MacrosSummary'
+import { OfflineBanner } from '../components/OfflineBanner'
 import { Onboarding } from '../components/Onboarding'
 import type { UserSettings, DailyTotals } from '../types'
 
@@ -110,15 +111,30 @@ export function WeeklyView() {
 
   const macroAverages = totalsCompleted && expected && daysElapsed > 0
     ? {
-        protein: calculateCompletedDayAverageDelta(totalsCompleted.protein_g, expected.protein_g, daysElapsed, 1),
-        carbs: calculateCompletedDayAverageDelta(totalsCompleted.carbs_g, expected.carbs_g, daysElapsed, 1),
-        fat: calculateCompletedDayAverageDelta(totalsCompleted.fat_g, expected.fat_g, daysElapsed, 1)
-      }
+      protein: calculateCompletedDayAverageDelta(totalsCompleted.protein_g, expected.protein_g, daysElapsed, 1),
+      carbs: calculateCompletedDayAverageDelta(totalsCompleted.carbs_g, expected.carbs_g, daysElapsed, 1),
+      fat: calculateCompletedDayAverageDelta(totalsCompleted.fat_g, expected.fat_g, daysElapsed, 1)
+    }
     : null
 
   const calorieAverageDelta = totalsCompleted && expected && daysElapsed > 0
     ? calculateCompletedDayAverageDelta(totalsCompleted.calories, expected.calories, daysElapsed, 0)
     : null
+
+  const [isOnline, setIsOnline] = useState(navigator.onLine)
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true)
+    const handleOffline = () => setIsOnline(false)
+
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+
+    return () => {
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
+  }, [])
 
   const lowIntakeAlerts = [] as {
     label: string
@@ -153,10 +169,10 @@ export function WeeklyView() {
 
   const macroTips = macroAverages
     ? [
-        { label: 'Protein', value: macroAverages.protein, emoji: '🥩', msg: 'Focus on lean meats or shakes next time!' },
-        { label: 'Carbs', value: macroAverages.carbs, emoji: '🍞', msg: 'Maybe swap the bread for some greens?' },
-        { label: 'Fat', value: macroAverages.fat, emoji: '🥑', msg: 'Easy on the oils and butter today!' }
-      ].filter(tip => tip.value > 2) // Only show if they are averaging significantly over the goal so far
+      { label: 'Protein', value: macroAverages.protein, emoji: '🥩', msg: 'Focus on lean meats or shakes next time!' },
+      { label: 'Carbs', value: macroAverages.carbs, emoji: '🍞', msg: 'Maybe swap the bread for some greens?' },
+      { label: 'Fat', value: macroAverages.fat, emoji: '🥑', msg: 'Easy on the oils and butter today!' }
+    ].filter(tip => tip.value > 2) // Only show if they are averaging significantly over the goal so far
     : []
 
   if (loading) {
@@ -169,6 +185,7 @@ export function WeeklyView() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-zinc-900">
+      {!isOnline && <OfflineBanner />}
       {/* Header */}
       <header className="bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b-4 border-black dark:border-zinc-800 sticky top-0 z-30 transition-all">
         <div className="max-w-4xl mx-auto px-4 py-4">

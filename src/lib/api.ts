@@ -1,4 +1,14 @@
 import { supabase } from './supabase'
+import {
+  saveCachedSettings,
+  getCachedSettings,
+  saveCachedMeals,
+  getCachedMeals,
+  saveCachedDailyTotals,
+  getCachedDailyTotals,
+  saveCachedWeeklyTotals,
+  getCachedWeeklyTotals
+} from './offline/db'
 import type {
   UserSettings,
   MealEntry,
@@ -13,13 +23,26 @@ import type {
 
 // User Settings
 export async function fetchUserSettings(): Promise<UserSettings | null> {
-  const { data, error } = await supabase
-    .from('user_settings')
-    .select('*')
-    .single()
+  try {
+    const { data, error } = await supabase
+      .from('user_settings')
+      .select('*')
+      .single()
 
-  if (error && error.code !== 'PGRST116') throw error // PGRST116 = no rows
-  return data
+    if (error && error.code !== 'PGRST116') throw error
+    if (data) {
+      await saveCachedSettings(data)
+      localStorage.setItem('pana_last_user_id', data.user_id)
+    }
+    return data
+  } catch (error) {
+    console.warn('Network fetch failed, trying cache for user settings:', error)
+    const userId = localStorage.getItem('pana_last_user_id')
+    if (userId) {
+      return await getCachedSettings(userId)
+    }
+    throw error
+  }
 }
 
 export async function upsertUserSettings(settings: Partial<UserSettings>) {
@@ -37,20 +60,30 @@ export async function upsertUserSettings(settings: Partial<UserSettings>) {
     .single()
 
   if (error) throw error
+  if (data) await saveCachedSettings(data)
   return data
 }
 
 // Meal Entries
 export async function fetchMealEntries(dateLocal: string): Promise<MealEntry[]> {
-  const { data, error } = await supabase
-    .from('meal_entries')
-    .select('*')
-    .eq('date_local', dateLocal)
-    .order('meal_group')
-    .order('position')
+  try {
+    const { data, error } = await supabase
+      .from('meal_entries')
+      .select('*')
+      .eq('date_local', dateLocal)
+      .order('meal_group')
+      .order('position')
 
-  if (error) throw error
-  return data || []
+    if (error) throw error
+    const entries = data || []
+    if (entries.length > 0) {
+      await saveCachedMeals(entries)
+    }
+    return entries
+  } catch (error) {
+    console.warn('Network fetch failed, trying cache for meal entries:', error)
+    return await getCachedMeals(dateLocal)
+  }
 }
 
 export async function insertMealEntry(entry: Omit<MealEntry, 'id' | 'user_id' | 'created_at' | 'updated_at'>) {
@@ -196,22 +229,42 @@ export async function updateMealQuantity(
 
 // Daily Totals
 export async function fetchDailyTotals(dateLocal: string): Promise<DailyTotals> {
-  const { data, error } = await supabase.rpc('get_daily_totals', {
-    target_date: dateLocal
-  })
+  try {
+    const { data, error } = await supabase.rpc('get_daily_totals', {
+      target_date: dateLocal
+    })
 
-  if (error) throw error
-  return data as DailyTotals
+    if (error) throw error
+    if (data) {
+      await saveCachedDailyTotals(dateLocal, data as DailyTotals)
+    }
+    return data as DailyTotals
+  } catch (error) {
+    console.warn('Network fetch failed, trying cache for daily totals:', error)
+    const cached = await getCachedDailyTotals(dateLocal)
+    if (cached) return cached
+    throw error
+  }
 }
 
 // Weekly Totals
 export async function fetchWeeklyTotals(weekStartDate: string): Promise<DailyTotals> {
-  const { data, error } = await supabase.rpc('get_weekly_totals', {
-    week_start_date: weekStartDate
-  })
+  try {
+    const { data, error } = await supabase.rpc('get_weekly_totals', {
+      week_start_date: weekStartDate
+    })
 
-  if (error) throw error
-  return data as DailyTotals
+    if (error) throw error
+    if (data) {
+      await saveCachedWeeklyTotals(weekStartDate, data as DailyTotals)
+    }
+    return data as DailyTotals
+  } catch (error) {
+    console.warn('Network fetch failed, trying cache for weekly totals:', error)
+    const cached = await getCachedWeeklyTotals(weekStartDate)
+    if (cached) return cached
+    throw error
+  }
 }
 
 // Edge Functions
