@@ -185,6 +185,66 @@ export async function insertMealEntries(
   return data
 }
 
+// Copy meal group to another date/group
+export async function copyMealGroup(
+  sourceMeals: MealEntry[],
+  destinationDate: string,
+  destinationGroup: MealGroup
+): Promise<MealEntry[]> {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Not authenticated')
+
+  if (sourceMeals.length === 0) return []
+
+  // Get existing meals at destination to determine start position
+  const existingMeals = await fetchMealEntries(destinationDate)
+  const groupMeals = existingMeals.filter(m => m.meal_group === destinationGroup)
+  const startPosition = groupMeals.length > 0
+    ? Math.max(...groupMeals.map(m => m.position)) + 1
+    : 0
+
+  const newEntries = sourceMeals.map((meal, index) => ({
+    user_id: user.id,
+    date_local: destinationDate,
+    meal_group: destinationGroup,
+    position: startPosition + index,
+    description: meal.description,
+    quantity: meal.quantity,
+    unit: meal.unit,
+    calories_min: meal.calories_min,
+    calories_max: meal.calories_max,
+    protein_g_min: meal.protein_g_min,
+    protein_g_max: meal.protein_g_max,
+    carbs_g_min: meal.carbs_g_min,
+    carbs_g_max: meal.carbs_g_max,
+    fat_g_min: meal.fat_g_min,
+    fat_g_max: meal.fat_g_max,
+    alcohol_g: meal.alcohol_g,
+    alcohol_calories: meal.alcohol_calories,
+    base_calories_min: meal.base_calories_min,
+    base_calories_max: meal.base_calories_max,
+    base_protein_g_min: meal.base_protein_g_min,
+    base_protein_g_max: meal.base_protein_g_max,
+    base_carbs_g_min: meal.base_carbs_g_min,
+    base_carbs_g_max: meal.base_carbs_g_max,
+    base_fat_g_min: meal.base_fat_g_min,
+    base_fat_g_max: meal.base_fat_g_max,
+    base_alcohol_g: meal.base_alcohol_g,
+    base_alcohol_calories: meal.base_alcohol_calories,
+    uncertainty: meal.uncertainty,
+    portion_level: meal.portion_level,
+    last_estimated_at: new Date().toISOString()
+  }))
+
+  const { data, error } = await supabase
+    .from('meal_entries')
+    .insert(newEntries)
+    .select()
+
+  if (error) throw error
+  return data
+}
+
 // Update meal quantity with proportional macro recalculation
 export async function updateMealQuantity(
   id: string,
