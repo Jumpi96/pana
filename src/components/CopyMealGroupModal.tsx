@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Calendar as CalendarIcon, X, Check, ArrowRight } from 'lucide-react'
 import { getLocalDate, addDays } from '../lib/utils'
 import type { MealGroup } from '../types'
@@ -32,8 +33,8 @@ export function CopyMealGroupModal({ sourceGroup, itemCount, onConfirm, onCancel
         }
     }
 
-    return (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+    return createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
             <div className="bg-white dark:bg-zinc-900 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 border-4 border-black dark:border-zinc-700">
 
                 {/* Header */}
@@ -139,6 +140,7 @@ export function CopyMealGroupModal({ sourceGroup, itemCount, onConfirm, onCancel
                     </div>
                 </form>
             </div>
-        </div>
+        </div>,
+        document.body
     )
 }

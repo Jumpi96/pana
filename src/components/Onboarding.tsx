@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { upsertUserSettings } from '../lib/api'
 
 interface Props {
@@ -48,8 +49,8 @@ export function Onboarding({ onComplete }: Props) {
   const total = proteinPct + carbsPct + fatPct
   const isValidTotal = Math.abs(total - 100) < 0.01
 
-  return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-6 transition-all">
+  return createPortal(
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[100] p-6 transition-all">
       <div className="bg-white dark:bg-zinc-950 rounded-[40px] border-[4px] border-black dark:border-zinc-800 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,0.05)] max-w-md w-full p-10 space-y-8 animate-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="text-center">
@@ -192,6 +193,7 @@ export function Onboarding({ onComplete }: Props) {
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
