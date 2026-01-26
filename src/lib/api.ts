@@ -15,6 +15,7 @@ import type {
   MealGroup,
   MealUnit,
   DailyTotals,
+  WeeklyTotals,
   EstimateResponse,
   EstimatedItem,
   SimilarMeal,
@@ -308,7 +309,7 @@ export async function fetchDailyTotals(dateLocal: string): Promise<DailyTotals> 
 }
 
 // Weekly Totals
-export async function fetchWeeklyTotals(weekStartDate: string): Promise<DailyTotals> {
+export async function fetchWeeklyTotals(weekStartDate: string): Promise<WeeklyTotals> {
   try {
     const { data, error } = await supabase.rpc('get_weekly_totals', {
       week_start_date: weekStartDate
@@ -316,13 +317,13 @@ export async function fetchWeeklyTotals(weekStartDate: string): Promise<DailyTot
 
     if (error) throw error
     if (data) {
-      await saveCachedWeeklyTotals(weekStartDate, data as DailyTotals)
+      await saveCachedWeeklyTotals(weekStartDate, data as WeeklyTotals)
     }
-    return data as DailyTotals
+    return data as WeeklyTotals
   } catch (error) {
     console.warn('Network fetch failed, trying cache for weekly totals:', error)
     const cached = await getCachedWeeklyTotals(weekStartDate)
-    if (cached) return cached
+    if (cached) return cached as WeeklyTotals
     throw error
   }
 }

@@ -153,7 +153,12 @@ export function DailyTracking() {
 
       {/* Macros Summary */}
       {totals && expected && (
-        <MacrosSummary actual={totals} expected={expected} />
+        <MacrosSummary
+          actual={totals}
+          expected={expected}
+          alcoholCalories={totals.alcohol_calories}
+          maxDailyDrinks={settings ? Math.round(settings.max_weekly_drinks * 0.3 * 10) / 10 : undefined}
+        />
       )}
 
       {/* Meal Groups */}

@@ -91,7 +91,18 @@ begin
         else (fat_g_min + fat_g_max) / 2.0
       end
     ), 0),
-    'alcohol_calories', coalesce(sum(alcohol_calories), 0)
+    'alcohol_calories', coalesce(sum(alcohol_calories), 0),
+    'max_daily_alcohol_calories', coalesce((
+      select max(daily_alcohol)
+      from (
+        select sum(alcohol_calories) as daily_alcohol
+        from meal_entries
+        where user_id = auth.uid()
+          and date_local >= week_start_date
+          and date_local <= week_end_date
+        group by date_local
+      ) daily_totals
+    ), 0)
   )
   into result
   from meal_entries

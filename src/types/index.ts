@@ -98,6 +98,10 @@ export interface DailyTotals {
   alcohol_calories: number
 }
 
+export interface WeeklyTotals extends DailyTotals {
+  max_daily_alcohol_calories: number
+}
+
 export interface ExpectedMacros {
   calories: number
   protein_g: number

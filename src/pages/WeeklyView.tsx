@@ -7,14 +7,14 @@ import { calculateCompletedDayAverageDelta, calculateExpectedMacros, calculateWe
 import { MacrosSummary } from '../components/MacrosSummary'
 import { OfflineBanner } from '../components/OfflineBanner'
 import { Onboarding } from '../components/Onboarding'
-import type { UserSettings, DailyTotals } from '../types'
+import type { UserSettings, DailyTotals, WeeklyTotals } from '../types'
 
 export function WeeklyView() {
   const [currentWeekStart, setCurrentWeekStart] = useState(
     getLocalDate(getMondayOfWeek(new Date()))
   )
   const [settings, setSettings] = useState<UserSettings | null>(null)
-  const [totals, setTotals] = useState<DailyTotals | null>(null)
+  const [totals, setTotals] = useState<WeeklyTotals | null>(null)
   const [todayTotals, setTodayTotals] = useState<DailyTotals | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -305,15 +305,27 @@ export function WeeklyView() {
               const isOverLimit = estimatedDrinks > maxDrinks
               const progress = maxDrinks > 0 ? Math.min((estimatedDrinks / maxDrinks) * 100, 100) : 0
 
+              // 30% rule: no single day should exceed 30% of weekly limit
+              const dailyLimit = Math.round(maxDrinks * 0.3 * 10) / 10
+              const maxDayDrinks = Math.round((totals.max_daily_alcohol_calories || 0) / 98 * 10) / 10
+              const hadBingeDay = maxDayDrinks > dailyLimit
+
               return (
-                <div className={`bg-white dark:bg-zinc-950 rounded-3xl border-[3px] p-8 transition-all hover:scale-[1.01] ${isOverLimit ? 'border-red-500 shadow-[8px_8px_0px_0px_rgba(239,68,68,1)]' : 'border-black dark:border-zinc-800 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.05)]'}`}>
+                <div className={`bg-white dark:bg-zinc-950 rounded-3xl border-[3px] p-8 transition-all hover:scale-[1.01] ${isOverLimit || hadBingeDay ? 'border-red-500 shadow-[8px_8px_0px_0px_rgba(239,68,68,1)]' : 'border-black dark:border-zinc-800 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.05)]'}`}>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="text-3xl">🍷</div>
                     <div>
                       <h2 className="text-2xl font-black uppercase tracking-tighter italic">Weekly Drinks</h2>
-                      <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase ${isOverLimit ? 'bg-red-500 text-white' : 'bg-purple-500 text-white'}`}>
-                        {isOverLimit ? 'Over Limit!' : 'Tracking'}
-                      </span>
+                      <div className="flex gap-2 mt-1">
+                        <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase ${isOverLimit ? 'bg-red-500 text-white' : 'bg-purple-500 text-white'}`}>
+                          {isOverLimit ? 'Over Limit!' : 'Tracking'}
+                        </span>
+                        {hadBingeDay && (
+                          <span className="text-[10px] font-black px-2 py-0.5 rounded-full uppercase bg-orange-500 text-white">
+                            Binge Day!
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -341,11 +353,23 @@ export function WeeklyView() {
                     </div>
                   </div>
 
-                  {isOverLimit && (
-                    <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-xl border-2 border-red-200 dark:border-red-800">
-                      <p className="text-xs font-bold text-red-600 dark:text-red-400">
-                        You've exceeded your weekly limit by {(estimatedDrinks - maxDrinks).toFixed(1)} drinks. Consider pacing yourself!
-                      </p>
+                  {/* Warnings */}
+                  {(isOverLimit || hadBingeDay) && (
+                    <div className="mt-4 space-y-2">
+                      {isOverLimit && (
+                        <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-xl border-2 border-red-200 dark:border-red-800">
+                          <p className="text-xs font-bold text-red-600 dark:text-red-400">
+                            You've exceeded your weekly limit by {(estimatedDrinks - maxDrinks).toFixed(1)} drinks.
+                          </p>
+                        </div>
+                      )}
+                      {hadBingeDay && (
+                        <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-xl border-2 border-orange-200 dark:border-orange-800">
+                          <p className="text-xs font-bold text-orange-600 dark:text-orange-400">
+                            One day had {maxDayDrinks} drinks (max {dailyLimit}/day recommended).
+                          </p>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -460,15 +484,27 @@ export function WeeklyView() {
               const isOverLimit = estimatedDrinks > maxDrinks
               const progress = maxDrinks > 0 ? Math.min((estimatedDrinks / maxDrinks) * 100, 100) : 0
 
+              // 30% rule: no single day should exceed 30% of weekly limit
+              const dailyLimit = Math.round(maxDrinks * 0.3 * 10) / 10
+              const maxDayDrinks = Math.round((totals.max_daily_alcohol_calories || 0) / 98 * 10) / 10
+              const hadBingeDay = maxDayDrinks > dailyLimit
+
               return (
-                <div className={`bg-white dark:bg-zinc-950 rounded-3xl border-[3px] p-8 transition-all hover:scale-[1.01] ${isOverLimit ? 'border-red-500 shadow-[8px_8px_0px_0px_rgba(239,68,68,1)]' : 'border-black dark:border-zinc-800 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.05)]'}`}>
+                <div className={`bg-white dark:bg-zinc-950 rounded-3xl border-[3px] p-8 transition-all hover:scale-[1.01] ${isOverLimit || hadBingeDay ? 'border-red-500 shadow-[8px_8px_0px_0px_rgba(239,68,68,1)]' : 'border-black dark:border-zinc-800 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.05)]'}`}>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="text-3xl">🍷</div>
                     <div>
                       <h2 className="text-2xl font-black uppercase tracking-tighter italic">Weekly Drinks</h2>
-                      <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase ${isOverLimit ? 'bg-red-500 text-white' : 'bg-purple-500 text-white'}`}>
-                        {isOverLimit ? 'Over Limit!' : 'Tracking'}
-                      </span>
+                      <div className="flex gap-2 mt-1">
+                        <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase ${isOverLimit ? 'bg-red-500 text-white' : 'bg-purple-500 text-white'}`}>
+                          {isOverLimit ? 'Over Limit!' : 'Tracking'}
+                        </span>
+                        {hadBingeDay && (
+                          <span className="text-[10px] font-black px-2 py-0.5 rounded-full uppercase bg-orange-500 text-white">
+                            Binge Day!
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -496,11 +532,23 @@ export function WeeklyView() {
                     </div>
                   </div>
 
-                  {isOverLimit && (
-                    <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-xl border-2 border-red-200 dark:border-red-800">
-                      <p className="text-xs font-bold text-red-600 dark:text-red-400">
-                        You've exceeded your weekly limit by {(estimatedDrinks - maxDrinks).toFixed(1)} drinks. Consider pacing yourself!
-                      </p>
+                  {/* Warnings */}
+                  {(isOverLimit || hadBingeDay) && (
+                    <div className="mt-4 space-y-2">
+                      {isOverLimit && (
+                        <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-xl border-2 border-red-200 dark:border-red-800">
+                          <p className="text-xs font-bold text-red-600 dark:text-red-400">
+                            You've exceeded your weekly limit by {(estimatedDrinks - maxDrinks).toFixed(1)} drinks.
+                          </p>
+                        </div>
+                      )}
+                      {hadBingeDay && (
+                        <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-xl border-2 border-orange-200 dark:border-orange-800">
+                          <p className="text-xs font-bold text-orange-600 dark:text-orange-400">
+                            One day had {maxDayDrinks} drinks (max {dailyLimit}/day recommended).
+                          </p>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
