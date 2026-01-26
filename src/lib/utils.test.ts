@@ -34,25 +34,25 @@ describe('getLocalDate', () => {
 
 describe('getMondayOfWeek', () => {
   it('should return the same date if already Monday', () => {
-    const monday = new Date('2024-01-15') // This is a Monday
+    const monday = new Date('2024-01-15T00:00:00') // This is a Monday
     const result = getMondayOfWeek(monday)
     expect(result.getDate()).toBe(15)
   })
 
   it('should return previous Monday for mid-week dates', () => {
-    const wednesday = new Date('2024-01-17') // Wednesday
+    const wednesday = new Date('2024-01-17T00:00:00') // Wednesday
     const result = getMondayOfWeek(wednesday)
     expect(result.getDate()).toBe(15) // Monday the 15th
   })
 
   it('should handle Sunday correctly (return previous Monday)', () => {
-    const sunday = new Date('2024-01-21') // Sunday
+    const sunday = new Date('2024-01-21T00:00:00') // Sunday
     const result = getMondayOfWeek(sunday)
     expect(result.getDate()).toBe(15) // Monday the 15th
   })
 
   it('should handle month boundaries', () => {
-    const firstOfMonth = new Date('2024-02-01') // Thursday
+    const firstOfMonth = new Date('2024-02-01T00:00:00') // Thursday
     const result = getMondayOfWeek(firstOfMonth)
     expect(result.getMonth()).toBe(0) // January
     expect(result.getDate()).toBe(29) // Monday Jan 29

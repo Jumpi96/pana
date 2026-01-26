@@ -14,6 +14,7 @@ export function Settings() {
   const [proteinPct, setProteinPct] = useState(30)
   const [carbsPct, setCarbsPct] = useState(40)
   const [fatPct, setFatPct] = useState(30)
+  const [maxWeeklyDrinks, setMaxWeeklyDrinks] = useState(10)
   const [isOnline, setIsOnline] = useState(navigator.onLine)
 
   useEffect(() => {
@@ -43,6 +44,7 @@ export function Settings() {
         setProteinPct(Number(settings.protein_pct))
         setCarbsPct(Number(settings.carbs_pct))
         setFatPct(Number(settings.fat_pct))
+        setMaxWeeklyDrinks(settings.max_weekly_drinks ?? 10)
       }
     } catch (error) {
       console.error('Failed to load settings:', error)
@@ -70,7 +72,8 @@ export function Settings() {
         daily_calories_target: calorieTarget,
         protein_pct: proteinPct,
         carbs_pct: carbsPct,
-        fat_pct: fatPct
+        fat_pct: fatPct,
+        max_weekly_drinks: maxWeeklyDrinks
       })
 
       alert('Settings saved!')
@@ -236,6 +239,26 @@ export function Settings() {
               Percentages must sum to exactly 100%
             </p>
           )}
+        </section>
+
+        {/* Max Weekly Drinks */}
+        <section className="bg-white dark:bg-zinc-950 rounded-3xl border-[3px] border-black dark:border-zinc-800 p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.05)]">
+          <h2 className="text-xl font-black uppercase tracking-tighter mb-6 flex items-center gap-2 italic">
+            <span className="text-2xl not-italic">🍷</span> Weekly Drinks Limit
+          </h2>
+          <div className="space-y-4">
+            <input
+              type="number"
+              value={maxWeeklyDrinks}
+              onChange={e => setMaxWeeklyDrinks(Math.max(0, Number(e.target.value)))}
+              min="0"
+              step="1"
+              className="w-full px-6 py-4 rounded-2xl border-[3px] border-black dark:border-zinc-700 bg-white dark:bg-zinc-900 text-2xl font-black tracking-tighter italic focus:ring-4 focus:ring-purple-500/20 outline-none transition-all shadow-inner"
+            />
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-2">
+              Max standard drinks per week (1 drink = 14g alcohol)
+            </p>
+          </div>
         </section>
 
         {/* Actions */}

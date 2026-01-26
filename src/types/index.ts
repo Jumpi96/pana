@@ -8,6 +8,7 @@ export interface UserSettings {
   protein_pct: number
   carbs_pct: number
   fat_pct: number
+  max_weekly_drinks: number
   created_at: string
   updated_at: string
 }
@@ -94,6 +95,7 @@ export interface DailyTotals {
   protein_g: number
   carbs_g: number
   fat_g: number
+  alcohol_calories: number
 }
 
 export interface ExpectedMacros {

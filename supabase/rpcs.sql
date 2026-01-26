@@ -36,7 +36,8 @@ begin
         when portion_level = 'heavy' then fat_g_max
         else (fat_g_min + fat_g_max) / 2.0
       end
-    ), 0)
+    ), 0),
+    'alcohol_calories', coalesce(sum(alcohol_calories), 0)
   )
   into result
   from meal_entries
@@ -89,7 +90,8 @@ begin
         when portion_level = 'heavy' then fat_g_max
         else (fat_g_min + fat_g_max) / 2.0
       end
-    ), 0)
+    ), 0),
+    'alcohol_calories', coalesce(sum(alcohol_calories), 0)
   )
   into result
   from meal_entries

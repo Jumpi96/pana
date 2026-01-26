@@ -93,7 +93,8 @@ export function WeeklyView() {
       calories: totals.calories - todayTotals.calories,
       protein_g: totals.protein_g - todayTotals.protein_g,
       carbs_g: totals.carbs_g - todayTotals.carbs_g,
-      fat_g: totals.fat_g - todayTotals.fat_g
+      fat_g: totals.fat_g - todayTotals.fat_g,
+      alcohol_calories: totals.alcohol_calories - (todayTotals.alcohol_calories || 0)
     }
   })()
 
@@ -297,6 +298,60 @@ export function WeeklyView() {
               </div>
             </div>
 
+            {/* Alcohol Tracking Card */}
+            {settings && (() => {
+              const estimatedDrinks = Math.round((totals.alcohol_calories || 0) / 98 * 10) / 10
+              const maxDrinks = settings.max_weekly_drinks ?? 10
+              const isOverLimit = estimatedDrinks > maxDrinks
+              const progress = maxDrinks > 0 ? Math.min((estimatedDrinks / maxDrinks) * 100, 100) : 0
+
+              return (
+                <div className={`bg-white dark:bg-zinc-950 rounded-3xl border-[3px] p-8 transition-all hover:scale-[1.01] ${isOverLimit ? 'border-red-500 shadow-[8px_8px_0px_0px_rgba(239,68,68,1)]' : 'border-black dark:border-zinc-800 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.05)]'}`}>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="text-3xl">🍷</div>
+                    <div>
+                      <h2 className="text-2xl font-black uppercase tracking-tighter italic">Weekly Drinks</h2>
+                      <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase ${isOverLimit ? 'bg-red-500 text-white' : 'bg-purple-500 text-white'}`}>
+                        {isOverLimit ? 'Over Limit!' : 'Tracking'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="text-center p-6 bg-gray-50 dark:bg-zinc-900 rounded-2xl border-2 border-dashed border-black/20 dark:border-white/20">
+                    <div className={`text-5xl font-black tracking-tighter italic mb-2 ${isOverLimit ? 'text-red-600 dark:text-red-400' : estimatedDrinks > 0 ? 'text-purple-600 dark:text-purple-400' : 'text-gray-400'}`}>
+                      {estimatedDrinks}
+                      <span className="text-lg ml-2 uppercase not-italic">/ {maxDrinks}</span>
+                    </div>
+                    <div className="text-xs font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                      Standard Drinks
+                    </div>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="mt-6">
+                    <div className="h-4 bg-gray-100 dark:bg-zinc-800 rounded-full border-2 border-black/10 dark:border-white/10 overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${isOverLimit ? 'bg-red-500' : progress > 75 ? 'bg-yellow-500' : 'bg-purple-500'}`}
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between mt-2 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                      <span>0</span>
+                      <span>{maxDrinks} drinks</span>
+                    </div>
+                  </div>
+
+                  {isOverLimit && (
+                    <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-xl border-2 border-red-200 dark:border-red-800">
+                      <p className="text-xs font-bold text-red-600 dark:text-red-400">
+                        You've exceeded your weekly limit by {(estimatedDrinks - maxDrinks).toFixed(1)} drinks. Consider pacing yourself!
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )
+            })()}
+
             {lowIntakeAlerts.length > 0 && (
               <div className="bg-red-50 dark:bg-red-900/10 rounded-3xl border-[3px] border-red-500 p-8 shadow-[8px_8px_0px_0px_rgba(239,68,68,1)] dark:shadow-[8px_8px_0px_0px_rgba(239,68,68,0.15)]">
                 <div className="flex items-center gap-3 mb-6">
@@ -397,6 +452,60 @@ export function WeeklyView() {
                 </button>
               </div>
             </div>
+
+            {/* Alcohol Tracking Card */}
+            {settings && (() => {
+              const estimatedDrinks = Math.round((totals.alcohol_calories || 0) / 98 * 10) / 10
+              const maxDrinks = settings.max_weekly_drinks ?? 10
+              const isOverLimit = estimatedDrinks > maxDrinks
+              const progress = maxDrinks > 0 ? Math.min((estimatedDrinks / maxDrinks) * 100, 100) : 0
+
+              return (
+                <div className={`bg-white dark:bg-zinc-950 rounded-3xl border-[3px] p-8 transition-all hover:scale-[1.01] ${isOverLimit ? 'border-red-500 shadow-[8px_8px_0px_0px_rgba(239,68,68,1)]' : 'border-black dark:border-zinc-800 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.05)]'}`}>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="text-3xl">🍷</div>
+                    <div>
+                      <h2 className="text-2xl font-black uppercase tracking-tighter italic">Weekly Drinks</h2>
+                      <span className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase ${isOverLimit ? 'bg-red-500 text-white' : 'bg-purple-500 text-white'}`}>
+                        {isOverLimit ? 'Over Limit!' : 'Tracking'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="text-center p-6 bg-gray-50 dark:bg-zinc-900 rounded-2xl border-2 border-dashed border-black/20 dark:border-white/20">
+                    <div className={`text-5xl font-black tracking-tighter italic mb-2 ${isOverLimit ? 'text-red-600 dark:text-red-400' : estimatedDrinks > 0 ? 'text-purple-600 dark:text-purple-400' : 'text-gray-400'}`}>
+                      {estimatedDrinks}
+                      <span className="text-lg ml-2 uppercase not-italic">/ {maxDrinks}</span>
+                    </div>
+                    <div className="text-xs font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                      Standard Drinks
+                    </div>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="mt-6">
+                    <div className="h-4 bg-gray-100 dark:bg-zinc-800 rounded-full border-2 border-black/10 dark:border-white/10 overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${isOverLimit ? 'bg-red-500' : progress > 75 ? 'bg-yellow-500' : 'bg-purple-500'}`}
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between mt-2 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                      <span>0</span>
+                      <span>{maxDrinks} drinks</span>
+                    </div>
+                  </div>
+
+                  {isOverLimit && (
+                    <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-xl border-2 border-red-200 dark:border-red-800">
+                      <p className="text-xs font-bold text-red-600 dark:text-red-400">
+                        You've exceeded your weekly limit by {(estimatedDrinks - maxDrinks).toFixed(1)} drinks. Consider pacing yourself!
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )
+            })()}
           </div>
         ) : null}
       </main>

@@ -10,6 +10,7 @@ describe('calculateExpectedMacros', () => {
       protein_pct: 30,
       carbs_pct: 40,
       fat_pct: 30,
+      max_weekly_drinks: 10,
       created_at: '2024-01-01',
       updated_at: '2024-01-01'
     }
@@ -32,6 +33,7 @@ describe('calculateExpectedMacros', () => {
       protein_pct: 25,
       carbs_pct: 50,
       fat_pct: 25,
+      max_weekly_drinks: 10,
       created_at: '2024-01-01',
       updated_at: '2024-01-01'
     }
