@@ -98,17 +98,17 @@ serve(async (req) => {
     // Generate embedding for query using Google's API
     const startTime = Date.now()
     const embeddingResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${GOOGLE_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${GOOGLE_API_KEY}`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'models/text-embedding-004',
           content: {
             parts: [{ text: query.trim() }]
-          }
+          },
+          outputDimensionality: 768
         }),
       }
     )
@@ -133,7 +133,7 @@ serve(async (req) => {
       throw new Error('No embedding in response')
     }
 
-    log('info', 'Query embedding generated', { latencyMs: embeddingLatencyMs })
+    log('info', 'Query embedding generated', { latencyMs: embeddingLatencyMs, dimensions: queryEmbedding.length })
 
     // Search similar meals using pgvector
     const searchStartTime = Date.now()

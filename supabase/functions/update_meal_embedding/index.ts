@@ -77,17 +77,17 @@ serve(async (req) => {
     // Generate embedding using Google's API
     const startTime = Date.now()
     const embeddingResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${GOOGLE_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${GOOGLE_API_KEY}`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'models/text-embedding-004',
           content: {
             parts: [{ text: description.trim() }]
-          }
+          },
+          outputDimensionality: 768
         }),
       }
     )
